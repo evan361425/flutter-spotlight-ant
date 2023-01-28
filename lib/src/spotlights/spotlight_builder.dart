@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:spotlight_ant/src/ant_position.dart';
 
 /// Abstract class to build [SpotlightPainter]
 abstract class SpotlightBuilder {
@@ -11,26 +10,21 @@ abstract class SpotlightBuilder {
   /// it should between 0 and 1.
   ///
   /// 1 means size of target, 0 means window size.
-  SpotlightPainter build(AntPosition target, double value, bool isBumping);
+  SpotlightPainter build(Rect target, double value, bool isBumping);
 
   /// The [InkWell]'s [Rect] inside the spotlight.
-  Rect inkWellRect(AntPosition target) => Rect.fromLTWH(
-        target.leftPad,
-        target.topPad,
-        target.widthPad,
-        target.heightPad,
-      );
+  Rect inkWellRect(Rect target) => target;
 
   /// The [InkWell]'s radius inside the spotlight.
-  double inkwellRadius(AntPosition target) => 0;
+  double inkwellRadius(Rect target);
 }
 
 /// Abstract class to paint the desired spotlight's shape
 ///
 /// The canvas size should be the whole window.
 abstract class SpotlightPainter extends CustomPainter {
-  /// Target for the spotlight
-  final AntPosition target;
+  /// Target of the spotlight
+  final Rect target;
 
   /// Current [Animation]'s value from gaffer and
   /// it should between 0 and 1.

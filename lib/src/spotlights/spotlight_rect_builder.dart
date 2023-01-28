@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:spotlight_ant/src/spotlights/spotlight_builder.dart';
-import 'package:spotlight_ant/src/ant_position.dart';
 
 class SpotlightRectBuilder extends SpotlightBuilder {
   /// Color of the rectangle
@@ -27,7 +26,7 @@ class SpotlightRectBuilder extends SpotlightBuilder {
   });
 
   @override
-  SpotlightPainter build(AntPosition target, double value, bool isBumping) {
+  SpotlightPainter build(Rect target, double value, bool isBumping) {
     return _RectPainter(
       value: value,
       target: target,
@@ -39,7 +38,7 @@ class SpotlightRectBuilder extends SpotlightBuilder {
   }
 
   @override
-  double inkwellRadius(AntPosition target) => radius;
+  double inkwellRadius(Rect target) => radius;
 }
 
 class _RectPainter extends SpotlightPainter {
@@ -48,7 +47,7 @@ class _RectPainter extends SpotlightPainter {
   final BorderSide borderSide;
 
   const _RectPainter({
-    required AntPosition target,
+    required Rect target,
     required double value,
     required this.color,
     required this.radius,
@@ -58,27 +57,26 @@ class _RectPainter extends SpotlightPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    if (target.isNotFound) return;
+    if (target.isEmpty) return;
 
     final rect = isBumping
         ? Rect.fromCenter(
             center: target.center,
-            width: target.widthPad * (1 + value),
-            height: target.heightPad * (1 + value),
+            width: target.width * (1 + value),
+            height: target.height * (1 + value),
           )
         : Rect.fromCenter(
             center: target.center,
-
-            /// Two times larger for corner object
-            /// without timing 2 will be like:
-            /// ┌──┬───┐
-            /// │  │  x│
-            /// │  │   │
-            /// │  └───┤
-            /// │      │
-            /// └──────┘
-            width: size.width * (1 - value) * 2 + target.widthPad,
-            height: size.height * (1 - value) * 2 + target.heightPad,
+            // Two times larger for corner object
+            // without timing 2 will be like:
+            // ┌──┬───┐
+            // │  │  x│
+            // │  │   │
+            // │  └───┤
+            // │      │
+            // └──────┘
+            width: size.width * (1 - value) * 2 + target.width,
+            height: size.height * (1 - value) * 2 + target.height,
           );
 
     canvas.drawPath(

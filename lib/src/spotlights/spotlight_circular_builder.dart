@@ -1,8 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:spotlight_ant/src/spotlights/spotlight_builder.dart';
-import 'package:spotlight_ant/src/ant_position.dart';
+import 'spotlight_builder.dart';
 
 class SpotlightCircularBuilder extends SpotlightBuilder {
   /// Color of the circle
@@ -27,7 +26,7 @@ class SpotlightCircularBuilder extends SpotlightBuilder {
   });
 
   @override
-  SpotlightPainter build(AntPosition target, double value, bool isBumping) {
+  SpotlightPainter build(Rect target, double value, bool isBumping) {
     return _CircularPainter(
       value: value,
       target: target,
@@ -39,15 +38,14 @@ class SpotlightCircularBuilder extends SpotlightBuilder {
   }
 
   @override
-  Rect inkWellRect(AntPosition target) => Rect.fromCircle(
+  Rect inkWellRect(Rect target) => Rect.fromCircle(
         center: target.center,
-        // if null precedence is higher than math operators
-        radius: radius ?? (target.size.longestSide + target.longestPad) / 2,
+        // `if null` precedence is higher than `math operators`
+        radius: radius ?? target.size.longestSide / 2,
       );
 
   @override
-  double inkwellRadius(AntPosition target) =>
-      radius ?? (target.size.longestSide + target.longestPad) / 2;
+  double inkwellRadius(Rect target) => radius ?? target.size.longestSide / 2;
 }
 
 class _CircularPainter extends SpotlightPainter {
@@ -56,7 +54,7 @@ class _CircularPainter extends SpotlightPainter {
   final BorderSide borderSide;
 
   const _CircularPainter({
-    required AntPosition target,
+    required Rect target,
     required double value,
     required this.color,
     required this.radius,
@@ -66,9 +64,9 @@ class _CircularPainter extends SpotlightPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    if (target.isNotFound) return;
+    if (target.isEmpty) return;
 
-    final a = radius ?? (target.size.longestSide + target.longestPad) / 2;
+    final a = radius ?? target.size.longestSide / 2;
     final r = isBumping ? a * (1 + value) : a + size.longestSide * (1 - value);
     final c = target.center;
 

@@ -1,10 +1,11 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
-import 'package:spotlight_ant/src/spotlights/spotlight_circular_builder.dart';
-import 'package:spotlight_ant/src/spotlights/spotlight_rect_builder.dart';
-import 'package:spotlight_ant/src/spotlights/spotlight_builder.dart';
-import 'package:spotlight_ant/src/ant_position.dart';
-import 'package:spotlight_ant/src/spotlight_content.dart';
-import 'package:spotlight_ant/src/spotlight_gaffer.dart';
+import 'spotlights/spotlight_circular_builder.dart';
+import 'spotlights/spotlight_rect_builder.dart';
+import 'spotlights/spotlight_builder.dart';
+import 'spotlight_content.dart';
+import 'spotlight_gaffer.dart';
 
 class SpotlightAnt extends StatefulWidget {
   /// Content beside the spotlight.
@@ -58,6 +59,8 @@ class SpotlightAnt extends StatefulWidget {
   final bool showAfterInit;
 
   /// Wait until the [Future] has done and start the spotlight show.
+  ///
+  /// *This property is only for gaffer*
   ///
   /// Default using:
   /// ```dart
@@ -199,7 +202,7 @@ class SpotlightAnt extends StatefulWidget {
   /// Callback after zoom-out.
   final VoidCallback? onDismissed;
 
-  /// Callback after tapping skip button.
+  /// Callback after skip the show.
   ///
   /// *This property is only for gaffer*
   ///
@@ -211,7 +214,7 @@ class SpotlightAnt extends StatefulWidget {
   /// *This property is only for gaffer*
   ///
   /// The scenarios that will finish the show:
-  ///   * Go next spotlight in last (available) spotlight.
+  ///   * Go next spotlight in the last (available) spotlight.
   ///   * Skip the show.
   final VoidCallback? onFinish;
 
@@ -251,7 +254,11 @@ class SpotlightAnt extends StatefulWidget {
     this.onFinish,
     this.content,
     required this.child,
-  }) : super(key: key);
+  })  : assert(
+            ants != null ||
+                (onSkip == null && onFinish == null && showWaitFuture == null),
+            'Only gaffer can set properties: `onSkip`, `onFinish`, `showWaitFuture`'),
+        super(key: key);
 
   @override
   State<StatefulWidget> createState() => SpotlightAntState();
@@ -276,12 +283,10 @@ class SpotlightAntState extends State<SpotlightAnt> {
 
     if (isAbleToShow) {
       gaffer = GlobalKey<SpotlightGafferState>();
-    }
-
-    if (widget.showAfterInit) {
-      print('after');
-      (widget.showWaitFuture ?? Future.delayed(Duration.zero))
-          .then((value) => show());
+      if (widget.showAfterInit) {
+        (widget.showWaitFuture ?? Future.delayed(Duration.zero))
+            .then((value) => show());
+      }
     }
   }
 
@@ -294,21 +299,61 @@ class SpotlightAntState extends State<SpotlightAnt> {
   /// Is this ant the gaffer?
   bool get isAbleToShow => widget.ants?.isNotEmpty == true;
 
+  /// Is it in the show?
+  bool get isShowing => _overlayEntry != null;
+
   /// Is this ant not the gaffer?
   bool get isNotAbleToShow => !isAbleToShow;
 
   /// What the position of this ant.
-  AntPosition get position {
+  Rect get rect {
     final renderBox = context.findRenderObject();
     final box = renderBox is RenderBox ? renderBox : null;
     final state = context.findAncestorStateOfType<NavigatorState>();
-    final offset = box?.localToGlobal(Offset.zero,
-        ancestor: state?.context.findRenderObject());
-    return AntPosition(
-      offset ?? Offset.zero,
-      box?.size ?? Size.zero,
-      widget.spotlightPadding,
+    final offset = box?.localToGlobal(
+          Offset.zero,
+          ancestor: state?.context.findRenderObject(),
+        ) ??
+        Offset.zero;
+    final size = box?.size ?? Size.zero;
+
+    return Rect.fromLTRB(
+      max(offset.dx - widget.spotlightPadding.left, 0),
+      max(offset.dy - widget.spotlightPadding.top, 0),
+      max(offset.dx + size.width + widget.spotlightPadding.right, 0),
+      max(offset.dy + size.height + widget.spotlightPadding.bottom, 0),
     );
+  }
+
+  /// Get current position for [Positioned]
+  ///
+  /// Have six values:
+  /// * left (nullable)
+  /// * right (nullable)
+  /// * top (nullable)
+  /// * bottom (nullable)
+  /// * width
+  /// * height
+  List<double?> get position {
+    final w = MediaQuery.of(context).size;
+    final r = this.rect;
+    final c = r.center;
+
+    final a = widget.contentAlignment ?? getAlignment(w, c);
+
+    final rect = widget.spotlightBuilder.inkWellRect(r);
+    final rWidth = rect.width * (0.5 + widget.bumpRatio);
+    final rHeight = rect.height * (0.5 + widget.bumpRatio);
+
+    final left = a.x > 0 ? max(c.dx + a.x * rWidth, 0.0) : null;
+    final right = a.x < 0 ? max(w.width - c.dx - a.x * rWidth, 0.0) : null;
+    final top = a.y > 0 ? max(c.dy + a.y * rHeight, 0.0) : null;
+    final bottom = a.y < 0 ? max(w.height - c.dy - a.y * rHeight, 0.0) : null;
+
+    final width = max(w.width - (left ?? 0) - (right ?? 0), 0.0);
+    final height = max(w.height - (top ?? 0) - (bottom ?? 0), 0.0);
+
+    return [left, right, top, bottom, width, height];
   }
 
   /// Show the spotlight(s).
@@ -324,14 +369,16 @@ class SpotlightAntState extends State<SpotlightAnt> {
         _overlayEntry = OverlayEntry(builder: (context) {
           final targets = widget.ants!.toList();
           return SpotlightGaffer(
-            key: gaffer,
-            ants: targets,
-            onFinish: () {
-              _overlayEntry?.remove();
-              _overlayEntry = null;
-              widget.onFinish?.call();
-            },
-          );
+              key: gaffer,
+              ants: targets,
+              onFinish: () {
+                _overlayEntry?.remove();
+                _overlayEntry = null;
+                widget.onFinish?.call();
+              },
+              onSkip: () {
+                widget.onSkip?.call();
+              });
         });
         Overlay.of(context).insert(_overlayEntry!);
       }
@@ -359,6 +406,21 @@ class SpotlightAntState extends State<SpotlightAnt> {
   ///
   /// *This method is only for gaffer*
   void prev() => gaffer.currentState?.prev();
+
+  /// Get target alignment from [center] in specific [windowSize].
+  Alignment getAlignment(Size windowSize, Offset center) {
+    // < 0 means ant is in left side, else right side
+    final xRatio = (center.dx / windowSize.width) - 0.5;
+    // < 0 means ant is in top side, else bottom side
+    final yRatio = (center.dy / windowSize.height) - 0.5;
+
+    // using horizontal
+    if (xRatio.abs() > yRatio.abs()) {
+      return xRatio < 0 ? Alignment.centerRight : Alignment.centerLeft;
+    } else {
+      return yRatio <= 0 ? Alignment.bottomCenter : Alignment.topCenter;
+    }
+  }
 }
 
 enum SpotlightAntAction {

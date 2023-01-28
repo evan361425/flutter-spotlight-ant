@@ -10,10 +10,14 @@ class SpotlightGaffer extends StatefulWidget {
   /// Callback after finish the show.
   final VoidCallback onFinish;
 
+  /// Callback after skip the show.
+  final VoidCallback onSkip;
+
   const SpotlightGaffer({
     Key? key,
     required this.ants,
     required this.onFinish,
+    required this.onSkip,
   })  : assert(ants.length > 0),
         super(key: key);
 
@@ -81,9 +85,9 @@ class SpotlightGafferState extends State<SpotlightGaffer>
   Widget _buildSpotlight(BuildContext context, Widget? child) {
     final builder = current.widget.spotlightBuilder;
     final value = isBumping ? _bumpAnimation.value : _zoomAnimation.value;
-    final p = current.position;
-    final painter = builder.build(p, value, isBumping);
-    final rect = builder.inkWellRect(p);
+    final r = current.rect;
+    final painter = builder.build(r, value, isBumping);
+    final rect = builder.inkWellRect(r);
 
     final onTap = current.widget.spotlightSilent ? () {} : next;
 
@@ -98,7 +102,7 @@ class SpotlightGafferState extends State<SpotlightGaffer>
         top: rect.top,
         child: current.widget.spotlightUsingInkwell
             ? InkWell(
-                borderRadius: BorderRadius.circular(builder.inkwellRadius(p)),
+                borderRadius: BorderRadius.circular(builder.inkwellRadius(r)),
                 splashColor: current.widget.spotlightSplashColor,
                 onTap: onTap,
                 child: SizedBox(
@@ -118,31 +122,16 @@ class SpotlightGafferState extends State<SpotlightGaffer>
   }
 
   Widget _buildContent() {
-    final w = MediaQuery.of(context).size;
     final p = current.position;
-    final a = current.widget.contentAlignment ?? p.getAlignmentIn(w);
-
-    final rect = current.widget.spotlightBuilder.inkWellRect(p);
-    final rWidth = rect.width / 2 + w.width * 0.02; // 0.02 for bumping variant
-    final rHeight = rect.height / 2 + w.height * 0.02;
-
-    final c = p.center;
-    final left = a.x > 0 ? c.dx + a.x * rWidth : null;
-    final right = a.x < 0 ? w.width - c.dx - a.x * rWidth : null;
-    final top = a.y > 0 ? c.dy + a.y * rHeight : null;
-    final bottom = a.y < 0 ? w.height - c.dy - a.y * rHeight : null;
-
-    final width = w.width - (left ?? 0) - (right ?? 0);
-    final height = w.height - (top ?? 0) - (bottom ?? 0);
 
     return Positioned(
-      left: left,
-      right: right,
-      bottom: bottom,
-      top: top,
+      left: p[0],
+      right: p[1],
+      top: p[2],
+      bottom: p[3],
       child: SizedBox(
-        width: width,
-        height: height,
+        width: p[4],
+        height: p[5],
         child: FadeTransition(
           opacity: _contentAnimation,
           child: Stack(children: [
@@ -257,7 +246,7 @@ class SpotlightGafferState extends State<SpotlightGaffer>
   }
 
   void _prev() {
-    if (currentIndex < widget.ants.length - 1) {
+    if (currentIndex > 0) {
       _startZoomIn(--currentIndex);
     }
   }
@@ -271,7 +260,7 @@ class SpotlightGafferState extends State<SpotlightGaffer>
   ///
   /// This will call the [finish] internal.
   void skip() {
-    current.widget.onSkip?.call();
+    widget.onSkip();
     finish();
   }
 
@@ -315,14 +304,12 @@ class SpotlightGafferState extends State<SpotlightGaffer>
               period: current.widget.bumpDuration,
             );
           }
-        } else {
-          _next();
         }
       });
     });
   }
 
-  Future<void> _startZoomOut() {
+  Future<void> _startZoomOut() async {
     if (isBumping) {
       isBumping = false;
       current.widget.onDismiss?.call();
@@ -332,7 +319,5 @@ class SpotlightGafferState extends State<SpotlightGaffer>
         current.widget.onDismissed?.call();
       });
     }
-
-    return Future.value();
   }
 }
