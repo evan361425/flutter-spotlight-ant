@@ -11,7 +11,7 @@ abstract class SpotlightBuilder {
   /// it should between 0 and 1.
   ///
   /// 1 means size of target, 0 means window size.
-  SpotlightPainter build(AntPosition target, double value);
+  SpotlightPainter build(AntPosition target, double value, bool isBumping);
 
   /// The [InkWell]'s [Rect] inside the spotlight.
   Rect inkWellRect(AntPosition target) => Rect.fromLTWH(
@@ -22,7 +22,7 @@ abstract class SpotlightBuilder {
       );
 
   /// The [InkWell]'s radius inside the spotlight.
-  double inkWellRadius(AntPosition target) => 0;
+  double inkwellRadius(AntPosition target) => 0;
 }
 
 /// Abstract class to paint the desired spotlight's shape
@@ -38,7 +38,10 @@ abstract class SpotlightPainter extends CustomPainter {
   /// 1 means size of target, 0 means window size.
   final double value;
 
-  const SpotlightPainter(this.target, this.value);
+  /// Painting bumping animation or zoom.
+  final bool isBumping;
+
+  const SpotlightPainter(this.target, this.value, this.isBumping);
 
   @override
   bool shouldRepaint(SpotlightPainter oldDelegate) {

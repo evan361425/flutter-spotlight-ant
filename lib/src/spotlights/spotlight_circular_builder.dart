@@ -1,10 +1,10 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:spotlight_ant/src/spotlights/spotlight_painter.dart';
+import 'package:spotlight_ant/src/spotlights/spotlight_builder.dart';
 import 'package:spotlight_ant/src/ant_position.dart';
 
-class CircularPainterBuilder extends SpotlightBuilder {
+class SpotlightCircularBuilder extends SpotlightBuilder {
   /// Color of the circle
   ///
   /// default using black with 0.8 opacity(0xCD000000)
@@ -20,20 +20,21 @@ class CircularPainterBuilder extends SpotlightBuilder {
   /// default using [BorderSide]'s default settings
   final BorderSide borderSide;
 
-  const CircularPainterBuilder({
+  const SpotlightCircularBuilder({
     this.color = const Color(0xCD000000),
     this.radius,
     this.borderSide = const BorderSide(),
   });
 
   @override
-  SpotlightPainter build(AntPosition target, double value) {
+  SpotlightPainter build(AntPosition target, double value, bool isBumping) {
     return _CircularPainter(
       value: value,
       target: target,
       color: color,
       radius: radius,
       borderSide: borderSide,
+      isBumping: isBumping,
     );
   }
 
@@ -45,7 +46,7 @@ class CircularPainterBuilder extends SpotlightBuilder {
       );
 
   @override
-  double inkWellRadius(AntPosition target) =>
+  double inkwellRadius(AntPosition target) =>
       radius ?? (target.size.longestSide + target.longestPad) / 2;
 }
 
@@ -60,14 +61,15 @@ class _CircularPainter extends SpotlightPainter {
     required this.color,
     required this.radius,
     required this.borderSide,
-  }) : super(target, value);
+    required bool isBumping,
+  }) : super(target, value, isBumping);
 
   @override
   void paint(Canvas canvas, Size size) {
     if (target.isNotFound) return;
 
-    final r = size.longestSide * (1 - value) +
-        (radius ?? (target.size.longestSide + target.longestPad) / 2);
+    final a = radius ?? (target.size.longestSide + target.longestPad) / 2;
+    final r = isBumping ? a * (1 + value) : a + size.longestSide * (1 - value);
     final c = target.center;
 
     canvas.drawPath(

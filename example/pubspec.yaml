@@ -14,9 +14,13 @@ dependencies:
     sdk: flutter
   spotlight_ant:
     path: ../
+  url_launcher: ^6.1.8
 
 dev_dependencies:
   flutter_lints: ^1.0.0
 
 flutter:
   uses-material-design: true
+
+  assets:
+    - assets/spotlight-ant.png

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:spotlight_ant/src/spotlights/circular_painter.dart';
-import 'package:spotlight_ant/src/spotlights/rect_painter.dart';
-import 'package:spotlight_ant/src/spotlights/spotlight_painter.dart';
+import 'package:spotlight_ant/src/spotlights/spotlight_circular_builder.dart';
+import 'package:spotlight_ant/src/spotlights/spotlight_rect_builder.dart';
+import 'package:spotlight_ant/src/spotlights/spotlight_builder.dart';
 import 'package:spotlight_ant/src/ant_position.dart';
 import 'package:spotlight_ant/src/spotlight_content.dart';
 import 'package:spotlight_ant/src/spotlight_gaffer.dart';
@@ -12,7 +12,7 @@ class SpotlightAnt extends StatefulWidget {
   /// See also:
   ///
   ///  * [SpotlightContent], which provide a nice wrapper for you (and me).
-  final Widget content;
+  final Widget? content;
 
   /// Tell the [SpotlightGaffer] which need to show.
   ///
@@ -24,12 +24,7 @@ class SpotlightAnt extends StatefulWidget {
   final Iterable<GlobalKey<SpotlightAntState>>? ants;
 
   /// Set to false will ignore this spotlight
-  final bool enableSpotlight;
-
-  /// Set to false will not build backdrop.
-  ///
-  /// Backdrop is use to close the spotlight when tapping anywhere.
-  final bool enableBackDrop;
+  final bool enable;
 
   /// Immediate show this ant after fire `initState`.
   ///
@@ -62,15 +57,18 @@ class SpotlightAnt extends StatefulWidget {
   /// ```
   final bool showAfterInit;
 
-  /// Duration before showing.
+  /// Wait until the [Future] has done and start the spotlight show.
   ///
-  /// *This property is only for gaffer*
-  final Duration showDelayDuration;
+  /// Default using:
+  /// ```dart
+  /// Future.delayed(Duration.zero)
+  /// ```
+  final Future? showWaitFuture;
 
   /// Building painter for spotlight.
   ///
-  /// default is using [CircularPainterBuilder],
-  /// using [RectPainterBuilder] fro rectangle.
+  /// default is using [SpotlightCircularBuilder],
+  /// using [SpotlightRectBuilder] fro rectangle.
   ///
   /// See also:
   ///
@@ -80,17 +78,92 @@ class SpotlightAnt extends StatefulWidget {
   /// Padding of spotlight.
   final EdgeInsets spotlightPadding;
 
-  /// Spotlight splash color.
+  /// Listen `onTap` event on the spotlight to dismiss the tutorial.
+  ///
+  /// Setting true will make it unable to go next when tapping the spotlight.
+  final bool spotlightSilent;
+
+  /// Using [InkWell] or [GestureDetector] on spotlight.
+  final bool spotlightUsingInkwell;
+
+  /// Spotlight inkwell splash color.
   ///
   /// Setting null to use default color (control by the app theme).
+  ///
+  /// Only useful when [spotlightSilent] is false.
   final Color? spotlightSplashColor;
 
-  /// Backdrop splash color.
+  /// Set to false will not build backdrop.
+  ///
+  /// Backdrop is use to close the spotlight when tapping anywhere.
+  final bool backdropSilent;
+
+  /// Using [InkWell] or [GestureDetector] on backdrop.
+  final bool backdropUsingInkwell;
+
+  /// Backdrop inkwell splash color.
   ///
   /// Setting null to use default color (control by the app theme).
   ///
-  /// Only useful when [enableBackDrop] is true.
+  /// Only useful when [backdropSilent] is false.
   final Color? backdropSplashColor;
+
+  /// Ordering actions by [SpotlightAntAction].
+  ///
+  /// send empty list for disabling default actions.
+  final List<SpotlightAntAction> actions;
+
+  /// Build the actions wrapper.
+  ///
+  /// Default using:
+  /// ```dart
+  /// Positioned(
+  ///   bottom: 16,
+  ///   left: 16,
+  ///   right: 16,
+  ///   child: Row(
+  ///     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  ///     children: actions.toList(),
+  ///   ),
+  /// );
+  /// ```
+  final Widget Function(BuildContext context, Iterable<Widget> actions)?
+      actionBuilder;
+
+  /// Pressed the action widget will go to next spotlight.
+  ///
+  /// Default using:
+  /// ```dart
+  /// TextButton.icon(
+  ///   onPressed: () => next(),
+  ///   label: const Text('NEXT'),
+  ///   icon: const Icon(Icons.arrow_forward_ios_sharp),
+  /// );
+  /// ```
+  final Widget? nextAction;
+
+  /// Pressed the action widget will go to previous spotlight.
+  ///
+  /// Default using:
+  /// ```dart
+  /// TextButton.icon(
+  ///   onPressed: () => prev(),
+  ///   label: const Text('NEXT'),
+  ///   icon: const Icon(Icons.arrow_forward_ios_sharp),
+  /// );
+  /// ```
+  final Widget? prevAction;
+
+  /// Pressed the action widget will skip all spotlights.
+  ///
+  /// Default using:
+  /// ```dart
+  /// TextButton(
+  ///   onPressed: () => skip(),
+  ///   child: const Text('SKIP'),
+  /// );
+  /// ```
+  final Widget? skipAction;
 
   /// Duration for zoom in the spotlight (start).
   final Duration zoomInDuration;
@@ -102,6 +175,9 @@ class SpotlightAnt extends StatefulWidget {
   ///
   /// One cycle of bumping will cost [bumpDuration] * 2 time.
   final Duration bumpDuration;
+
+  /// Bumping ratio, higher value will have larger bumping area.
+  final double bumpRatio;
 
   /// Alignment of content.
   ///
@@ -123,30 +199,57 @@ class SpotlightAnt extends StatefulWidget {
   /// Callback after zoom-out.
   final VoidCallback? onDismissed;
 
+  /// Callback after tapping skip button.
+  ///
+  /// *This property is only for gaffer*
+  ///
+  /// Notice that after tapping skip button, [onFinish] will also be fired.
+  final VoidCallback? onSkip;
+
+  /// Callback after finish the show.
+  ///
+  /// *This property is only for gaffer*
+  ///
+  /// The scenarios that will finish the show:
+  ///   * Go next spotlight in last (available) spotlight.
+  ///   * Skip the show.
+  final VoidCallback? onFinish;
+
   /// The child contained by the [SpotlightAnt].
   final Widget child;
 
   const SpotlightAnt({
     required GlobalKey<SpotlightAntState> key,
     this.ants,
-    this.enableSpotlight = true,
-    this.enableBackDrop = true,
-    this.spotlightBuilder = const CircularPainterBuilder(),
+    this.enable = true,
+    this.spotlightBuilder = const SpotlightCircularBuilder(),
     this.spotlightPadding = const EdgeInsets.all(8),
+    this.spotlightSilent = false,
+    this.spotlightUsingInkwell = true,
     this.spotlightSplashColor,
+    this.backdropSilent = false,
+    this.backdropUsingInkwell = true,
     this.backdropSplashColor,
-    this.showDelayDuration = Duration.zero,
+    this.actions = const [SpotlightAntAction.skip],
+    this.actionBuilder,
+    this.nextAction,
+    this.prevAction,
+    this.skipAction,
     this.showAfterInit = true,
+    this.showWaitFuture,
     this.zoomInDuration = const Duration(milliseconds: 600),
     this.zoomOutDuration = const Duration(milliseconds: 600),
     this.bumpDuration = const Duration(milliseconds: 500),
+    this.bumpRatio = 0.1,
     this.contentAlignment,
     this.contentFadeInDuration = const Duration(milliseconds: 300),
     this.onShown,
     this.onShow,
     this.onDismiss,
     this.onDismissed,
-    required this.content,
+    this.onSkip,
+    this.onFinish,
+    this.content,
     required this.child,
   }) : super(key: key);
 
@@ -176,7 +279,9 @@ class SpotlightAntState extends State<SpotlightAnt> {
     }
 
     if (widget.showAfterInit) {
-      show();
+      print('after');
+      (widget.showWaitFuture ?? Future.delayed(Duration.zero))
+          .then((value) => show());
     }
   }
 
@@ -209,12 +314,10 @@ class SpotlightAntState extends State<SpotlightAnt> {
   /// Show the spotlight(s).
   ///
   /// *This method is only for gaffer*
-  void show() async {
+  void show() {
     if (isNotAbleToShow) {
       return;
     }
-
-    await Future.delayed(widget.showDelayDuration);
 
     WidgetsBinding.instance.scheduleFrameCallback((timeStamp) {
       if (_overlayEntry == null) {
@@ -226,10 +329,11 @@ class SpotlightAntState extends State<SpotlightAnt> {
             onFinish: () {
               _overlayEntry?.remove();
               _overlayEntry = null;
+              widget.onFinish?.call();
             },
           );
         });
-        Overlay.of(context)?.insert(_overlayEntry!);
+        Overlay.of(context).insert(_overlayEntry!);
       }
     });
   }
@@ -238,6 +342,13 @@ class SpotlightAntState extends State<SpotlightAnt> {
   ///
   /// *This method is only for gaffer*
   void finish() => gaffer.currentState?.finish();
+
+  /// Skip the show.
+  ///
+  /// *This method is only for gaffer*
+  ///
+  /// This will call the [finish] internal.
+  void skip() => gaffer.currentState?.skip();
 
   /// Go to next spotlight properly.
   ///
@@ -248,4 +359,10 @@ class SpotlightAntState extends State<SpotlightAnt> {
   ///
   /// *This method is only for gaffer*
   void prev() => gaffer.currentState?.prev();
+}
+
+enum SpotlightAntAction {
+  prev,
+  next,
+  skip,
 }
