@@ -1,8 +1,6 @@
 <a href="https://evan361425.github.io/flutter-spotlight-ant/">
   <h1 align="center">
-    <picture>
-      <img alt="SpotlightAnt" src="https://raw.githubusercontent.com/evan361425/flutter-spotlight-ant/master/docs/spotlight-ant.png">
-    </picture>
+    <img alt="SpotlightAnt" src="https://raw.githubusercontent.com/evan361425/flutter-spotlight-ant/master/docs/spotlight-ant.png">
   </h1>
 </a>
 
@@ -21,11 +19,14 @@
 Play it yourself by cloning the repo:
 
 ```bash
-git clone git@github.com:evan361425/flutter-spotlight-ant.git \
-  && cd flutter-spotlight-ant/example \
-  && flutter pub get \
-  && flutter run -d chrome
+git clone --depth 1 \
+  git@github.com:evan361425/flutter-spotlight-ant.git spotlight-ant \
+    && cd spotlight-ant/example \
+    && flutter pub get \
+    && flutter run -d chrome
 ```
+
+See more details in [example](example/README.md).
 
 ## Installation
 
@@ -39,20 +40,22 @@ flutter pub add spotlight_ant
 final ant1 = GlobalKey<SpotlightAntState>();
 final ant2 = GlobalKey<SpotlightAntState>();
 
-return Column(children: [
-  // this is the main ant with `ants`, we call it gaffer
-  SpotlightAnt(
-    key: ant1,
-    ants: [ant1, ant2], // only gaffer can set it
-    child: MyCircularButton(),
-  ),
-  SpotlightAnt(
-    key: ant2,
-    // set the ants again here will build two spotlight shows.
-    spotlightBuilder: const SpotlightRectBuilder(),
-    child: MyRectButton(),
-  ),
-]);
+Widget build(BuildContext context) {
+  return Column(children: [
+    // this is the main ant with `ants`, we call it gaffer
+    SpotlightAnt(
+      key: ant1,
+      ants: [ant1, ant2], // only gaffer can set it
+      child: MyCircularButton(),
+    ),
+    SpotlightAnt(
+      key: ant2,
+      // set the ants again here will build two spotlight shows.
+      spotlightBuilder: const SpotlightRectBuilder(),
+      child: MyRectButton(),
+    ),
+  ]);
+}
 ```
 
 It can also run by program:

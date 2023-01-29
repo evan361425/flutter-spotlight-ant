@@ -1,24 +1,17 @@
 name: Publish package
 
 on:
+  # Pub.dev only allows automated publishing from GitHub Actions
+  # when the workflow is triggered by pushing a git tag to GitHub.
   push:
     tags:
       - "v[0-9]+.[0-9]+.[0-9]+*"
 
 jobs:
   publish:
-    runs-on: ubuntu-latest
-    steps:
-      # Checkout repository
-      - uses: actions/checkout@v3
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: "3.x"
-          cache: true
-          channel: "stable"
-      - name: Publish - dry run
-        run: flutter pub publish --dry-run
-      # Publishing...
-      - name: Publish to pub.dev
-        run: flutter pub publish -f
+    # followed by
+    # https://dart.dev/tools/pub/automated-publishing#configuring-a-github-action-workflow-for-publishing-to-pubdev
+    uses: dart-lang/setup-dart/.github/workflows/publish.yml@v1
+    with:
+      # Specify the github actions deployment environment
+      environment: pub.dev

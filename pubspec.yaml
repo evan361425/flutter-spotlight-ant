@@ -1,4 +1,5 @@
 name: spotlight_ant
+package: spotlight_ant
 version: 0.2.0
 description: >-
   Spotlight the widget by wrapping it and with highly flexible configuration.

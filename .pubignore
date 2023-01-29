@@ -4,6 +4,8 @@
 build/
 coverage/
 docs/
+example/*
+!example/README.md
 test/
 .gitignore
 analysis_options.yaml
