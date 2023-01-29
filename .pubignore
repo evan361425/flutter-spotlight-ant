@@ -4,7 +4,6 @@
 build/
 coverage/
 docs/
-example/
 test/
 .gitignore
 analysis_options.yaml
