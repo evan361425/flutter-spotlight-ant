@@ -10,6 +10,7 @@ on:
       - "**.md"
       - ".github/**"
       - ".vscode/**"
+      - "example/**"
       - pubspec.yaml
   pull_request:
 

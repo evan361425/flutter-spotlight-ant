@@ -19,6 +19,7 @@
   <p style="text-align: center;">Auto<br/>Alignment</p>
   <p style="text-align: center;">Follow<br/>Animation</p>
 </div>
+
 ![SpotlightAnt Basic DEMO](docs/intro-align-animate.gif)
 
 ## Usage

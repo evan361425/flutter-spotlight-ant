@@ -11,6 +11,7 @@ void main() {
   final observer = RouteObserver<ModalRoute<void>>();
 
   runApp(MaterialApp(
+    title: 'SpotlightAnt',
     navigatorObservers: [observer],
     theme: ThemeData(),
     home: StartPage(),
