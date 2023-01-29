@@ -8,6 +8,10 @@ This document's format follow the context in [Keep a Changelog](https://keepacha
 
 Please check git diff.
 
+## [v0.2.1] - 2023-01-29
+
+fix example document
+
 ## [v0.2.0] - 2023-01-29
 
 -   fix: now skip will also zooming out first
@@ -16,6 +20,7 @@ Please check git diff.
 
 Initial release
 
-[unreleased]: https://github.com/evan361425/flutter-spotlight-ant/compare/v0.2.0...HEAD
+[unreleased]: https://github.com/evan361425/flutter-spotlight-ant/compare/v0.2.1...HEAD
+[v0.2.1]: https://github.com/evan361425/flutter-spotlight-ant/compare/v0.2.0...v0.2.1
 [v0.2.0]: https://github.com/evan361425/flutter-spotlight-ant/compare/v0.1.0...v0.2.0
 [v0.1.0]: https://github.com/evan361425/flutter-spotlight-ant/compare/commits
