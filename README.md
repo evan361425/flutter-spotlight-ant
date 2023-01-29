@@ -14,11 +14,24 @@
 
 > This package is separated from my project [POS-System](https://github.com/evan361425/flutter-pos-system).
 
-| Flexible | Auto Alignment | Animation |
-| - | - | - |
-| ![SpotlightAnt Basic DEMO](https://raw.githubusercontent.com/evan361425/flutter-spotlight-ant/master/docs/intro.gif) | ![SpotlightAnt Alignment DEMO](https://raw.githubusercontent.com/evan361425/flutter-spotlight-ant/master/docs/align.gif)| ![SpotlightAnt Animation DEMO](https://raw.githubusercontent.com/evan361425/flutter-spotlight-ant/master/docs/animate.gif) |
+![SpotlightAnt Basic DEMO](https://raw.githubusercontent.com/evan361425/flutter-spotlight-ant/master/docs/intro.gif)
 
-Play it yourself by visiting the [web page](https://evan361425.github.io/flutter-spotlight-ant).
+> See more example gif files in [usage](https://github.com/evan361425/flutter-spotlight-ant/master/docs/usage.md)
+
+Play it yourself by cloning the repo:
+
+```bash
+git clone git@github.com:evan361425/flutter-spotlight-ant.git \
+  && cd flutter-spotlight-ant/example \
+  && flutter pub get \
+  && flutter run -d chrome
+```
+
+## Installation
+
+```bash
+flutter pub add spotlight_ant
+```
 
 ## Usage
 
