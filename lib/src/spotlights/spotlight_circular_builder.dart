@@ -66,7 +66,7 @@ class _CircularPainter extends SpotlightPainter {
   void paint(Canvas canvas, Size size) {
     if (target.isEmpty) return;
 
-    final a = radius ?? target.size.longestSide / 2;
+    final a = radius ?? (target.size.longestSide / 2);
     final r = isBumping ? a * (1 + value) : a + size.longestSide * (1 - value);
     final c = target.center;
 

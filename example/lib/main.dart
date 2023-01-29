@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test_example/my_spotlight.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spotlight_ant/spotlight_ant.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -51,7 +52,10 @@ class StartPage extends StatelessWidget {
                 onPressed: () => launchUrl(Uri.parse(
                   'https://github.com/evan361425/flutter-spotlight-ant',
                 )),
-                child: const Text('Go to GitHub page.'),
+                child: Row(mainAxisSize: MainAxisSize.min, children: const [
+                  Text('Go to GitHub '),
+                  Icon(Icons.open_in_new_sharp),
+                ]),
               ),
             ]),
           ),
@@ -69,6 +73,12 @@ class StartPage extends StatelessWidget {
               ));
             },
             child: const Text('Alignment'),
+          ),
+          IconButton(
+            onPressed: () => launchUrl(Uri.parse(
+              'https://github.com/evan361425/flutter-spotlight-ant',
+            )),
+            icon: const FaIcon(IconDataBrands(0xf09b)),
           ),
           ElevatedButton(
             onPressed: () {

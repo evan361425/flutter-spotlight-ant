@@ -6,10 +6,14 @@ abstract class SpotlightBuilder {
 
   /// Build the desired painter by [target] and [value].
   ///
-  /// [value] is current [Animation]'s value from gaffer and
-  /// it should between 0 and 1.
+  /// [value] is current [Animation]'s value from gaffer.
   ///
-  /// 1 means size of target, 0 means window size.
+  /// If is bumping, `0` means no bumping at all,
+  /// `1` means bump as large as the origin width and height.
+  ///
+  /// If is zoom in or out, it should between 0 and 1.
+  /// `1` means finish the zoom in animation or just start to zoom out,
+  /// `0` means just start to zoom in or finish the zoom out animation.
   SpotlightPainter build(Rect target, double value, bool isBumping);
 
   /// The [InkWell]'s [Rect] inside the spotlight.

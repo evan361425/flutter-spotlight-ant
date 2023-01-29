@@ -70,8 +70,8 @@ class SpotlightAnt extends StatefulWidget {
 
   /// Building painter for spotlight.
   ///
-  /// default is using [SpotlightCircularBuilder],
-  /// using [SpotlightRectBuilder] fro rectangle.
+  /// Default is using [SpotlightCircularBuilder].
+  /// You can use [SpotlightRectBuilder] for rectangle.
   ///
   /// See also:
   ///
@@ -318,10 +318,10 @@ class SpotlightAntState extends State<SpotlightAnt> {
     final size = box?.size ?? Size.zero;
 
     return Rect.fromLTRB(
-      max(offset.dx - widget.spotlightPadding.left, 0),
-      max(offset.dy - widget.spotlightPadding.top, 0),
-      max(offset.dx + size.width + widget.spotlightPadding.right, 0),
-      max(offset.dy + size.height + widget.spotlightPadding.bottom, 0),
+      offset.dx - widget.spotlightPadding.left,
+      offset.dy - widget.spotlightPadding.top,
+      offset.dx + size.width + widget.spotlightPadding.right,
+      offset.dy + size.height + widget.spotlightPadding.bottom,
     );
   }
 
@@ -342,8 +342,8 @@ class SpotlightAntState extends State<SpotlightAnt> {
     final a = widget.contentAlignment ?? getAlignment(w, c);
 
     final rect = widget.spotlightBuilder.inkWellRect(r);
-    final rWidth = rect.width * (0.5 + widget.bumpRatio);
-    final rHeight = rect.height * (0.5 + widget.bumpRatio);
+    final rWidth = rect.width * (0.5 + widget.bumpRatio / 2);
+    final rHeight = rect.height * (0.5 + widget.bumpRatio / 2);
 
     final left = a.x > 0 ? max(c.dx + a.x * rWidth, 0.0) : null;
     final right = a.x < 0 ? max(w.width - c.dx - a.x * rWidth, 0.0) : null;
