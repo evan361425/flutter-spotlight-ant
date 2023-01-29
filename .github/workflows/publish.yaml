@@ -9,8 +9,19 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - name: Publish
-        uses: dart-lang/setup-dart/.github/workflows/publish.yml@v1
+      # Checkout repository
+      - uses: actions/checkout@v3
+      - uses: dart-lang/setup-dart@v1
+      - name: Install dependencies
+        run: dart pub get
+        working-directory: example
+      - name: Publish - dry run
+        run: dart pub publish --dry-run
+        working-directory: example
+      # Publishing...
+      - name: Publish to pub.dev
+        run: dart pub publish -f
+        working-directory: example
         with:
           # Specify the github actions deployment environment
           environment: pub.dev
