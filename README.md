@@ -1,7 +1,7 @@
 <a href="https://evan361425.github.io/flutter-spotlight-ant/">
   <h1 align="center">
     <picture>
-      <img alt="SpotlightAnt" src="docs/spotlight-ant.png">
+      <img alt="SpotlightAnt" src="https://raw.githubusercontent.com/evan361425/flutter-spotlight-ant/master/docs/spotlight-ant.png">
     </picture>
   </h1>
 </a>
@@ -16,7 +16,7 @@
 
 | Flexible | Auto Alignment | Animation |
 | - | - | - |
-| ![SpotlightAnt Basic DEMO](docs/intro.gif) | ![SpotlightAnt Alignment DEMO](docs/align.gif)| ![SpotlightAnt Animation DEMO](docs/animate.gif) |
+| ![SpotlightAnt Basic DEMO](https://raw.githubusercontent.com/evan361425/flutter-spotlight-ant/master/docs/intro.gif) | ![SpotlightAnt Alignment DEMO](https://raw.githubusercontent.com/evan361425/flutter-spotlight-ant/master/docs/align.gif)| ![SpotlightAnt Animation DEMO](https://raw.githubusercontent.com/evan361425/flutter-spotlight-ant/master/docs/animate.gif) |
 
 Play it yourself by visiting the [web page](https://evan361425.github.io/flutter-spotlight-ant).
 

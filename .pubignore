@@ -1,0 +1,12 @@
+.dart_tool/
+.github/
+.vscode/
+build/
+coverage/
+docs/
+example/
+test/
+.gitignore
+analysis_options.yaml
+bumper.json
+pubspec.lock
