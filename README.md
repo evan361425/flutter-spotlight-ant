@@ -14,13 +14,11 @@
 
 > This package is separated from my project [POS-System](https://github.com/evan361425/flutter-pos-system).
 
-<div style="display: flex; justify-content: space-between; max-width: 714px;">
-  <p style="text-align: center;">Flexible</p>
-  <p style="text-align: center;">Auto<br/>Alignment</p>
-  <p style="text-align: center;">Follow<br/>Animation</p>
-</div>
+| Flexible | Auto Alignment | Animation |
+| - | - | - |
+| ![SpotlightAnt Basic DEMO](docs/intro.gif) | ![SpotlightAnt Alignment DEMO](docs/align.gif)| ![SpotlightAnt Animation DEMO](docs/animate.gif) |
 
-![SpotlightAnt Basic DEMO](docs/intro-align-animate.gif)
+Play it yourself by visiting the [web page](https://evan361425.github.io/flutter-spotlight-ant).
 
 ## Usage
 
