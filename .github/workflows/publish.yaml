@@ -17,8 +17,6 @@ jobs:
           environment: pub.dev
       - name: Publish - dry run
         run: dart pub publish --dry-run
-        working-directory: example
       # Publishing...
       - name: Publish to pub.dev
         run: dart pub publish -f
-        working-directory: example
