@@ -15,9 +15,6 @@ jobs:
         with:
           # Specify the github actions deployment environment
           environment: pub.dev
-      - name: Install dependencies
-        run: dart pub get
-        working-directory: example
       - name: Publish - dry run
         run: dart pub publish --dry-run
         working-directory: example
