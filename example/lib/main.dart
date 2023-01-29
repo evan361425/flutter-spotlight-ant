@@ -3,17 +3,20 @@ import 'package:flutter_test_example/my_spotlight.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spotlight_ant/spotlight_ant.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:url_strategy/url_strategy.dart';
 
 import 'alignment_screen.dart';
 import 'animation_screen.dart';
 
 void main() {
+  setPathUrlStrategy();
   final observer = RouteObserver<ModalRoute<void>>();
 
   runApp(MaterialApp(
     title: 'SpotlightAnt',
+    onGenerateTitle: (context) => 'SpotlightAnt',
     navigatorObservers: [observer],
-    theme: ThemeData(),
+    theme: ThemeData(useMaterial3: true, colorSchemeSeed: Colors.amber),
     home: StartPage(),
     debugShowCheckedModeBanner: false,
   ));
@@ -21,6 +24,7 @@ void main() {
 
 class StartPage extends StatelessWidget {
   final k = GlobalKey<MySpotlightState>();
+  final gaffer = GlobalKey<SpotlightAntState>();
   final ant = GlobalKey<SpotlightAntState>();
 
   StartPage({Key? key}) : super(key: key);
@@ -28,13 +32,33 @@ class StartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('SpotlightAnt Example')),
+      appBar: AppBar(
+        title: const Text('SpotlightAnt Example'),
+        leading: Builder(
+          builder: (BuildContext context) {
+            return MySpotlight(
+              ant: ant,
+              content: const SpotlightContent(
+                child: Text(
+                  'Now start to setup your own spotlight!',
+                  style: TextStyle(fontSize: 32),
+                ),
+              ),
+              child: IconButton(
+                icon: const Icon(Icons.menu_sharp),
+                onPressed: () => Scaffold.of(context).openDrawer(),
+                tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+              ),
+            );
+          },
+        ),
+      ),
       drawer: D(() => k.currentState?.show()),
       body: Column(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
         MySpotlight(
           key: k,
-          ant: ant,
-          ants: [ant],
+          ant: gaffer,
+          ants: [gaffer, ant],
           content: SpotlightContent(
             child: Column(children: [
               const CircleAvatar(
@@ -65,6 +89,10 @@ class StartPage extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: const Text('Welcome!', style: TextStyle(fontSize: 32)),
           ),
+        ),
+        ElevatedButton(
+          onPressed: () => k.currentState?.show(),
+          child: const Text('Run Again'),
         ),
         Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
           ElevatedButton(

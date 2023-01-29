@@ -164,14 +164,12 @@ class SpotlightGafferState extends State<SpotlightGaffer>
     for (final action in current.widget.actions) {
       switch (action) {
         case SpotlightAntAction.prev:
-          if (currentIndex > 0) {
-            yield current.widget.prevAction ??
-                TextButton.icon(
-                  onPressed: () => prev(),
-                  label: const Text('PREV'),
-                  icon: const Icon(Icons.arrow_back_ios_sharp),
-                );
-          }
+          yield current.widget.prevAction ??
+              TextButton.icon(
+                onPressed: () => prev(),
+                label: const Text('PREV'),
+                icon: const Icon(Icons.arrow_back_ios_sharp),
+              );
           break;
         case SpotlightAntAction.next:
           yield current.widget.nextAction ??
@@ -229,7 +227,11 @@ class SpotlightGafferState extends State<SpotlightGaffer>
 
   /// Go to next spotlight properly.
   void next() {
-    _startZoomOut().then((value) => _next());
+    _startZoomOut().then((success) {
+      if (success) {
+        _next();
+      }
+    });
   }
 
   void _next() {
@@ -242,7 +244,11 @@ class SpotlightGafferState extends State<SpotlightGaffer>
 
   /// Go to previous spotlight properly.
   void prev() {
-    _startZoomOut().then((value) => _prev());
+    _startZoomOut().then((success) {
+      if (success) {
+        _prev();
+      }
+    });
   }
 
   void _prev() {
@@ -253,7 +259,9 @@ class SpotlightGafferState extends State<SpotlightGaffer>
 
   /// Finish the show.
   void finish() {
-    widget.onFinish();
+    _startZoomOut().then((success) {
+      widget.onFinish();
+    });
   }
 
   /// Skip the show.
@@ -309,7 +317,7 @@ class SpotlightGafferState extends State<SpotlightGaffer>
     });
   }
 
-  Future<void> _startZoomOut() async {
+  Future<bool> _startZoomOut() async {
     if (isBumping) {
       isBumping = false;
       current.widget.onDismiss?.call();
@@ -317,7 +325,9 @@ class SpotlightGafferState extends State<SpotlightGaffer>
       _contentController.reverse(from: 0);
       return _zoomController.reverse().then((value) {
         current.widget.onDismissed?.call();
+        return true;
       });
     }
+    return false;
   }
 }

@@ -115,9 +115,14 @@ void main() {
       await tester.tap(find.text('SKIP'));
       expect(onShow, equals(6));
       expect(onShown, equals(6));
-      expect(onDismiss, equals(4));
-      expect(onDismissed, equals(4));
+      expect(onDismiss, equals(6));
+      expect(onDismissed, equals(4)); // wait for zooming out
       expect(onSkip, equals(1));
+      expect(onFinish, equals(0));
+
+      await tester.pump(const Duration(milliseconds: 1));
+      await tester.pump(const Duration(milliseconds: 6));
+      expect(onDismissed, equals(6));
       expect(onFinish, equals(1));
     });
 
@@ -212,7 +217,7 @@ void main() {
 
       ant1.currentState?.skip();
       await tester.pump(const Duration(milliseconds: 1));
-      expect(onDismiss, equals(3)); // skip won't fire `onDismiss`
+      expect(onDismiss, equals(4));
       expect(onShow, equals(4));
       expect(onSkip, equals(1));
       expect(onFinish, equals(1));

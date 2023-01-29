@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spotlight_ant/spotlight_ant.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import 'widgets.dart';
 
@@ -33,6 +34,7 @@ class MySpotlightState extends State<MySpotlight> {
       zoomInDuration: Duration(milliseconds: D.zoomIn.toInt()),
       zoomOutDuration: Duration(milliseconds: D.zoomOut.toInt()),
       bumpDuration: Duration(milliseconds: D.bump.toInt()),
+      contentFadeInDuration: Duration(milliseconds: D.fadeIn.toInt()),
       bumpRatio: D.bumpRatio,
       backdropSilent: D.backdropSilent,
       backdropUsingInkwell: D.backdropInkwell,
@@ -43,6 +45,12 @@ class MySpotlightState extends State<MySpotlight> {
           : const SpotlightRectBuilder(),
       contentAlignment: D.alignment,
       actions: D.actions,
+      onShow: () => _print('onShow'),
+      onShown: () => _print('onShown'),
+      onDismiss: () => _print('onDismiss'),
+      onDismissed: () => _print('onDismissed'),
+      onSkip: widget.ants == null ? null : () => _print('onSkip'),
+      onFinish: widget.ants == null ? null : () => _print('onFinish'),
       content: widget.content,
       child: widget.child,
     );
@@ -60,12 +68,23 @@ class MySpotlightState extends State<MySpotlight> {
       widget.ant.currentState?.show();
     });
   }
+
+  void _print(String event) {
+    Fluttertoast.showToast(
+      webShowClose: true,
+      toastLength: Toast.LENGTH_LONG,
+      timeInSecForIosWeb: 5,
+      msg:
+          '$event(${widget.ant.hashCode}) - ${DateTime.now().toString().substring(12)}',
+    );
+  }
 }
 
 class D extends StatefulWidget {
   static double zoomIn = 600;
   static double zoomOut = 600;
   static double bump = 500;
+  static double fadeIn = 300;
   static double bumpRatio = 0.1;
   static double padding = 16.0;
   static bool spotlightSilent = false;
@@ -92,6 +111,7 @@ class _DState extends State<D> {
   late double zoomIn;
   late double zoomOut;
   late double bump;
+  late double fadeIn;
   late double bumpRatio;
   late bool useCircle;
   late double padding;
@@ -121,7 +141,7 @@ class _DState extends State<D> {
                     Navigator.of(context).pop();
                     widget.onApply();
                   },
-                  child: const Text('Apply'),
+                  child: const Text('Run Again'),
                 ),
               ],
             ),
@@ -162,6 +182,17 @@ class _DState extends State<D> {
               max: 3000,
               onChanged: (value) => setState(() {
                 D.bump = bump = value;
+              }),
+            ),
+          ]),
+          ScrollRow(children: [
+            Text('Content FadeIn (${bump.toStringAsFixed(0)})'),
+            Slider(
+              value: bump,
+              min: 50,
+              max: 3000,
+              onChanged: (value) => setState(() {
+                D.fadeIn = fadeIn = value;
               }),
             ),
           ]),
@@ -219,33 +250,6 @@ class _DState extends State<D> {
           const Divider(),
           const Center(
             child: Text(
-              'Alignment',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
-          Wrap(spacing: 4, runSpacing: 4, children: [
-            for (final v in const [
-              Alignment.topLeft,
-              Alignment.topCenter,
-              Alignment.topRight,
-              Alignment.centerLeft,
-              Alignment.center,
-              Alignment.centerRight,
-              Alignment.bottomLeft,
-              Alignment.bottomCenter,
-              Alignment.bottomRight,
-            ])
-              ChoiceChip(
-                label: Text(v.toString()),
-                selected: v == alignment,
-                onSelected: (value) => setState(() {
-                  D.alignment = alignment = (value ? v : null);
-                }),
-              ),
-          ]),
-          const Divider(),
-          const Center(
-            child: Text(
               'True/False',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
@@ -285,6 +289,33 @@ class _DState extends State<D> {
               D.backdropSilent = backdropSilent = value;
             }),
           ),
+          const Divider(),
+          const Center(
+            child: Text(
+              'Alignment',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+          Wrap(spacing: 4, runSpacing: 4, children: [
+            for (final v in const [
+              Alignment.topLeft,
+              Alignment.topCenter,
+              Alignment.topRight,
+              Alignment.centerLeft,
+              Alignment.center,
+              Alignment.centerRight,
+              Alignment.bottomLeft,
+              Alignment.bottomCenter,
+              Alignment.bottomRight,
+            ])
+              ChoiceChip(
+                label: Text(v.toString()),
+                selected: v == alignment,
+                onSelected: (value) => setState(() {
+                  D.alignment = alignment = (value ? v : null);
+                }),
+              ),
+          ]),
         ],
       ),
     );

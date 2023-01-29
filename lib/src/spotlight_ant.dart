@@ -207,6 +207,7 @@ class SpotlightAnt extends StatefulWidget {
   /// *This property is only for gaffer*
   ///
   /// Notice that after tapping skip button, [onFinish] will also be fired.
+  /// This callback will be executed before [onDismiss] and [onDismissed].
   final VoidCallback? onSkip;
 
   /// Callback after finish the show.
