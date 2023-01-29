@@ -186,9 +186,9 @@ class _DState extends State<D> {
             ),
           ]),
           ScrollRow(children: [
-            Text('Content FadeIn (${bump.toStringAsFixed(0)})'),
+            Text('Content FadeIn (${fadeIn.toStringAsFixed(0)})'),
             Slider(
-              value: bump,
+              value: fadeIn,
               min: 50,
               max: 3000,
               onChanged: (value) => setState(() {
@@ -297,6 +297,13 @@ class _DState extends State<D> {
             ),
           ),
           Wrap(spacing: 4, runSpacing: 4, children: [
+            ChoiceChip(
+              label: const Text('Auto detect'),
+              selected: alignment == null,
+              onSelected: (value) => setState(() {
+                D.alignment = alignment = null;
+              }),
+            ),
             for (final v in const [
               Alignment.topLeft,
               Alignment.topCenter,
