@@ -35,15 +35,8 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./example/build/web
-  # publish:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v3
-  #       with:
-  #         ref: master
-
-  #     - name: Publish
-  #       uses: sakebook/actions-flutter-pub-publisher@v1.4.1
-  #       with:
-  #         credential: ${{ secrets.PUB_CREDENTIALS }}
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Publish
+        uses: dart-lang/setup-dart/.github/workflows/publish.yml@v1
