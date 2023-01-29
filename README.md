@@ -14,7 +14,7 @@
 
 > This package is separated from my project [POS-System](https://github.com/evan361425/flutter-pos-system).
 
-![SpotlightAnt Basic DEMO](https://raw.githubusercontent.com/evan361425/flutter-spotlight-ant/master/docs/intro.gif)
+<img alt="SpotlightAnt Basic DEMO" src="https://raw.githubusercontent.com/evan361425/flutter-spotlight-ant/master/docs/intro.gif" width="300">
 
 > See more example gif files in [usage](https://github.com/evan361425/flutter-spotlight-ant/master/docs/usage.md)
 
