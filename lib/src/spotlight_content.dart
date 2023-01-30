@@ -8,13 +8,15 @@ class SpotlightContent extends StatelessWidget {
   final Color textColor;
 
   /// Padding of the content.
+  ///
+  /// Inset of bottom should be larger to avoid overlap with actions.
   final EdgeInsets padding;
 
   const SpotlightContent({
     Key? key,
     required this.child,
     this.textColor = Colors.white,
-    this.padding = const EdgeInsets.all(8),
+    this.padding = const EdgeInsets.fromLTRB(8, 8, 8, 32),
   }) : super(key: key); // coverage:ignore-line
 
   @override
