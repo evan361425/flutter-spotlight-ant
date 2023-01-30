@@ -9,11 +9,14 @@ on:
 
 jobs:
   publish:
-    # followed by
-    # https://dart.dev/tools/pub/automated-publishing#configuring-a-github-action-workflow-for-publishing-to-pubdev
-    uses: dart-lang/setup-dart/.github/workflows/publish.yml@v1
     permissions:
       id-token: write
     with:
       # Specify the github actions deployment environment
       environment: pub.dev
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dart-lang/setup-dart@v1
+      - name: Publish
+        run: dart pub publish --force
