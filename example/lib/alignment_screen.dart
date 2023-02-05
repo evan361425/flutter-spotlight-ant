@@ -65,7 +65,7 @@ class AlignmentScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              'Content of $a\n',
+                              'Content of ${a.toString().substring(10)}\n',
                               style: const TextStyle(fontSize: 32),
                             ),
                             ElevatedButton(

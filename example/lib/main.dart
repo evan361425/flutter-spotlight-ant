@@ -51,10 +51,7 @@ class _StartPageState extends State<StartPage> {
               ant: ant,
               enable: isFirst,
               content: const SpotlightContent(
-                child: Text(
-                  'Configure your spotlight,',
-                  style: TextStyle(fontSize: 32),
-                ),
+                child: Text('Configure your spotlight...'),
               ),
               child: IconButton(
                 icon: const Icon(Icons.menu_sharp),
@@ -70,10 +67,7 @@ class _StartPageState extends State<StartPage> {
         ant: ant2,
         enable: isFirst,
         content: const SpotlightContent(
-          child: Text(
-            'and re-run the animation by pressing the button.',
-            style: TextStyle(fontSize: 32),
-          ),
+          child: Text('and re-run the animation by pressing the button.'),
         ),
         child: FloatingActionButton(
           onPressed: () => k.currentState?.show(),
@@ -116,7 +110,7 @@ class _StartPageState extends State<StartPage> {
           child: Container(
             margin: const EdgeInsets.symmetric(vertical: 16.0),
             padding: const EdgeInsets.all(8.0),
-            child: const Text('Welcome!', style: TextStyle(fontSize: 32)),
+            child: const Text('Welcome !', style: TextStyle(fontSize: 32)),
           ),
         ),
         ElevatedButton(
