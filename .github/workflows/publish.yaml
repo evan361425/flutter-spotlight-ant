@@ -9,14 +9,16 @@ on:
 
 jobs:
   publish:
+    name: "Publish to pub.dev"
     permissions:
       id-token: write
-    with:
-      # Specify the github actions deployment environment
-      environment: pub.dev
+    # Specify the github actions deployment environment
+    environment: pub.dev
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: dart-lang/setup-dart@v1
+      - name: Publish - dry run
+        run: dart pub publish --dry-run
       - name: Publish
         run: dart pub publish --force
