@@ -230,5 +230,35 @@ void main() {
       expect(onSkip, equals(1));
       expect(onFinish, equals(1));
     });
+
+    testWidgets('should finish press next in last ant', (tester) async {
+      final ant = GlobalKey<SpotlightAntState>();
+      bool onShow = false;
+      bool onFinish = false;
+
+      await tester.pumpWidget(MaterialApp(
+        home: Column(children: [
+          SpotlightAnt(
+            key: ant,
+            ants: [ant],
+            content: const Text('content-1'),
+            zoomInDuration: Duration.zero,
+            zoomOutDuration: Duration.zero,
+            contentFadeInDuration: Duration.zero,
+            onShow: () => onShow = true,
+            onFinish: () => onFinish = true,
+            child: const Text('child-1'),
+          ),
+        ]),
+      ));
+      await tester.pumpAndSettle();
+
+      await tester.pump(const Duration(milliseconds: 5));
+      expect(onShow, isTrue);
+
+      ant.currentState?.next();
+      await tester.pump(const Duration(milliseconds: 1)); // zoom out and in
+      expect(onFinish, isTrue);
+    });
   });
 }

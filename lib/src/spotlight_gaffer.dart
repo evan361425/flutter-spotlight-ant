@@ -227,11 +227,15 @@ class SpotlightGafferState extends State<SpotlightGaffer>
 
   /// Go to next spotlight properly.
   void next() {
-    _startZoomOut().then((success) {
-      if (success) {
-        _next();
-      }
-    });
+    if (currentIndex < widget.ants.length - 1) {
+      _startZoomOut().then((success) {
+        if (success) {
+          _next();
+        }
+      });
+    } else {
+      finish();
+    }
   }
 
   void _next() {
@@ -244,16 +248,12 @@ class SpotlightGafferState extends State<SpotlightGaffer>
 
   /// Go to previous spotlight properly.
   void prev() {
-    _startZoomOut().then((success) {
-      if (success) {
-        _prev();
-      }
-    });
-  }
-
-  void _prev() {
     if (currentIndex > 0) {
-      _startZoomIn(--currentIndex);
+      _startZoomOut().then((success) {
+        if (success) {
+          _startZoomIn(--currentIndex);
+        }
+      });
     }
   }
 

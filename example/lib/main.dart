@@ -16,18 +16,29 @@ void main() {
     title: 'SpotlightAnt',
     onGenerateTitle: (context) => 'SpotlightAnt',
     navigatorObservers: [observer],
-    theme: ThemeData(useMaterial3: true, colorSchemeSeed: Colors.amber),
-    home: StartPage(),
+    theme: ThemeData(useMaterial3: true, colorSchemeSeed: Colors.red),
+    home: const StartPage(),
     debugShowCheckedModeBanner: false,
   ));
 }
 
-class StartPage extends StatelessWidget {
+class StartPage extends StatefulWidget {
+  const StartPage({Key? key}) : super(key: key);
+
+  @override
+  State<StartPage> createState() => _StartPageState();
+}
+
+class _StartPageState extends State<StartPage> {
+  bool isFirst = true;
+
   final k = GlobalKey<MySpotlightState>();
+
   final gaffer = GlobalKey<SpotlightAntState>();
+
   final ant = GlobalKey<SpotlightAntState>();
 
-  StartPage({Key? key}) : super(key: key);
+  final ant2 = GlobalKey<SpotlightAntState>();
 
   @override
   Widget build(BuildContext context) {
@@ -38,9 +49,10 @@ class StartPage extends StatelessWidget {
           builder: (BuildContext context) {
             return MySpotlight(
               ant: ant,
+              enable: isFirst,
               content: const SpotlightContent(
                 child: Text(
-                  'Now start to setup your own spotlight!',
+                  'Configure your spotlight,',
                   style: TextStyle(fontSize: 32),
                 ),
               ),
@@ -53,12 +65,29 @@ class StartPage extends StatelessWidget {
           },
         ),
       ),
-      drawer: D(() => k.currentState?.show()),
+      drawer: const D(),
+      floatingActionButton: MySpotlight(
+        ant: ant2,
+        enable: isFirst,
+        content: const SpotlightContent(
+          child: Text(
+            'and re-run the animation by pressing the button.',
+            style: TextStyle(fontSize: 32),
+          ),
+        ),
+        child: FloatingActionButton(
+          onPressed: () => k.currentState?.show(),
+          child: const Icon(Icons.refresh_sharp),
+        ),
+      ),
       body: Column(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
         MySpotlight(
           key: k,
           ant: gaffer,
-          ants: [gaffer, ant],
+          ants: [gaffer, ant, ant2],
+          onFinish: () => setState(() {
+            isFirst = false;
+          }),
           content: SpotlightContent(
             child: Column(children: [
               const CircleAvatar(

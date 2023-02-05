@@ -16,7 +16,7 @@ class SpotlightContent extends StatelessWidget {
     Key? key,
     required this.child,
     this.textColor = Colors.white,
-    this.padding = const EdgeInsets.fromLTRB(8, 8, 8, 32),
+    this.padding = const EdgeInsets.fromLTRB(8, 8, 8, 64),
   }) : super(key: key); // coverage:ignore-line
 
   @override

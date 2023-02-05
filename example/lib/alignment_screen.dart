@@ -37,11 +37,15 @@ class AlignmentScreen extends StatelessWidget {
           )
         ],
       ),
-      drawer: D(() {
-        for (final k in keys) {
-          k.currentState?.show();
-        }
-      }),
+      drawer: const D(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          for (final k in keys) {
+            k.currentState?.show();
+          }
+        },
+        child: const Icon(Icons.refresh_sharp),
+      ),
       body: SizedBox.expand(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
@@ -53,25 +57,27 @@ class AlignmentScreen extends StatelessWidget {
                   key: keys[i],
                   ants: i == 0 ? ants : null,
                   ant: ants[i++],
-                  content: Container(
-                    width: double.infinity,
-                    height: double.infinity,
-                    color: Colors.red,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Content of $a\n',
-                          style: const TextStyle(fontSize: 32),
+                  content: Material(
+                    color: Colors.indigo,
+                    child: Center(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Content of $a\n',
+                              style: const TextStyle(fontSize: 32),
+                            ),
+                            ElevatedButton(
+                              onPressed: () => ants[0].currentState?.finish(),
+                              child: const Text('FINISH'),
+                            )
+                          ],
                         ),
-                        ElevatedButton(
-                          onPressed: () => ants[0].currentState?.finish(),
-                          child: const Text('FINISH'),
-                        )
-                      ],
+                      ),
                     ),
                   ),
-                  child: Text(a.toString()),
+                  child: Text(a.toString().substring(10)),
                 ),
               ),
           ]),

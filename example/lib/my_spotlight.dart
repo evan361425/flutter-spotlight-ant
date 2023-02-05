@@ -9,12 +9,16 @@ class MySpotlight extends StatefulWidget {
   final List<GlobalKey<SpotlightAntState>>? ants;
   final Widget? content;
   final Widget child;
+  final bool enable;
+  final VoidCallback? onFinish;
 
   const MySpotlight({
     Key? key,
     required this.ant,
     this.ants,
     this.content,
+    this.enable = true,
+    this.onFinish,
     required this.child,
   }) : super(key: key);
 
@@ -30,6 +34,7 @@ class MySpotlightState extends State<MySpotlight> {
     return SpotlightAnt(
       key: widget.ant,
       ants: widget.ants,
+      enable: widget.enable,
       spotlightPadding: EdgeInsets.all(D.padding),
       zoomInDuration: Duration(milliseconds: D.zoomIn.toInt()),
       zoomOutDuration: Duration(milliseconds: D.zoomOut.toInt()),
@@ -50,7 +55,12 @@ class MySpotlightState extends State<MySpotlight> {
       onDismiss: () => _print('onDismiss'),
       onDismissed: () => _print('onDismissed'),
       onSkip: widget.ants == null ? null : () => _print('onSkip'),
-      onFinish: widget.ants == null ? null : () => _print('onFinish'),
+      onFinish: widget.ants == null
+          ? null
+          : () {
+              widget.onFinish?.call();
+              _print('onFinish');
+            },
       content: widget.content,
       child: widget.child,
     );
@@ -70,13 +80,15 @@ class MySpotlightState extends State<MySpotlight> {
   }
 
   void _print(String event) {
-    Fluttertoast.showToast(
-      webShowClose: true,
-      toastLength: Toast.LENGTH_LONG,
-      timeInSecForIosWeb: 5,
-      msg:
-          '$event(${widget.ant.hashCode}) - ${DateTime.now().toString().substring(12)}',
-    );
+    if (D.listening) {
+      Fluttertoast.showToast(
+        webShowClose: true,
+        toastLength: Toast.LENGTH_LONG,
+        timeInSecForIosWeb: 5,
+        msg:
+            '$event(${widget.ant.hashCode}) - ${DateTime.now().toString().substring(12)}',
+      );
+    }
   }
 }
 
@@ -87,6 +99,7 @@ class D extends StatefulWidget {
   static double fadeIn = 300;
   static double bumpRatio = 0.1;
   static double padding = 16.0;
+  static bool listening = false;
   static bool spotlightSilent = false;
   static bool spotlightInkwell = true;
   static bool backdropSilent = false;
@@ -99,9 +112,7 @@ class D extends StatefulWidget {
   ];
   static bool useCircle = true;
 
-  final VoidCallback onApply;
-
-  const D(this.onApply, {Key? key}) : super(key: key);
+  const D({Key? key}) : super(key: key);
 
   @override
   State<D> createState() => _DState();
@@ -115,6 +126,7 @@ class _DState extends State<D> {
   late double bumpRatio;
   late bool useCircle;
   late double padding;
+  late bool listening;
   late bool spotlightSilent;
   late bool spotlightInkwell;
   late bool backdropSilent;
@@ -128,24 +140,7 @@ class _DState extends State<D> {
       child: ListView(
         padding: const EdgeInsets.all(8),
         children: [
-          DrawerHeader(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Text(
-                  'Settings',
-                  style: Theme.of(context).textTheme.headlineMedium,
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    widget.onApply();
-                  },
-                  child: const Text('Run Again'),
-                ),
-              ],
-            ),
-          ),
+          Text('Settings', style: Theme.of(context).textTheme.headlineSmall),
           const Center(
             child: Text(
               'Duration',
@@ -255,6 +250,13 @@ class _DState extends State<D> {
             ),
           ),
           SwitchListTile(
+            value: listening,
+            title: const Text('Listening events'),
+            onChanged: (value) => setState(() {
+              D.listening = listening = value;
+            }),
+          ),
+          SwitchListTile(
             value: useCircle,
             title: const Text('Use circle'),
             onChanged: (value) => setState(() {
@@ -316,7 +318,7 @@ class _DState extends State<D> {
               Alignment.bottomRight,
             ])
               ChoiceChip(
-                label: Text(v.toString()),
+                label: Text(v.toString().substring(10)),
                 selected: v == alignment,
                 onSelected: (value) => setState(() {
                   D.alignment = alignment = (value ? v : null);
@@ -334,9 +336,11 @@ class _DState extends State<D> {
     zoomIn = D.zoomIn;
     zoomOut = D.zoomOut;
     bump = D.bump;
+    fadeIn = D.fadeIn;
     bumpRatio = D.bumpRatio;
     useCircle = D.useCircle;
     padding = D.padding;
+    listening = D.listening;
     spotlightSilent = D.spotlightSilent;
     spotlightInkwell = D.spotlightInkwell;
     backdropSilent = D.backdropSilent;

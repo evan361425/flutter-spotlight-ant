@@ -43,7 +43,11 @@ class AnimationScreenState extends State<AnimationScreen>
           )
         ],
       ),
-      drawer: D(() => k.currentState?.show()),
+      drawer: const D(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => k.currentState?.show(),
+        child: const Icon(Icons.refresh_sharp),
+      ),
       body: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
           final Size biggest = constraints.biggest;
