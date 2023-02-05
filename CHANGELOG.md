@@ -8,6 +8,10 @@ This document's format follow the context in [Keep a Changelog](https://keepacha
 
 Please check git diff.
 
+## [v0.2.3] - 2023-02-05
+
+-   ([218e99a](https://github.com/evan361425/flutter-spotlight-ant/commit/218e99aede3a741b4a8bcbffd9e27b23e9776265)) doc: add spotlight ant pages
+
 ## [v0.2.2] - 2023-01-30
 
 -   ([bb1def4](https://github.com/evan361425/flutter-spotlight-ant/commit/bb1def47264fe5e829dfb7156e6291f9fdcb8edb)) fix: make padding larger on bottom - Shueh Chou Lu
@@ -25,8 +29,8 @@ fix example document
 
 Initial release
 
-[unreleased]: https://github.com/evan361425/flutter-spotlight-ant/compare/v0.2.2...HEAD
-[v0.2.2]: https://github.com/evan361425/flutter-spotlight-ant/compare/v0.2.1...v0.2.2
+[unreleased]: https://github.com/evan361425/flutter-spotlight-ant/compare/v0.2.3...HEAD
+[v0.2.2]: https://github.com/evan361425/flutter-spotlight-ant/compare/v0.2.2...v0.2.3
 [v0.2.1]: https://github.com/evan361425/flutter-spotlight-ant/compare/v0.2.0...v0.2.1
 [v0.2.0]: https://github.com/evan361425/flutter-spotlight-ant/compare/v0.1.0...v0.2.0
 [v0.1.0]: https://github.com/evan361425/flutter-spotlight-ant/compare/commits
