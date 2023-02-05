@@ -1,6 +1,7 @@
 {
   "$schema": "/usr/local/lib/node_modules/@evan361425/version-bumper/schema.json",
   "repoLink": "https://github.com/evan361425/flutter-spotlight-ant",
+  "beforeScripts": [["grep", "-q", "# bumper-checker: {tag}", "pubspec.yaml"]],
   "changelog": {
     "template": "{content}",
     "commitMessage": "chore: bump to {version}"
