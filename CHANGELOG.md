@@ -8,6 +8,10 @@ This document's format follow the context in [Keep a Changelog](https://keepacha
 
 Please check git diff.
 
+## [v0.4.0] - 2023-02-11
+
+-   ([033adbe](https://github.com/evan361425/flutter-spotlight-ant/commit/033adbe9e7d2cf1e3dcf3e3c5c198e2e6aa21792)) feat: allow prefer vertical or horizontal - Shueh Chou Lu
+
 ## [v0.3.0] - 2023-02-05
 
 -   ([dac541b](https://github.com/evan361425/flutter-spotlight-ant/commit/dac541b81b4b38dc8e63cc0044302b72055dee7a)) fix: prev button won't execute if in first ant - Shueh Chou Lu
@@ -33,7 +37,8 @@ fix example document
 
 Initial release
 
-[unreleased]: https://github.com/evan361425/flutter-spotlight-ant/compare/v0.3.0...HEAD
+[unreleased]: https://github.com/evan361425/flutter-spotlight-ant/compare/v0.4.0...HEAD
+[v0.4.0]: https://github.com/evan361425/flutter-spotlight-ant/compare/v0.3.0...v0.4.0
 [v0.3.0]: https://github.com/evan361425/flutter-spotlight-ant/compare/v0.2.3...v0.3.0
 [v0.2.2]: https://github.com/evan361425/flutter-spotlight-ant/compare/v0.2.2...v0.2.3
 [v0.2.1]: https://github.com/evan361425/flutter-spotlight-ant/compare/v0.2.0...v0.2.1
