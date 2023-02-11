@@ -47,12 +47,18 @@ class _StartPageState extends State<StartPage> {
         title: const Text('SpotlightAnt Example'),
         leading: Builder(
           builder: (BuildContext context) {
-            return MySpotlight(
-              ant: ant,
+            return SpotlightAnt(
+              key: ant,
               enable: isFirst,
               content: const SpotlightContent(
+                fontSize: 26,
                 child: Text('Configure your spotlight...'),
               ),
+              actions: const [SpotlightAntAction.prev, SpotlightAntAction.next],
+              bumpDuration: const Duration(milliseconds: 200),
+              zoomInDuration: const Duration(milliseconds: 300),
+              zoomOutDuration: const Duration(milliseconds: 300),
+              bumpRatio: 1.0,
               child: IconButton(
                 icon: const Icon(Icons.menu_sharp),
                 onPressed: () => Scaffold.of(context).openDrawer(),
@@ -63,10 +69,13 @@ class _StartPageState extends State<StartPage> {
         ),
       ),
       drawer: const D(),
-      floatingActionButton: MySpotlight(
-        ant: ant2,
+      floatingActionButton: SpotlightAnt(
+        key: ant2,
         enable: isFirst,
+        spotlightBuilder: const SpotlightRectBuilder(),
+        actions: const [SpotlightAntAction.prev],
         content: const SpotlightContent(
+          fontSize: 26,
           child: Text('and re-run the animation by pressing the button.'),
         ),
         child: FloatingActionButton(
@@ -86,7 +95,7 @@ class _StartPageState extends State<StartPage> {
             child: Column(children: [
               const CircleAvatar(
                 foregroundImage: AssetImage('assets/spotlight-ant.png'),
-                radius: 128,
+                radius: 64,
               ),
               const Text('SpotlightAnt', style: TextStyle(fontSize: 32)),
               const SizedBox(height: 16),

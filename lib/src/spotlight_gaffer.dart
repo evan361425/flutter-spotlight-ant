@@ -165,25 +165,29 @@ class SpotlightGafferState extends State<SpotlightGaffer>
       switch (action) {
         case SpotlightAntAction.prev:
           yield current.widget.prevAction ??
-              TextButton.icon(
+              IconButton(
                 onPressed: () => prev(),
-                label: const Text('PREV'),
+                tooltip: 'Previous spotlight',
+                color: Colors.white,
                 icon: const Icon(Icons.arrow_back_ios_sharp),
               );
           break;
         case SpotlightAntAction.next:
           yield current.widget.nextAction ??
-              TextButton.icon(
+              IconButton(
                 onPressed: () => next(),
-                label: const Text('NEXT'),
+                tooltip: 'Next spotlight',
+                color: Colors.white,
                 icon: const Icon(Icons.arrow_forward_ios_sharp),
               );
           break;
         case SpotlightAntAction.skip:
           yield current.widget.skipAction ??
-              TextButton(
+              IconButton(
                 onPressed: () => skip(),
-                child: const Text('SKIP'),
+                tooltip: 'Skip spotlight show',
+                color: Colors.white,
+                icon: const Icon(Icons.close_sharp),
               );
           break;
       }
@@ -299,7 +303,7 @@ class SpotlightGafferState extends State<SpotlightGaffer>
 
       current.widget.onShow?.call();
 
-      // Start animate
+      // Start animation
       _zoomController.forward().then((value) {
         isBumping = true;
         if (antMounted) {

@@ -20,6 +20,7 @@ void main() {
               zoomInDuration: Duration.zero,
               zoomOutDuration: Duration.zero,
               contentFadeInDuration: Duration.zero,
+              preferVertical: false,
               child: const Text('child'),
             ),
           ),

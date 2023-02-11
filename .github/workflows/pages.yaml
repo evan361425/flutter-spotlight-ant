@@ -30,7 +30,9 @@ jobs:
 
       - name: Build web
         working-directory: ./example
-        run: flutter build web --release --base-href "/flutter-spotlight-ant/"
+        run: flutter build web --release \
+          --base-href "/flutter-spotlight-ant/" \
+          --web-renderer html
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3

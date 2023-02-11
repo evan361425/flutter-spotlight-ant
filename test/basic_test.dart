@@ -44,6 +44,7 @@ void main() {
             zoomOutDuration: const Duration(milliseconds: 5),
             contentFadeInDuration: Duration.zero,
             spotlightBuilder: const SpotlightRectBuilder(),
+            preferVertical: false,
             actions: actions,
             onShow: () => onShow += 2,
             onShown: () => onShown += 2,
@@ -88,7 +89,7 @@ void main() {
       expect(onShown, equals(3));
 
       // previous
-      await tester.tap(find.text('PREV'));
+      await tester.tap(find.byIcon(Icons.arrow_back_ios_sharp));
       expect(onDismiss, equals(3));
       expect(onDismissed, equals(1));
       await tester.pump(const Duration(milliseconds: 1));
@@ -100,7 +101,7 @@ void main() {
       expect(onShown, equals(4));
 
       // next
-      await tester.tap(find.text('NEXT'));
+      await tester.tap(find.byIcon(Icons.arrow_forward_ios_sharp));
       expect(onDismiss, equals(4));
       expect(onDismissed, equals(3));
       await tester.pump(const Duration(milliseconds: 1));
@@ -112,7 +113,7 @@ void main() {
       expect(onShown, equals(6));
 
       // skip
-      await tester.tap(find.text('SKIP'));
+      await tester.tap(find.byIcon(Icons.close_sharp));
       expect(onShow, equals(6));
       expect(onShown, equals(6));
       expect(onDismiss, equals(6));
@@ -141,6 +142,7 @@ void main() {
             zoomInDuration: Duration.zero,
             zoomOutDuration: Duration.zero,
             contentFadeInDuration: Duration.zero,
+            preferHorizontal: true,
             onShow: () => onShow = true,
             onFinish: () => onFinish = true,
             child: const Text('child-1'),

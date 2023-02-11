@@ -7,6 +7,9 @@ class SpotlightContent extends StatelessWidget {
   /// Text color in [DefaultTextStyle].
   final Color textColor;
 
+  /// Font size in [DefaultTextStyle].
+  final double? fontSize;
+
   /// Padding of the content.
   ///
   /// Inset of bottom should be larger to avoid overlap with actions.
@@ -16,6 +19,8 @@ class SpotlightContent extends StatelessWidget {
     Key? key,
     required this.child,
     this.textColor = Colors.white,
+    this.fontSize,
+    // this.fontSize =
     this.padding = const EdgeInsets.fromLTRB(8, 8, 8, 64),
   }) : super(key: key); // coverage:ignore-line
 
@@ -23,7 +28,7 @@ class SpotlightContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: DefaultTextStyle(
-        style: TextStyle(color: textColor),
+        style: TextStyle(color: textColor, fontSize: fontSize),
         child: Padding(
           padding: padding,
           child: Center(

@@ -8,13 +8,6 @@ import 'spotlight_content.dart';
 import 'spotlight_gaffer.dart';
 
 class SpotlightAnt extends StatefulWidget {
-  /// Content beside the spotlight.
-  ///
-  /// See also:
-  ///
-  ///  * [SpotlightContent], which provide a nice wrapper for you (and me).
-  final Widget? content;
-
   /// Tell the [SpotlightGaffer] which need to show.
   ///
   /// You should only make one [SpotlightAnt] with this value.
@@ -137,9 +130,10 @@ class SpotlightAnt extends StatefulWidget {
   ///
   /// Default using:
   /// ```dart
-  /// TextButton.icon(
-  ///   onPressed: () => next(),
-  ///   label: const Text('NEXT'),
+  /// IconButton(
+  ///   onPressed: () => prev(),
+  ///   tooltip: 'Next spotlight',
+  ///   color: Colors.white,
   ///   icon: const Icon(Icons.arrow_forward_ios_sharp),
   /// );
   /// ```
@@ -149,10 +143,11 @@ class SpotlightAnt extends StatefulWidget {
   ///
   /// Default using:
   /// ```dart
-  /// TextButton.icon(
+  /// IconButton(
   ///   onPressed: () => prev(),
-  ///   label: const Text('NEXT'),
-  ///   icon: const Icon(Icons.arrow_forward_ios_sharp),
+  ///   tooltip: 'Previous spotlight',
+  ///   color: Colors.white,
+  ///   icon: const Icon(Icons.arrow_back_ios_sharp),
   /// );
   /// ```
   final Widget? prevAction;
@@ -161,9 +156,11 @@ class SpotlightAnt extends StatefulWidget {
   ///
   /// Default using:
   /// ```dart
-  /// TextButton(
+  /// IconButton(
   ///   onPressed: () => skip(),
-  ///   child: const Text('SKIP'),
+  ///   tooltip: 'Skip spotlight show',
+  ///   color: Colors.white,
+  ///   icon: const Icon(Icons.close_sharp),
   /// );
   /// ```
   final Widget? skipAction;
@@ -187,8 +184,50 @@ class SpotlightAnt extends StatefulWidget {
   /// Setting null will auto-detected by the center position.
   final Alignment? contentAlignment;
 
+  /// Prefer content shown in vertical side.
+  ///
+  /// If both [preferHorizontal] and [preferVertical] set to false,
+  /// it will choose the largest ratio compare to window.
+  ///
+  /// For example, target is at `(0.7 * window_width, 0.4 * window_height)`
+  /// it will align to [Alignment.centerLeft], since
+  /// `|0.7 - 0.5| > |0.4 - 0.5|`
+  ///
+  /// If [preferVertical] set to true, it will choose
+  /// [Alignment.topCenter] or [Alignment.bottomCenter]
+  ///
+  /// If both [preferHorizontal] and [preferVertical] set to true,
+  /// [preferHorizontal] will take the procedure.
+  final bool preferVertical;
+
+  /// Prefer content shown in horizontal side.
+  ///
+  /// If both [preferHorizontal] and [preferVertical] set to false,
+  /// it will choose the largest ratio compare to window.
+  ///
+  /// For example, target is at `(0.7 * window_width, 0.4 * window_height)`
+  /// it will align to [Alignment.centerLeft], since
+  /// `|0.7 - 0.5| > |0.4 - 0.5|`
+  ///
+  /// If [preferHorizontal] set to true, it will choose
+  /// [Alignment.centerLeft] or [Alignment.centerRight]
+  ///
+  /// If both [preferHorizontal] and [preferVertical] set to true,
+  /// [preferHorizontal] will take the procedure.
+  ///
+  /// The reason horizontal has higher procedure is make user easy to setup
+  /// [preferHorizontal], since the default is [preferVertical].
+  final bool preferHorizontal;
+
   /// Duration of fading in the content after zoom-in.
   final Duration contentFadeInDuration;
+
+  /// Content beside the spotlight.
+  ///
+  /// See also:
+  ///
+  ///  * [SpotlightContent], which provide a nice wrapper for you (and me).
+  final Widget? content;
 
   /// Callback before zoom-in.
   final VoidCallback? onShow;
@@ -246,14 +285,16 @@ class SpotlightAnt extends StatefulWidget {
     this.bumpDuration = const Duration(milliseconds: 500),
     this.bumpRatio = 0.1,
     this.contentAlignment,
-    this.contentFadeInDuration = const Duration(milliseconds: 300),
+    this.preferVertical = true,
+    this.preferHorizontal = false,
+    this.contentFadeInDuration = const Duration(milliseconds: 200),
+    this.content,
     this.onShown,
     this.onShow,
     this.onDismiss,
     this.onDismissed,
     this.onSkip,
     this.onFinish,
-    this.content,
     required this.child,
   })  : assert(
             ants != null ||
@@ -415,8 +456,13 @@ class SpotlightAntState extends State<SpotlightAnt> {
     // < 0 means ant is in top side, else bottom side
     final yRatio = (center.dy / windowSize.height) - 0.5;
 
-    // using horizontal
-    if (xRatio.abs() > yRatio.abs()) {
+    final useHorizontal = widget.preferHorizontal
+        ? true
+        : widget.preferVertical
+            ? false
+            : xRatio.abs() > yRatio.abs();
+
+    if (useHorizontal) {
       return xRatio < 0 ? Alignment.centerRight : Alignment.centerLeft;
     } else {
       return yRatio <= 0 ? Alignment.bottomCenter : Alignment.topCenter;
