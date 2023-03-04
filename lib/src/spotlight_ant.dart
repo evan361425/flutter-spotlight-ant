@@ -6,18 +6,8 @@ import 'spotlights/spotlight_circular_builder.dart';
 import 'spotlights/spotlight_rect_builder.dart';
 import 'spotlights/spotlight_builder.dart';
 import 'spotlight_content.dart';
-import 'spotlight_gaffer.dart';
 
 class SpotlightAnt extends StatefulWidget {
-  /// Tell the [SpotlightGaffer] which need to show.
-  ///
-  /// You should only make one [SpotlightAnt] with this value.
-  ///
-  /// We call this ant gaffer which means it is controlling the spotlight.
-  /// When you see the document: *This property is only for gaffer*,
-  /// it means the property is only useful for the gaffer.
-  final Iterable<GlobalKey<SpotlightAntState>>? ants;
-
   /// Set to false will ignore this spotlight
   final bool enable;
 
@@ -210,7 +200,6 @@ class SpotlightAnt extends StatefulWidget {
 
   const SpotlightAnt({
     Key? key,
-    this.ants,
     this.enable = true,
     this.spotlightBuilder = const SpotlightCircularBuilder(),
     this.spotlightPadding = const EdgeInsets.all(8),

@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:spotlight_ant/spotlight_ant.dart';
+import 'spotlight_ant.dart';
+import 'spotlight_gaffer.dart';
 
 class SpotlightShow extends StatefulWidget {
   /// The child contained by the [SpotlightShow].
@@ -74,21 +75,17 @@ class SpotlightShow extends StatefulWidget {
 
   static SpotlightShowState of(BuildContext context) {
     final SpotlightShowState? gafferState = maybeOf(context);
-    assert(() {
-      if (gafferState == null) {
-        throw FlutterError(
-          'SpotlightShow.of() was called with a context '
-          'that does not contain a SpotlightShow widget.\n'
-          'No SpotlightShow widget ancestor could be found '
-          'starting from the context that was passed to SpotlightShow.of(). '
-          'This can happen because you are using a widget '
-          'that looks for a SpotlightShow ancestor, but no such ancestor exists.\n'
-          'The context used was:\n'
-          '  $context',
-        );
-      }
-      return true;
-    }());
+    assert(
+      gafferState != null,
+      'SpotlightShow.of() was called with a context '
+      'that does not contain a SpotlightShow widget.\n'
+      'No SpotlightShow widget ancestor could be found '
+      'starting from the context that was passed to SpotlightShow.of(). '
+      'This can happen because you are using a widget '
+      'that looks for a SpotlightShow ancestor, but no such ancestor exists.\n'
+      'The context used was:\n'
+      '  $context',
+    );
     return gafferState!;
   }
 }
@@ -193,9 +190,11 @@ class SpotlightShowState extends State<SpotlightShow> {
     _charQueue.add(char);
 
     if (char.widget.index != null) {
-      assert(() {
-        return _charQueue.any((e) => e.widget.index != null);
-      }());
+      assert(
+        _charQueue.every((e) => e.widget.index != null),
+        'Should make sure all SpotlightAnt under SpotlightShow have '
+        'either all null or all indexed.',
+      );
 
       _charQueue.sort((a, b) => a.widget.index! - b.widget.index!);
     }
@@ -224,9 +223,6 @@ class _ShowScope extends InheritedWidget {
 
   final SpotlightShowState _showState;
 
-  /// The [SpotlightShow] associated with this widget.
-  SpotlightShow get show => _showState.widget;
-
-  @override
+  @override // coverage:ignore-line
   bool updateShouldNotify(_ShowScope old) => false;
 }
