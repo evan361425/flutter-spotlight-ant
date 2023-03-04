@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_test_example/my_spotlight.dart';
-import 'package:spotlight_ant/spotlight_ant.dart';
+
+import 'my_spotlight.dart';
 
 class DelayScreen extends StatefulWidget {
   const DelayScreen({Key? key}) : super(key: key);
@@ -24,7 +24,7 @@ class _DelayScreenState extends State<DelayScreen> {
             },
           )
         : Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-            const SpotlightAnt(child: Text('Hello SpotlightAnt')),
+            const MySpotlight(child: Text('Hello SpotlightAnt')),
             const SizedBox(height: 16),
             _Timer(
               text: waitFor,
@@ -40,7 +40,7 @@ class _DelayScreenState extends State<DelayScreen> {
       appBar: AppBar(
         title: InkWell(
           onTap: () => Navigator.of(context).pop(),
-          child: const Text('Random Index'),
+          child: const Text('Delay Example'),
         ),
         actions: [
           IconButton(

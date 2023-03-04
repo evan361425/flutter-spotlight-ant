@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_test_example/delay_screen.dart';
-import 'package:flutter_test_example/my_spotlight.dart';
-import 'package:flutter_test_example/random_screen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:spotlight_ant/spotlight_ant.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_strategy/url_strategy.dart';
 
-import 'alignment_screen.dart';
-import 'animation_screen.dart';
+import 'my_spotlight.dart';
+import 'delay_screen.dart' deferred as delay;
+import 'random_screen.dart' deferred as random;
+import 'alignment_screen.dart' deferred as alignment;
+import 'animation_screen.dart' deferred as animation;
 
 void main() {
   setPathUrlStrategy();
@@ -62,8 +62,9 @@ class _StartPageState extends State<StartPage> {
       ),
       floatingActionButtonWrapper: (btn) => SpotlightAnt(
         enable: isFirst,
-        spotlightBuilder: const SpotlightRectBuilder(),
+        spotlightBuilder: const SpotlightRectBuilder(borderRadius: 20),
         actions: const [SpotlightAntAction.prev],
+        spotlightPadding: EdgeInsets.zero,
         content: const SpotlightContent(
           fontSize: 26,
           child: Text('and re-run the animation by pressing the button.'),
@@ -109,33 +110,37 @@ class _StartPageState extends State<StartPage> {
           ),
           Wrap(spacing: 8.0, runSpacing: 8.0, children: [
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
+                await alignment.loadLibrary();
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const AlignmentScreen(),
+                  builder: (context) => alignment.AlignmentScreen(),
                 ));
               },
               child: const Text('Alignment'),
             ),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
+                await animation.loadLibrary();
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const AnimationScreen(),
+                  builder: (context) => animation.AnimationScreen(),
                 ));
               },
               child: const Text('Animation'),
             ),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
+                await random.loadLibrary();
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const RandomScreen(),
+                  builder: (context) => random.RandomScreen(),
                 ));
               },
               child: const Text('Random Index'),
             ),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
+                await delay.loadLibrary();
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const DelayScreen(),
+                  builder: (context) => delay.DelayScreen(),
                 ));
               },
               child: const Text('Delay'),

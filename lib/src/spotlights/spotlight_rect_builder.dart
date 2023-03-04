@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:spotlight_ant/src/spotlights/spotlight_builder.dart';
 
@@ -12,7 +10,7 @@ class SpotlightRectBuilder extends SpotlightBuilder {
   /// Radius of the border
   ///
   /// disable by passing it 0
-  final double radius;
+  final double borderRadius;
 
   /// Border setting
   ///
@@ -21,7 +19,7 @@ class SpotlightRectBuilder extends SpotlightBuilder {
 
   const SpotlightRectBuilder({
     this.color = const Color(0xCD000000),
-    this.radius = 0,
+    this.borderRadius = 0,
     this.borderSide = const BorderSide(),
   });
 
@@ -31,26 +29,26 @@ class SpotlightRectBuilder extends SpotlightBuilder {
       value: value,
       target: target,
       color: color,
-      radius: radius,
+      borderRadius: borderRadius,
       borderSide: borderSide,
       isBumping: isBumping,
     );
   }
 
   @override
-  double inkwellRadius(Rect target) => radius;
+  double inkwellRadius(Rect target) => borderRadius;
 }
 
 class _RectPainter extends SpotlightPainter {
   final Color color;
-  final double radius;
+  final double borderRadius;
   final BorderSide borderSide;
 
   const _RectPainter({
     required Rect target,
     required double value,
     required this.color,
-    required this.radius,
+    required this.borderRadius,
     required this.borderSide,
     required bool isBumping,
   }) : super(target, value, isBumping);
@@ -62,8 +60,8 @@ class _RectPainter extends SpotlightPainter {
     final rect = isBumping
         ? Rect.fromCenter(
             center: target.center,
-            width: target.width * (1 + value),
-            height: target.height * (1 + value),
+            width: target.width + target.shortestSide * value,
+            height: target.height + target.shortestSide * value,
           )
         : Rect.fromCenter(
             center: target.center,
@@ -75,76 +73,34 @@ class _RectPainter extends SpotlightPainter {
             // │  └───┤
             // │      │
             // └──────┘
-            width: size.width * (1 - value) * 2 + target.width,
-            height: size.height * (1 - value) * 2 + target.height,
+            width: size.longestSide * (1 - value) * 2 + target.width,
+            height: size.longestSide * (1 - value) * 2 + target.height,
           );
+    final rRect = RRect.fromRectAndRadius(rect, Radius.circular(borderRadius));
 
     canvas.drawPath(
-      _drawRRect(size, rect, radius),
+      Path()
+        ..addRRect(rRect)
+        ..moveTo(0, 0)
+        // ..lineTo(0, rect.top)
+        // ..lineTo(rect.left, rect.top)
+        // ..moveTo(rect.left, rect.top)
+        // ..lineTo(0, rect.top)
+        ..lineTo(0, size.height)
+        ..lineTo(size.width, size.height)
+        ..lineTo(size.width, 0)
+        // ..lineTo(0, 0)
+        ..close(),
       Paint()
         ..style = PaintingStyle.fill
-        ..color = color
-        ..strokeWidth = 4,
+        ..color = color,
     );
 
     if (borderSide.style != BorderStyle.none) {
       canvas.drawPath(
-        _drawRBorder(rect, radius),
-        Paint()
-          ..style = PaintingStyle.stroke
-          ..color = borderSide.color
-          ..strokeWidth = borderSide.width,
+        Path()..addRRect(rRect),
+        borderSide.toPaint(),
       );
     }
-  }
-}
-
-Path _drawRRect(Size size, Rect rect, double radius) {
-  return Path()
-    ..moveTo(0, 0)
-    ..lineTo(0, rect.top + radius)
-    ..rRect(rect, radius)
-    ..lineTo(0, rect.top + radius)
-    ..lineTo(0, size.height)
-    ..lineTo(size.width, size.height)
-    ..lineTo(size.width, 0)
-    ..close();
-}
-
-Path _drawRBorder(Rect rect, double radius) {
-  return Path()
-    ..moveTo(rect.left, rect.top + radius)
-    ..rRect(rect, radius)
-    ..close();
-}
-
-extension _Rect on Path {
-  void rRect(Rect rect, double radius) {
-    final d = radius * 2;
-    arcTo(
-      Rect.fromLTWH(rect.left, rect.top, d, d),
-      pi,
-      pi / 2,
-      false,
-    );
-    arcTo(
-      Rect.fromLTWH(rect.right - d, rect.top, d, d),
-      3 * pi / 2,
-      pi / 2,
-      false,
-    );
-    arcTo(
-      Rect.fromLTWH(rect.right - d, rect.bottom - d, d, d),
-      0,
-      pi / 2,
-      false,
-    );
-    arcTo(
-      Rect.fromLTWH(rect.left, rect.bottom - d, d, d),
-      pi / 2,
-      pi / 2,
-      false,
-    );
-    lineTo(rect.left, rect.top + radius);
   }
 }

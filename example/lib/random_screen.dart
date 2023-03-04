@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_test_example/my_spotlight.dart';
+
+import 'my_spotlight.dart';
 
 class RandomScreen extends StatelessWidget {
   const RandomScreen({Key? key}) : super(key: key);

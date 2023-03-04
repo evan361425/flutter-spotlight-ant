@@ -31,7 +31,7 @@ class SpotlightCircularBuilder extends SpotlightBuilder {
       value: value,
       target: target,
       color: color,
-      radius: radius,
+      radius: inkwellRadius(target),
       borderSide: borderSide,
       isBumping: isBumping,
     );
@@ -40,17 +40,17 @@ class SpotlightCircularBuilder extends SpotlightBuilder {
   @override
   Rect inkWellRect(Rect target) => Rect.fromCircle(
         center: target.center,
-        // `if null` precedence is higher than `math operators`
-        radius: radius ?? target.size.longestSide / 2,
+        radius: inkwellRadius(target),
       );
 
   @override
+  // `if null` precedence is higher than `math operators`
   double inkwellRadius(Rect target) => radius ?? target.size.longestSide / 2;
 }
 
 class _CircularPainter extends SpotlightPainter {
   final Color color;
-  final double? radius;
+  final double radius;
   final BorderSide borderSide;
 
   const _CircularPainter({
@@ -66,53 +66,35 @@ class _CircularPainter extends SpotlightPainter {
   void paint(Canvas canvas, Size size) {
     if (target.isEmpty) return;
 
-    final a = radius ?? (target.size.longestSide / 2);
-    final r = isBumping ? a * (1 + value) : a + size.longestSide * (1 - value);
-    final c = target.center;
+    final r = isBumping ? radius * (1 + value) : radius + size.longestSide * (1 - value);
+    final rect = Rect.fromCircle(center: target.center, radius: r);
 
     canvas.drawPath(
       Path()
+        ..addArc(rect, pi, 2 * pi)
         ..moveTo(0, 0)
-        ..lineTo(0, c.dy)
-        ..circle(c, r)
-        ..lineTo(0, c.dy)
         ..lineTo(0, size.height)
         ..lineTo(size.width, size.height)
         ..lineTo(size.width, 0)
         ..close(),
+      // ..moveTo(0, 0)
+      // ..lineTo(0, rect.center.dy)
+      // ..lineTo(rect.left, rect.center.dy)
+      // ..addArc(rect, pi, 2 * pi)
+      // ..moveTo(rect.left, rect.center.dy)
+      // ..lineTo(0, rect.center.dy)
+      // ..lineTo(0, size.height)
+      // ..lineTo(size.width, size.height)
+      // ..lineTo(size.width, 0)
+      // ..lineTo(0, 0)
+      // ..close(),
       Paint()
         ..style = PaintingStyle.fill
         ..color = color,
     );
 
     if (borderSide.style != BorderStyle.none) {
-      canvas.drawPath(
-          Path()
-            ..moveTo(c.dx - r, c.dy)
-            ..circle(c, r)
-            ..close(),
-          Paint()
-            ..style = PaintingStyle.stroke
-            ..color = borderSide.color
-            ..strokeWidth = borderSide.width);
+      canvas.drawPath(Path()..addArc(rect, 0, 2 * pi), borderSide.toPaint());
     }
-  }
-}
-
-extension _Circle on Path {
-  /// Draw circle from [center] with [radius] size.
-  circle(Offset center, double radius) {
-    arcTo(
-      Rect.fromCircle(center: center, radius: radius),
-      pi,
-      pi,
-      false,
-    );
-    arcTo(
-      Rect.fromCircle(center: center, radius: radius),
-      0,
-      pi,
-      false,
-    );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_test_example/my_spotlight.dart';
+
+import 'my_spotlight.dart';
 
 class AnimationScreen extends StatefulWidget {
   const AnimationScreen({Key? key}) : super(key: key);
