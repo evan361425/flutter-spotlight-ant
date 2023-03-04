@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:spotlight_ant/src/spotlight_show.dart';
 import 'spotlights/spotlight_circular_builder.dart';
 import 'spotlights/spotlight_rect_builder.dart';
 import 'spotlights/spotlight_builder.dart';
@@ -19,47 +20,6 @@ class SpotlightAnt extends StatefulWidget {
 
   /// Set to false will ignore this spotlight
   final bool enable;
-
-  /// Immediate show this ant after fire `initState`.
-  ///
-  /// *This property is only for gaffer*
-  ///
-  /// This is useful if you are using special page view (e.g. [TabBarView]):
-  ///
-  /// ```dart
-  /// TabBarView(
-  ///   controller: _controller,
-  ///   children: [
-  ///     Container(),
-  ///     SpotlightAnt(
-  ///       key: _ant,
-  ///       content: Text(''),
-  ///       ants: [_ant],
-  ///       child: Container(),
-  ///     ),
-  ///   ],
-  /// );
-  /// // ...
-  /// final desiredIndex = 1;
-  /// _controller.addListener(() {
-  ///   if (!_controller.indexIsChanging) {
-  ///     if (desiredIndex == _controller.index) {
-  ///       _ant.show();
-  ///     }
-  ///   }
-  /// });
-  /// ```
-  final bool showAfterInit;
-
-  /// Wait until the [Future] has done and start the spotlight show.
-  ///
-  /// *This property is only for gaffer*
-  ///
-  /// Default using:
-  /// ```dart
-  /// Future.delayed(Duration.zero)
-  /// ```
-  final Future? showWaitFuture;
 
   /// Building painter for spotlight.
   ///
@@ -123,8 +83,7 @@ class SpotlightAnt extends StatefulWidget {
   ///   ),
   /// );
   /// ```
-  final Widget Function(BuildContext context, Iterable<Widget> actions)?
-      actionBuilder;
+  final Widget Function(BuildContext context, Iterable<Widget> actions)? actionBuilder;
 
   /// Pressed the action widget will go to next spotlight.
   ///
@@ -241,28 +200,16 @@ class SpotlightAnt extends StatefulWidget {
   /// Callback after zoom-out.
   final VoidCallback? onDismissed;
 
-  /// Callback after skip the show.
+  /// Order in the show
   ///
-  /// *This property is only for gaffer*
-  ///
-  /// Notice that after tapping skip button, [onFinish] will also be fired.
-  /// This callback will be executed before [onDismiss] and [onDismissed].
-  final VoidCallback? onSkip;
-
-  /// Callback after finish the show.
-  ///
-  /// *This property is only for gaffer*
-  ///
-  /// The scenarios that will finish the show:
-  ///   * Go next spotlight in the last (available) spotlight.
-  ///   * Skip the show.
-  final VoidCallback? onFinish;
+  /// TODO
+  final int? index;
 
   /// The child contained by the [SpotlightAnt].
   final Widget child;
 
   const SpotlightAnt({
-    required GlobalKey<SpotlightAntState> key,
+    Key? key,
     this.ants,
     this.enable = true,
     this.spotlightBuilder = const SpotlightCircularBuilder(),
@@ -278,8 +225,6 @@ class SpotlightAnt extends StatefulWidget {
     this.nextAction,
     this.prevAction,
     this.skipAction,
-    this.showAfterInit = true,
-    this.showWaitFuture,
     this.zoomInDuration = const Duration(milliseconds: 600),
     this.zoomOutDuration = const Duration(milliseconds: 600),
     this.bumpDuration = const Duration(milliseconds: 500),
@@ -293,13 +238,9 @@ class SpotlightAnt extends StatefulWidget {
     this.onShow,
     this.onDismiss,
     this.onDismissed,
-    this.onSkip,
-    this.onFinish,
+    this.index,
     required this.child,
-  })  : assert(
-            ants != null ||
-                (onSkip == null && onFinish == null && showWaitFuture == null),
-            'Only gaffer can set properties: `onSkip`, `onFinish`, `showWaitFuture`'),
+  })  : assert(index == null || index >= 0),
         super(key: key);
 
   @override
@@ -307,45 +248,17 @@ class SpotlightAnt extends StatefulWidget {
 }
 
 class SpotlightAntState extends State<SpotlightAnt> {
-  OverlayEntry? _overlayEntry;
-
-  /// Make you able to control the gaffer's behavior
-  ///
-  /// *This property is only for gaffer*
-  late GlobalKey<SpotlightGafferState> gaffer;
-
   @override
   Widget build(BuildContext context) {
+    SpotlightShow.maybeOf(context)?.register(this);
     return widget.child;
   }
 
   @override
-  void initState() {
-    super.initState();
-
-    if (isAbleToShow) {
-      gaffer = GlobalKey<SpotlightGafferState>();
-      if (widget.showAfterInit) {
-        (widget.showWaitFuture ?? Future.delayed(Duration.zero))
-            .then((value) => show());
-      }
-    }
+  void deactivate() {
+    SpotlightShow.maybeOf(context)?.unregister(this);
+    super.deactivate();
   }
-
-  @override
-  void dispose() {
-    _overlayEntry?.remove();
-    super.dispose();
-  }
-
-  /// Is this ant the gaffer?
-  bool get isAbleToShow => widget.ants?.isNotEmpty == true;
-
-  /// Is it in the show?
-  bool get isShowing => _overlayEntry != null;
-
-  /// Is this ant not the gaffer?
-  bool get isNotAbleToShow => !isAbleToShow;
 
   /// What the position of this ant.
   Rect get rect {
@@ -397,57 +310,6 @@ class SpotlightAntState extends State<SpotlightAnt> {
 
     return [left, right, top, bottom, width, height];
   }
-
-  /// Show the spotlight(s).
-  ///
-  /// *This method is only for gaffer*
-  void show() {
-    if (isNotAbleToShow) {
-      return;
-    }
-
-    WidgetsBinding.instance.scheduleFrameCallback((timeStamp) {
-      if (_overlayEntry == null) {
-        _overlayEntry = OverlayEntry(builder: (context) {
-          final targets = widget.ants!.toList();
-          return SpotlightGaffer(
-              key: gaffer,
-              ants: targets,
-              onFinish: () {
-                _overlayEntry?.remove();
-                _overlayEntry = null;
-                widget.onFinish?.call();
-              },
-              onSkip: () {
-                widget.onSkip?.call();
-              });
-        });
-        Overlay.of(context).insert(_overlayEntry!);
-      }
-    });
-  }
-
-  /// Finish the show.
-  ///
-  /// *This method is only for gaffer*
-  void finish() => gaffer.currentState?.finish();
-
-  /// Skip the show.
-  ///
-  /// *This method is only for gaffer*
-  ///
-  /// This will call the [finish] internal.
-  void skip() => gaffer.currentState?.skip();
-
-  /// Go to next spotlight properly.
-  ///
-  /// *This method is only for gaffer*
-  void next() => gaffer.currentState?.next();
-
-  /// Go to previous spotlight properly.
-  ///
-  /// *This method is only for gaffer*
-  void prev() => gaffer.currentState?.prev();
 
   /// Get target alignment from [center] in specific [windowSize].
   Alignment getAlignment(Size windowSize, Offset center) {

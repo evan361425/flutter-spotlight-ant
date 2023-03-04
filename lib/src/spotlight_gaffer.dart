@@ -5,7 +5,7 @@ typedef AntCallback = void Function(SpotlightAntState ant);
 
 class SpotlightGaffer extends StatefulWidget {
   /// Passed from [SpotlightAnt].
-  final List<GlobalKey<SpotlightAntState>> ants;
+  final List<SpotlightAntState> ants;
 
   /// Callback after finish the show.
   final VoidCallback onFinish;
@@ -25,8 +25,7 @@ class SpotlightGaffer extends StatefulWidget {
   State<SpotlightGaffer> createState() => SpotlightGafferState();
 }
 
-class SpotlightGafferState extends State<SpotlightGaffer>
-    with TickerProviderStateMixin {
+class SpotlightGafferState extends State<SpotlightGaffer> with TickerProviderStateMixin {
   // animation
   late final AnimationController _zoomController;
   late final AnimationController _bumpController;
@@ -40,8 +39,8 @@ class SpotlightGafferState extends State<SpotlightGaffer>
   /// 0-index
   int currentIndex = -1;
 
-  /// Access current ant by [GlobalKey].
-  GlobalKey<SpotlightAntState>? currentAnt;
+  /// Access current ant.
+  SpotlightAntState? currentAnt;
 
   /// Current ant is in bumping mode.
   bool isBumping = false;
@@ -62,17 +61,17 @@ class SpotlightGafferState extends State<SpotlightGaffer>
           );
         },
       ),
-      if (current.widget.content != null) _buildContent(),
+      if (currentAnt!.widget.content != null) _buildContent(),
     ]);
 
-    final onTap = current.widget.backdropSilent ? () {} : next;
+    final onTap = currentAnt!.widget.backdropSilent ? () {} : next;
 
     return Material(
       type: MaterialType.transparency,
-      child: current.widget.backdropUsingInkwell
+      child: currentAnt!.widget.backdropUsingInkwell
           ? InkWell(
               onTap: onTap,
-              splashColor: current.widget.backdropSplashColor,
+              splashColor: currentAnt!.widget.backdropSplashColor,
               child: spotlight,
             )
           : GestureDetector(
@@ -83,13 +82,13 @@ class SpotlightGafferState extends State<SpotlightGaffer>
   }
 
   Widget _buildSpotlight(BuildContext context, Widget? child) {
-    final builder = current.widget.spotlightBuilder;
+    final builder = currentAnt!.widget.spotlightBuilder;
     final value = isBumping ? _bumpAnimation.value : _zoomAnimation.value;
-    final r = current.rect;
+    final r = currentAnt!.rect;
     final painter = builder.build(r, value, isBumping);
     final rect = builder.inkWellRect(r);
 
-    final onTap = current.widget.spotlightSilent ? () {} : next;
+    final onTap = currentAnt!.widget.spotlightSilent ? () {} : next;
 
     return Stack(children: <Widget>[
       SizedBox(
@@ -100,10 +99,10 @@ class SpotlightGafferState extends State<SpotlightGaffer>
       Positioned(
         left: rect.left,
         top: rect.top,
-        child: current.widget.spotlightUsingInkwell
+        child: currentAnt!.widget.spotlightUsingInkwell
             ? InkWell(
                 borderRadius: BorderRadius.circular(builder.inkwellRadius(r)),
-                splashColor: current.widget.spotlightSplashColor,
+                splashColor: currentAnt!.widget.spotlightSplashColor,
                 onTap: onTap,
                 child: SizedBox(
                   width: rect.width,
@@ -122,7 +121,7 @@ class SpotlightGafferState extends State<SpotlightGaffer>
   }
 
   Widget _buildContent() {
-    final p = current.position;
+    final p = currentAnt!.position;
 
     return Positioned(
       left: p[0],
@@ -135,8 +134,8 @@ class SpotlightGafferState extends State<SpotlightGaffer>
         child: FadeTransition(
           opacity: _contentAnimation,
           child: Stack(children: [
-            SizedBox.expand(child: current.widget.content),
-            (current.widget.actionBuilder ?? _buildActions).call(_getActions()),
+            SizedBox.expand(child: currentAnt!.widget.content),
+            (currentAnt!.widget.actionBuilder ?? _buildActions).call(_getActions()),
           ]),
         ),
       ),
@@ -157,14 +156,13 @@ class SpotlightGafferState extends State<SpotlightGaffer>
 
   Iterable<Widget> _getActions() sync* {
     assert(() {
-      return current.widget.actions.toSet().length ==
-          current.widget.actions.length;
+      return currentAnt!.widget.actions.toSet().length == currentAnt!.widget.actions.length;
     }(), 'Spotlight actions must not repeated.');
 
-    for (final action in current.widget.actions) {
+    for (final action in currentAnt!.widget.actions) {
       switch (action) {
         case SpotlightAntAction.prev:
-          yield current.widget.prevAction ??
+          yield currentAnt!.widget.prevAction ??
               IconButton(
                 onPressed: () => prev(),
                 tooltip: 'Previous spotlight',
@@ -173,7 +171,7 @@ class SpotlightGafferState extends State<SpotlightGaffer>
               );
           break;
         case SpotlightAntAction.next:
-          yield current.widget.nextAction ??
+          yield currentAnt!.widget.nextAction ??
               IconButton(
                 onPressed: () => next(),
                 tooltip: 'Next spotlight',
@@ -182,7 +180,7 @@ class SpotlightGafferState extends State<SpotlightGaffer>
               );
           break;
         case SpotlightAntAction.skip:
-          yield current.widget.skipAction ??
+          yield currentAnt!.widget.skipAction ??
               IconButton(
                 onPressed: () => skip(),
                 tooltip: 'Skip spotlight show',
@@ -219,14 +217,9 @@ class SpotlightGafferState extends State<SpotlightGaffer>
     super.dispose();
   }
 
-  /// Current [SpotlightAntState] from [currentAnt] without checking null-value.
-  SpotlightAntState get current {
-    return currentAnt!.currentState!;
-  }
-
   /// Is the gaffer and current ant mounted or not.
   bool get antMounted {
-    return mounted && currentAnt?.currentState?.mounted == true;
+    return mounted && currentAnt?.mounted == true;
   }
 
   /// Go to next spotlight properly.
@@ -278,13 +271,13 @@ class SpotlightGafferState extends State<SpotlightGaffer>
 
   void _startZoomIn(int index) async {
     currentAnt = widget.ants[index];
-    if (!antMounted || !current.widget.enable) {
+    if (!antMounted || !currentAnt!.widget.enable) {
       Future.delayed(Duration.zero, _next);
       return;
     }
 
     setState(() {
-      final ant = current.widget;
+      final ant = currentAnt!.widget;
       _zoomController.duration = ant.zoomInDuration;
       _zoomController.reverseDuration = ant.zoomOutDuration;
       _contentController.duration = ant.contentFadeInDuration;
@@ -301,19 +294,19 @@ class SpotlightGafferState extends State<SpotlightGaffer>
       _bumpController.reset();
       _contentController.reset();
 
-      current.widget.onShow?.call();
+      currentAnt!.widget.onShow?.call();
 
       // Start animation
       _zoomController.forward().then((value) {
         isBumping = true;
         if (antMounted) {
-          current.widget.onShown?.call();
+          currentAnt!.widget.onShown?.call();
 
           _contentController.forward();
-          if (current.widget.bumpDuration != Duration.zero) {
+          if (currentAnt!.widget.bumpDuration != Duration.zero) {
             _bumpController.repeat(
               reverse: true,
-              period: current.widget.bumpDuration,
+              period: currentAnt!.widget.bumpDuration,
             );
           }
         }
@@ -324,11 +317,11 @@ class SpotlightGafferState extends State<SpotlightGaffer>
   Future<bool> _startZoomOut() async {
     if (isBumping) {
       isBumping = false;
-      current.widget.onDismiss?.call();
+      currentAnt!.widget.onDismiss?.call();
       _bumpController.stop();
       _contentController.reverse(from: 0);
       return _zoomController.reverse().then((value) {
-        current.widget.onDismissed?.call();
+        currentAnt!.widget.onDismissed?.call();
         return true;
       });
     }
