@@ -7,6 +7,7 @@ import 'spotlights/spotlight_rect_builder.dart';
 import 'spotlights/spotlight_builder.dart';
 import 'spotlight_content.dart';
 
+/// Basic widget that contains the spotlight information.
 class SpotlightAnt extends StatefulWidget {
   /// Set to false will ignore this spotlight
   final bool enable;
@@ -190,9 +191,13 @@ class SpotlightAnt extends StatefulWidget {
   /// Callback after zoom-out.
   final VoidCallback? onDismissed;
 
-  /// Order in the show
+  /// Order of the show.
   ///
-  /// TODO
+  /// Make sure all of the [SpotlightAnt]s have not set the index, or all of the
+  /// ants have set the index.
+  ///
+  /// Once you set the index, [SpotlightShow] will wait for the ant with index 0
+  /// and start the show.
   final int? index;
 
   /// The child contained by the [SpotlightAnt].

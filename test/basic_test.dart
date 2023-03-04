@@ -298,5 +298,42 @@ void main() {
       await tester.pump(const Duration(milliseconds: 1));
       expect(find.text('content-2'), findsOneWidget);
     });
+
+    testWidgets('should pass pop event', (tester) async {
+      await tester.pumpWidget(MaterialApp(
+        routes: {
+          'test': (context) => const Scaffold(
+                body: SpotlightShow(
+                  child: Text('child'),
+                ),
+              ),
+        },
+        home: Scaffold(
+          body: Builder(
+            builder: (context) {
+              return TextButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed('test');
+                },
+                child: const Text('go'),
+              );
+            },
+          ),
+        ),
+      ));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('go'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('go'), findsNothing);
+
+      // Pop and pass the WillPopScope
+      final dynamic widgetsAppState = tester.state(find.byType(WidgetsApp));
+      await widgetsAppState.didPopRoute();
+      await tester.pumpAndSettle();
+
+      expect(find.text('go'), findsOneWidget);
+    });
   });
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:spotlight_ant/spotlight_ant.dart';
 
 import 'my_spotlight.dart';
 

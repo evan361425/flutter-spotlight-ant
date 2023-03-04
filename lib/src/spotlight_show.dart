@@ -2,24 +2,36 @@ import 'package:flutter/widgets.dart';
 import 'spotlight_ant.dart';
 import 'spotlight_gaffer.dart';
 
+/// An container for grouping together multiple [SpotlightAnt] widgets.
+///
+/// Each individual [SpotlightAnt] should with the [SpotlightShow] widget as a
+/// common ancestor of all of those. Call methods on [SpotlightShowState] to
+/// show, skip, finish, go next or previous [SpotlightAnt] that is a descendant
+/// of this [SpotlightShow]. To obtain the [SpotlightShowState], you may use
+/// [SpotlightShow.of] with a context whose ancestor is the [SpotlightShow],
+/// or pass a [GlobalKey] to the [SpotlightShow] constructor and call
+/// [GlobalKey.currentState].
 class SpotlightShow extends StatefulWidget {
-  /// The child contained by the [SpotlightShow].
+  /// The widget below this widget in the tree.
+  ///
+  /// This is the root of the widget hierarchy that contains this show.
   final Widget child;
 
   /// Callback after skip the show.
   ///
-  /// Notice that after tapping skip button, [onFinish] will also be fired.
-  /// This callback will be executed before [onDismiss] and [onDismissed].
+  /// [onFinish] won't be fired if [onSkip] is fired.
   final VoidCallback? onSkip;
 
   /// Callback after finish the show.
   ///
+  /// [onSkip] won't be fired if [onFinish] is fired.
+  ///
   /// The scenarios that will finish the show:
   ///   * Go next spotlight in the last (available) spotlight.
-  ///   * Skip the show.
+  ///   * Programmatically execute [SpotlightShowState.finish].
   final VoidCallback? onFinish;
 
-  /// Immediate start the show after ready ant registered.
+  /// Immediate start the show after ready spotlight registered.
   ///
   /// This is useful if you are using special page view (e.g. [TabBarView]):
   ///
@@ -29,9 +41,7 @@ class SpotlightShow extends StatefulWidget {
   ///   children: [
   ///     Container(),
   ///     SpotlightAnt(
-  ///       key: _ant,
   ///       content: Text(''),
-  ///       ants: [_ant],
   ///       child: Container(),
   ///     ),
   ///   ],
@@ -41,7 +51,7 @@ class SpotlightShow extends StatefulWidget {
   /// _controller.addListener(() {
   ///   if (!_controller.indexIsChanging) {
   ///     if (desiredIndex == _controller.index) {
-  ///       _ant.show();
+  ///       SpotlightShow.of(context).start();
   ///     }
   ///   }
   /// });
@@ -68,11 +78,48 @@ class SpotlightShow extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => SpotlightShowState();
 
+  /// Returns the [SpotlightShowState] of the closest [SpotlightShow] widget
+  /// which encloses the given context, or null if none is found.
+  ///
+  /// Typical usage is as follows:
+  ///
+  /// ```dart
+  /// SpotlightShowState? show = SpotlightShow.maybeOf(context);
+  /// show?.start();
+  /// ```
+  ///
+  /// Calling this method will create a dependency on the closest
+  /// [SpotlightShow] in the [context], if there is one.
+  ///
+  /// See also:
+  ///
+  /// * [SpotlightShow.of], which is similar to this method, but asserts if no
+  ///   [SpotlightShow] ancestor is found.
   static SpotlightShowState? maybeOf(BuildContext context) {
     final _ShowScope? scope = context.dependOnInheritedWidgetOfExactType<_ShowScope>();
     return scope?._showState;
   }
 
+  /// Returns the [SpotlightShowState] of the closest [SpotlightShow] widget
+  /// which encloses the given [context].
+  ///
+  /// Typical usage is as follows:
+  ///
+  /// ```dart
+  /// SpotlightShowState show = SpotlightShow.of(context);
+  /// show.start();
+  /// ```
+  ///
+  /// If no [SpotlightShow] ancestor is found, this will assert in debug mode,
+  /// and throw an exception in release mode.
+  ///
+  /// Calling this method will create a dependency on the closest
+  /// [SpotlightShow] in the [context].
+  ///
+  /// See also:
+  ///
+  /// * [SpotlightShow.maybeOf], which is similar to this method, but returns
+  ///   null if no [SpotlightShow] ancestor is found.
   static SpotlightShowState of(BuildContext context) {
     final SpotlightShowState? gafferState = maybeOf(context);
     assert(
@@ -92,16 +139,20 @@ class SpotlightShow extends StatefulWidget {
 
 class SpotlightShowState extends State<SpotlightShow> {
   OverlayEntry? _overlayEntry;
-  final _charSet = <SpotlightAntState>{};
-  final _charQueue = <SpotlightAntState>[];
+  final _antSet = <SpotlightAntState>{};
+  final _antQueue = <SpotlightAntState>[];
 
-  /// Make you able to control the gaffer's behavior
+  /// Let you able to control the gaffer's behavior
   final gaffer = GlobalKey<SpotlightGafferState>();
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
+        if (isNotPerforming) {
+          return true;
+        }
+
         gaffer.currentState?.skip();
         return false;
       },
@@ -118,28 +169,51 @@ class SpotlightShowState extends State<SpotlightShow> {
     super.dispose();
   }
 
+  /// Is this show ready to start?
+  ///
+  /// If this show is in perform, it will return false.
+  ///
+  /// See also:
+  ///
+  /// * [isNotReadyToStart], which will return the opposite result of this.
+  /// * [isNotPerforming], whether this show is performing.
   bool get isReadyToStart {
-    if (_charQueue.isNotEmpty) {
-      final index = _charQueue.first.widget.index;
+    if (_antQueue.isNotEmpty) {
+      final index = _antQueue.first.widget.index;
       return (index == null || index == 0) && isNotPerforming;
     }
 
     return false;
   }
 
+  /// Is this show not ready to start?
+  ///
+  /// See also:
+  ///
+  /// * [isReadyToStart], which will return the opposite result of this.
   bool get isNotReadyToStart => !isReadyToStart;
 
+  /// Whether this show is performing.
   bool get isNotPerforming => _overlayEntry == null;
 
+  /// Start the show.
+  ///
+  /// It will start automatically if [SpotlightAnt] is registered.
+  ///
+  /// See also:
+  ///
+  /// * [SpotlightShow.startWhenReady], will disable automatic behavior.
+  /// * [skip], will turn off the show, and call the [SpotlightShow.onSkip].
+  /// * [finish], will turn off the show, and call the [SpotlightShow.onFinish].
   void start() {
-    if (_charQueue.isEmpty) return;
+    if (_antQueue.isEmpty) return;
 
     WidgetsBinding.instance.scheduleFrameCallback((timeStamp) {
       if (isNotPerforming) {
         _overlayEntry = OverlayEntry(builder: (context) {
           return SpotlightGaffer(
               key: gaffer,
-              ants: _charQueue,
+              ants: _antQueue,
               onFinish: () {
                 _overlayEntry?.remove();
                 _overlayEntry = null;
@@ -157,11 +231,11 @@ class SpotlightShowState extends State<SpotlightShow> {
   }
 
   /// Finish the show.
+  ///
+  /// This will also be execute when go next in last spotlight.
   void finish() => gaffer.currentState?.finish();
 
   /// Skip the show.
-  ///
-  /// This will call the [finish] internal.
   void skip() => gaffer.currentState?.skip();
 
   /// Go to next spotlight properly.
@@ -170,33 +244,37 @@ class SpotlightShowState extends State<SpotlightShow> {
   /// Go to previous spotlight properly.
   void prev() => gaffer.currentState?.prev();
 
-  void register(SpotlightAntState char) {
-    final success = _charSet.add(char);
+  /// Register [SpotlightAnt] programmatically.
+  void register(SpotlightAntState ant) {
+    final success = _antSet.add(ant);
 
     if (success) {
-      _queue(char);
+      _queue(ant);
     }
   }
 
-  void unregister(SpotlightAntState char) {
-    final success = _charSet.remove(char);
+  /// Unregister [SpotlightAnt] programmatically.
+  ///
+  /// If no more spotlights exist, it will finish show.
+  void unregister(SpotlightAntState ant) {
+    final success = _antSet.remove(ant);
 
     if (success) {
-      _dequeue(char);
+      _dequeue(ant);
     }
   }
 
-  void _queue(SpotlightAntState char) {
-    _charQueue.add(char);
+  void _queue(SpotlightAntState ant) {
+    _antQueue.add(ant);
 
-    if (char.widget.index != null) {
+    if (ant.widget.index != null) {
       assert(
-        _charQueue.every((e) => e.widget.index != null),
+        _antQueue.every((e) => e.widget.index != null),
         'Should make sure all SpotlightAnt under SpotlightShow have '
         'either all null or all indexed.',
       );
 
-      _charQueue.sort((a, b) => a.widget.index! - b.widget.index!);
+      _antQueue.sort((a, b) => a.widget.index! - b.widget.index!);
     }
 
     if (isReadyToStart && widget.startWhenReady) {
@@ -205,10 +283,10 @@ class SpotlightShowState extends State<SpotlightShow> {
     }
   }
 
-  void _dequeue(SpotlightAntState char) {
-    _charQueue.removeWhere((e) => e == char);
+  void _dequeue(SpotlightAntState ant) {
+    _antQueue.removeWhere((e) => e == ant);
 
-    if (_charQueue.isEmpty) {
+    if (_antQueue.isEmpty) {
       _overlayEntry?.remove();
       _overlayEntry = null;
     }
