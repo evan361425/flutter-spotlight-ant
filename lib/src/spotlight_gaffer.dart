@@ -230,7 +230,7 @@ class SpotlightGafferState extends State<SpotlightGaffer> with TickerProviderSta
           _next();
         }
       });
-    } else {
+    } else if (isBumping) {
       finish();
     }
   }
@@ -255,6 +255,9 @@ class SpotlightGafferState extends State<SpotlightGaffer> with TickerProviderSta
   }
 
   /// Finish the show.
+  ///
+  /// This call the [SpotlightAnt.onFinish],
+  /// but won't call the [SpotlightAnt.onSkip].
   void finish() {
     _startZoomOut().then((success) {
       widget.onFinish();
@@ -263,10 +266,12 @@ class SpotlightGafferState extends State<SpotlightGaffer> with TickerProviderSta
 
   /// Skip the show.
   ///
-  /// This will call the [finish] internal.
+  /// This call the [SpotlightAnt.onSkip],
+  /// but won't call the [SpotlightAnt.onFinish].
   void skip() {
-    widget.onSkip();
-    finish();
+    _startZoomOut().then((success) {
+      widget.onSkip();
+    });
   }
 
   void _startZoomIn(int index) async {

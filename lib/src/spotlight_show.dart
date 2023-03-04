@@ -77,10 +77,12 @@ class SpotlightShow extends StatefulWidget {
     assert(() {
       if (gafferState == null) {
         throw FlutterError(
-          'Form.of() was called with a context that does not contain a Form widget.\n'
-          'No Form widget ancestor could be found starting from the context that '
-          'was passed to Form.of(). This can happen because you are using a widget '
-          'that looks for a Form ancestor, but no such ancestor exists.\n'
+          'SpotlightShow.of() was called with a context '
+          'that does not contain a SpotlightShow widget.\n'
+          'No SpotlightShow widget ancestor could be found '
+          'starting from the context that was passed to SpotlightShow.of(). '
+          'This can happen because you are using a widget '
+          'that looks for a SpotlightShow ancestor, but no such ancestor exists.\n'
           'The context used was:\n'
           '  $context',
         );
@@ -133,6 +135,8 @@ class SpotlightShowState extends State<SpotlightShow> {
   bool get isNotPerforming => _overlayEntry == null;
 
   void start() {
+    if (_charQueue.isEmpty) return;
+
     WidgetsBinding.instance.scheduleFrameCallback((timeStamp) {
       if (isNotPerforming) {
         _overlayEntry = OverlayEntry(builder: (context) {
@@ -145,6 +149,8 @@ class SpotlightShowState extends State<SpotlightShow> {
                 widget.onFinish?.call();
               },
               onSkip: () {
+                _overlayEntry?.remove();
+                _overlayEntry = null;
                 widget.onSkip?.call();
               });
         });
@@ -202,6 +208,11 @@ class SpotlightShowState extends State<SpotlightShow> {
 
   void _dequeue(SpotlightAntState char) {
     _charQueue.removeWhere((e) => e == char);
+
+    if (_charQueue.isEmpty) {
+      _overlayEntry?.remove();
+      _overlayEntry = null;
+    }
   }
 }
 

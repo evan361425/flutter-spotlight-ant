@@ -4,12 +4,14 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 class MySpotlight extends StatefulWidget {
   final Widget? content;
+  final int? index;
   final Widget child;
   final bool enable;
 
   const MySpotlight({
     Key? key,
     this.content,
+    this.index,
     this.enable = true,
     required this.child,
   }) : super(key: key);
@@ -23,6 +25,7 @@ class _MySpotlightState extends SpotlightState<MySpotlight> {
   Widget build(BuildContext context) {
     return SpotlightAnt(
       enable: widget.enable,
+      index: widget.index,
       spotlightPadding: EdgeInsets.all(padding),
       zoomInDuration: Duration(milliseconds: zoomIn.toInt()),
       zoomOutDuration: Duration(milliseconds: zoomOut.toInt()),
@@ -68,25 +71,32 @@ class MyScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SpotlightShow(
-      onFinish: () {
-        _MyDriver.print('onFinish');
-        onFinish?.call();
-      },
-      onSkip: () => _MyDriver.print('onSkip'),
-      child: Builder(builder: (context) {
-        final btn = FloatingActionButton(
-          onPressed: () => SpotlightShow.of(context).start(),
-          child: const Icon(Icons.refresh_sharp),
-        );
+    return SafeArea(
+      child: SpotlightShow(
+        onFinish: () {
+          _MyDriver.print('onFinish');
+          onFinish?.call();
+        },
+        onSkip: () => _MyDriver.print('onSkip'),
+        child: Builder(builder: (context) {
+          final btn = ElevatedButton(
+            style: const ButtonStyle(
+              minimumSize: MaterialStatePropertyAll(
+                Size(double.infinity, 48),
+              ),
+            ),
+            onPressed: () => SpotlightShow.of(context).start(),
+            child: const Text('Re-run the spotlight show!'),
+          );
 
-        return Scaffold(
-          appBar: appBar,
-          drawer: const _MyDriver(),
-          floatingActionButton: floatingActionButtonWrapper?.call(btn) ?? btn,
-          body: bodyBuilder?.call(context) ?? body,
-        );
-      }),
+          return Scaffold(
+            appBar: appBar,
+            drawer: const _MyDriver(),
+            persistentFooterButtons: [floatingActionButtonWrapper?.call(btn) ?? btn],
+            body: bodyBuilder?.call(context) ?? body,
+          );
+        }),
+      ),
     );
   }
 }

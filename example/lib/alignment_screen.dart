@@ -59,20 +59,9 @@ class _AlignTarget extends StatelessWidget {
         content: Material(
           color: Colors.indigo,
           child: Center(
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Content of ${a.toString().substring(10)}\n',
-                    style: const TextStyle(fontSize: 32),
-                  ),
-                  ElevatedButton(
-                    onPressed: () => SpotlightShow.of(context).finish(),
-                    child: const Text('FINISH'),
-                  )
-                ],
-              ),
+            child: Text(
+              'Content of ${a.toString().substring(10)}\n',
+              style: Theme.of(context).textTheme.headlineMedium,
             ),
           ),
         ),
