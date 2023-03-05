@@ -38,7 +38,7 @@ class SpotlightCircularBuilder extends SpotlightBuilder {
   }
 
   @override
-  Rect inkWellRect(Rect target) => Rect.fromCircle(
+  Rect targetRect(Rect target) => Rect.fromCircle(
         center: target.center,
         radius: inkwellRadius(target),
       );
@@ -77,17 +77,6 @@ class _CircularPainter extends SpotlightPainter {
         ..lineTo(size.width, size.height)
         ..lineTo(size.width, 0)
         ..close(),
-      // ..moveTo(0, 0)
-      // ..lineTo(0, rect.center.dy)
-      // ..lineTo(rect.left, rect.center.dy)
-      // ..addArc(rect, pi, 2 * pi)
-      // ..moveTo(rect.left, rect.center.dy)
-      // ..lineTo(0, rect.center.dy)
-      // ..lineTo(0, size.height)
-      // ..lineTo(size.width, size.height)
-      // ..lineTo(size.width, 0)
-      // ..lineTo(0, 0)
-      // ..close(),
       Paint()
         ..style = PaintingStyle.fill
         ..color = color,

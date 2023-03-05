@@ -290,7 +290,7 @@ class SpotlightAntState extends State<SpotlightAnt> {
 
     final a = widget.contentAlignment ?? getAlignment(w, c);
 
-    final rect = widget.spotlightBuilder.inkWellRect(r);
+    final rect = widget.spotlightBuilder.targetRect(r);
     final rWidth = rect.width * (0.5 + widget.bumpRatio / 2);
     final rHeight = rect.height * (0.5 + widget.bumpRatio / 2);
 

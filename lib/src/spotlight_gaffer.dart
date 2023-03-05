@@ -86,7 +86,7 @@ class SpotlightGafferState extends State<SpotlightGaffer> with TickerProviderSta
     final value = isBumping ? _bumpAnimation.value : _zoomAnimation.value;
     final r = currentAnt!.rect;
     final painter = builder.build(r, value, isBumping);
-    final rect = builder.inkWellRect(r);
+    final rect = builder.targetRect(r);
 
     final onTap = currentAnt!.widget.spotlightSilent ? () {} : next;
 

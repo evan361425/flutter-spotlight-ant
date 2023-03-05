@@ -16,11 +16,14 @@ abstract class SpotlightBuilder {
   /// `0` means just start to zoom in or finish the zoom out animation.
   SpotlightPainter build(Rect target, double value, bool isBumping);
 
-  /// The [InkWell]'s [Rect] inside the spotlight.
-  Rect inkWellRect(Rect target) => target;
+  /// The [Rect] inside the spotlight.
+  Rect targetRect(Rect target) => target;
 
-  /// The [InkWell]'s radius inside the spotlight.
-  double inkwellRadius(Rect target);
+  /// The [InkWell]'s radius of the target.
+  ///
+  /// It will using [targetRect] to build [InkWell] bounds,
+  /// but you can customize it border radius.
+  double inkwellRadius(Rect target) => 0;
 }
 
 /// Abstract class to paint the desired spotlight's shape

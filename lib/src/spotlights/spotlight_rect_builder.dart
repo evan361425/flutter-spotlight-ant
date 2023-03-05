@@ -82,14 +82,9 @@ class _RectPainter extends SpotlightPainter {
       Path()
         ..addRRect(rRect)
         ..moveTo(0, 0)
-        // ..lineTo(0, rect.top)
-        // ..lineTo(rect.left, rect.top)
-        // ..moveTo(rect.left, rect.top)
-        // ..lineTo(0, rect.top)
         ..lineTo(0, size.height)
         ..lineTo(size.width, size.height)
         ..lineTo(size.width, 0)
-        // ..lineTo(0, 0)
         ..close(),
       Paint()
         ..style = PaintingStyle.fill
