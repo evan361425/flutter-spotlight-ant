@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test_example/my_spotlight.dart';
-import 'package:spotlight_ant/spotlight_ant.dart';
 
 class AnimationScreen extends StatefulWidget {
   const AnimationScreen({Key? key}) : super(key: key);
@@ -9,15 +8,11 @@ class AnimationScreen extends StatefulWidget {
   State<AnimationScreen> createState() => AnimationScreenState();
 }
 
-class AnimationScreenState extends State<AnimationScreen>
-    with TickerProviderStateMixin {
+class AnimationScreenState extends State<AnimationScreen> with TickerProviderStateMixin {
   late final AnimationController _controller = AnimationController(
     duration: const Duration(seconds: 2),
     vsync: this,
   )..repeat(reverse: true);
-
-  final k = GlobalKey<MySpotlightState>();
-  final ant = GlobalKey<SpotlightAntState>();
 
   @override
   void dispose() {
@@ -30,7 +25,7 @@ class AnimationScreenState extends State<AnimationScreen>
     const double smallLogo = 100;
     const double bigLogo = 200;
 
-    return Scaffold(
+    return MyScaffold(
       appBar: AppBar(
         title: InkWell(
           onTap: () => Navigator.of(context).pop(),
@@ -43,19 +38,11 @@ class AnimationScreenState extends State<AnimationScreen>
           )
         ],
       ),
-      drawer: const D(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => k.currentState?.show(),
-        child: const Icon(Icons.refresh_sharp),
-      ),
       body: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
           final Size biggest = constraints.biggest;
           return Stack(children: <Widget>[
             MySpotlight(
-              key: k,
-              ant: ant,
-              ants: [ant],
               child: PositionedTransition(
                 rect: RelativeRectTween(
                   begin: RelativeRect.fromSize(

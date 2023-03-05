@@ -1,3 +1,4 @@
 {
-  "cSpell.words": ["LTWH", "vsync"]
+  "cSpell.words": ["LTWH", "vsync"],
+  "dart.lineLength": 120
 }

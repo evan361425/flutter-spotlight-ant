@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:spotlight_ant/spotlight_ant.dart';
 
 import 'my_spotlight.dart';
 
@@ -20,11 +19,7 @@ class AlignmentScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ants = [for (final _ in alignments) GlobalKey<SpotlightAntState>()];
-    final keys = [for (final _ in alignments) GlobalKey<MySpotlightState>()];
-    int i = 0;
-
-    return Scaffold(
+    return MyScaffold(
       appBar: AppBar(
         title: InkWell(
           onTap: () => Navigator.of(context).pop(),
@@ -37,51 +32,39 @@ class AlignmentScreen extends StatelessWidget {
           )
         ],
       ),
-      drawer: const D(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          for (final k in keys) {
-            k.currentState?.show();
-          }
-        },
-        child: const Icon(Icons.refresh_sharp),
+      body: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Stack(children: [
+          for (final a in alignments) _AlignTarget(a: a),
+        ]),
       ),
-      body: SizedBox.expand(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Stack(children: [
-            for (final a in alignments)
-              Align(
-                alignment: a,
-                child: MySpotlight(
-                  key: keys[i],
-                  ants: i == 0 ? ants : null,
-                  ant: ants[i++],
-                  content: Material(
-                    color: Colors.indigo,
-                    child: Center(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Content of ${a.toString().substring(10)}\n',
-                              style: const TextStyle(fontSize: 32),
-                            ),
-                            ElevatedButton(
-                              onPressed: () => ants[0].currentState?.finish(),
-                              child: const Text('FINISH'),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  child: Text(a.toString().substring(10)),
-                ),
-              ),
-          ]),
+    );
+  }
+}
+
+class _AlignTarget extends StatelessWidget {
+  const _AlignTarget({
+    Key? key,
+    required this.a,
+  }) : super(key: key);
+
+  final Alignment a;
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: a,
+      child: MySpotlight(
+        content: Material(
+          color: Colors.indigo,
+          child: Center(
+            child: Text(
+              'Content of ${a.toString().substring(10)}\n',
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
+          ),
         ),
+        child: Text(a.toString().substring(10)),
       ),
     );
   }

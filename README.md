@@ -8,7 +8,7 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/003d6ab544314dee887aa57631e856c9)](https://www.codacy.com/gh/evan361425/flutter-spotlight-ant/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=evan361425/flutter-spotlight-ant&amp;utm_campaign=Badge_Grade)
 [![Pub Version](https://img.shields.io/pub/v/spotlight_ant)](https://pub.dev/packages/spotlight_ant)
 
-`SpotlightAnt` help focus on specific widget with highly flexible configuration.
+`SpotlightAnt` helps focus on specific widget with highly flexible configuration.
 
 > This package is separated from my project [POS-System](https://github.com/evan361425/flutter-pos-system).
 
@@ -24,29 +24,35 @@ flutter pub add spotlight_ant
 
 ## Usage
 
-```dart
-final ant1 = GlobalKey<SpotlightAntState>();
-final ant2 = GlobalKey<SpotlightAntState>();
+There are two main widget: `SpotlightShow` and `SpotlightAnt`.
 
+Each individual `SpotlightAnt` should with the `SpotlightShow` widget as a
+common ancestor of all of those. Call methods on `SpotlightShowState` to
+show, skip, finish, go next or previous `SpotlightAnt` that is a descendant
+of this `SpotlightShow`.
+
+To obtain the `SpotlightShowState`, you may use `SpotlightShow.of` with a
+context whose ancestor is the `SpotlightShow`, or pass a `GlobalKey` to the
+`SpotlightShow` constructor and call `GlobalKey.currentState`.
+
+```dart
 Widget build(BuildContext context) {
-  return Column(children: [
-    // this is the main ant with `ants`, we call it gaffer
+  // Wrap all the SpotlightAnt by SpotlightShow.
+  return SpotlightShow(child: Column(children: [
     SpotlightAnt(
-      key: ant1,
-      ants: [ant1, ant2], // only gaffer can set it
       child: MyCircularButton(),
     ),
     SpotlightAnt(
-      key: ant2,
-      // set the ants again here will build two spotlight shows.
+      // Using rectangle spotlight to emphasize it.
       spotlightBuilder: const SpotlightRectBuilder(),
+      content: Text('this is my content'),
       child: MyRectButton(),
     ),
   ]);
 }
 ```
 
-It can also run by program:
+It can also be run by program:
 
 ```dart
 TabBarView(
@@ -54,8 +60,6 @@ TabBarView(
   children: [
     Container(),
     SpotlightAnt(
-      key: _ant,
-      ants: [_ant],
       child: Text('child'),
     ),
   ],
@@ -65,7 +69,8 @@ final desiredIndex = 1;
 _controller.addListener(() {
   if (!_controller.indexIsChanging) {
     if (desiredIndex == _controller.index) {
-      _ant.show();
+      // Get the SpotlightShow from descent context.
+      SpotlightShow.of(context).start();
     }
   }
 });
@@ -73,18 +78,17 @@ _controller.addListener(() {
 
 ## Configuration
 
-Every ant(no matter it is gaffer or not) share the configuration bellow:
+The configuration of `SpotlightAnt`:
 
 | Name | Default | Desc. |
 | - | - | - |
-| key | *required* | Created by `GlobalKey<SpotlightAntState>()`. |
-| enable | `true` | - |
-| spotlightBuilder | `SpotlightCircularBuilder` | Allow any builder from extends from `SpotlightBuilder`. |
+| enable | `true` | Whether show this ant or not |
+| spotlightBuilder | `SpotlightCircularBuilder` | Allow any builder that extends from `SpotlightBuilder`. |
 | spotlightPadding | `EdgeInsets.all(8)` | - |
-| spotlightSilent | `false` | Disable capture spotlight tap event. |
-| spotlightUsingInkwell | `true` | Use `GestureDetector` if false. |
-| spotlightSplashColor | `null` | - |
-| backdropSilent | `false` | - |
+| spotlightSilent | `false` | Disable capturing spotlight's tap event which will start to show next spotlight. |
+| spotlightUsingInkwell | `true` | Use `GestureDetector` instead of `Inkwell`. |
+| spotlightSplashColor | `null` | `Inkwell` property. |
+| backdropSilent | `false` | Disable capturing backdrop's tap event which will start to show next spotlight. |
 | backdropUsingInkwell | `true` | - |
 | backdropSplashColor | `null` | - |
 | actions | `[SpotlightAntAction.skip]` | Actions showing in bottom, customize it by `actionBuilder`. |
@@ -105,15 +109,16 @@ Every ant(no matter it is gaffer or not) share the configuration bellow:
 | onDismissed | `null` | Callback after zoom out. |
 | child | *required* | The spotlight target. |
 
-Only *gaffer* can set the configuration below:
+The configuration of `SpotlightShow`:
 
 | Name | Default | Desc. |
 | - | - | - |
-| ants | `null` | Set the ants for spotlight. |
 | showAfterInit | `true` | If you want to fire it by program, set it to false |
-| showWaitFuture | `null` | Pass the `Future` and it will wait until done and start the spotlight show. |
+| showWaitFuture | `null` | Pass the `Future` and it will wait until it done and start the show. |
 | onSkip | `null` | Callback after tapping `SpotlightAntAction.skip`. |
 | onFinish | `null` | Callback after finish the show. |
+
+Go to [API doc](https://pub.dev/documentation/spotlight_ant/latest/spotlight_ant/spotlight_ant-library.html) for details.
 
 ## Customize
 
