@@ -302,38 +302,57 @@ void main() {
     testWidgets('should pass pop event', (tester) async {
       await tester.pumpWidget(MaterialApp(
         routes: {
-          'test': (context) => const Scaffold(
+          'ignore': (context) => const Scaffold(
                 body: SpotlightShow(
                   child: Text('child'),
+                ),
+              ),
+          'custom': (context) => Scaffold(
+                body: SpotlightShow(
+                  onWillPop: (_) => Future.value(true),
+                  child: const Text('child'),
                 ),
               ),
         },
         home: Scaffold(
           body: Builder(
             builder: (context) {
-              return TextButton(
-                onPressed: () {
-                  Navigator.of(context).pushNamed('test');
-                },
-                child: const Text('go'),
-              );
+              return Column(children: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pushNamed('ignore'),
+                  child: const Text('go ignore'),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pushNamed('custom'),
+                  child: const Text('go custom'),
+                )
+              ]);
             },
           ),
         ),
       ));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('go'));
+      await tester.tap(find.text('go ignore'));
       await tester.pumpAndSettle();
 
-      expect(find.text('go'), findsNothing);
+      expect(find.text('go ignore'), findsNothing);
 
       // Pop and pass the WillPopScope
       final dynamic widgetsAppState = tester.state(find.byType(WidgetsApp));
       await widgetsAppState.didPopRoute();
       await tester.pumpAndSettle();
 
-      expect(find.text('go'), findsOneWidget);
+      expect(find.text('go ignore'), findsOneWidget);
+
+      await tester.tap(find.text('go custom'));
+      await tester.pumpAndSettle();
+
+      // Pop and pass the WillPopScope
+      await widgetsAppState.didPopRoute();
+      await tester.pumpAndSettle();
+
+      expect(find.text('go custom'), findsOneWidget);
     });
   });
 }

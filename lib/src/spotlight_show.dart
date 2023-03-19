@@ -31,6 +31,19 @@ class SpotlightShow extends StatefulWidget {
   ///   * Programmatically execute [SpotlightShowState.finish].
   final VoidCallback? onFinish;
 
+  /// Callback when user try to pop the navigation.
+  ///
+  /// Default using:
+  ///
+  /// ```dart
+  /// if (state.isNotPerforming) {
+  ///   return true;
+  /// }
+  /// state.gaffer.currentState?.skip();
+  /// return false;
+  /// ```
+  final Future<bool> Function(SpotlightShowState state)? onWillPop;
+
   /// Immediate start the show after ready spotlight registered.
   ///
   /// This is useful if you are using special page view (e.g. [TabBarView]):
@@ -66,12 +79,17 @@ class SpotlightShow extends StatefulWidget {
   /// ```
   final Future? showWaitFuture;
 
+  /// True to make it able to start.
+  final bool enable;
+
   const SpotlightShow({
     Key? key,
     this.startWhenReady = true,
     this.showWaitFuture,
     this.onSkip,
     this.onFinish,
+    this.onWillPop,
+    this.enable = true,
     required this.child,
   }) : super(key: key);
 
@@ -149,6 +167,10 @@ class SpotlightShowState extends State<SpotlightShow> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
+        if (widget.onWillPop != null) {
+          return widget.onWillPop!(this);
+        }
+
         if (isNotPerforming) {
           return true;
         }
@@ -206,7 +228,7 @@ class SpotlightShowState extends State<SpotlightShow> {
   /// * [skip], will turn off the show, and call the [SpotlightShow.onSkip].
   /// * [finish], will turn off the show, and call the [SpotlightShow.onFinish].
   void start() {
-    if (_antQueue.isEmpty) return;
+    if (_antQueue.isEmpty || !widget.enable) return;
 
     WidgetsBinding.instance.scheduleFrameCallback((timeStamp) {
       if (isNotPerforming) {
