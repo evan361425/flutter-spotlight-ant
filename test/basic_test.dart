@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:spotlight_ant/spotlight_ant.dart';
+import 'package:spotlight_ant/src/spotlights/spotlight_backdrop_builder.dart';
 
 void main() {
   group('Spotlight Ant and Show Interaction', () {
@@ -176,6 +177,7 @@ void main() {
               zoomInDuration: Duration.zero,
               zoomOutDuration: Duration.zero,
               contentFadeInDuration: Duration.zero,
+              spotlightBuilder: const SpotlightBackDropBuilder(),
               spotlightUsingInkwell: false,
               backdropUsingInkwell: false,
               onShow: () => onShow++,
@@ -187,6 +189,7 @@ void main() {
               zoomInDuration: Duration.zero,
               zoomOutDuration: Duration.zero,
               contentFadeInDuration: Duration.zero,
+              spotlightBuilder: const SpotlightBackDropBuilder(),
               spotlightSilent: true,
               backdropSilent: true,
               onShow: () => onShow += 2,
