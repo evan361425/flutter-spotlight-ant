@@ -79,6 +79,9 @@ class SpotlightShow extends StatefulWidget {
   /// ```
   final Future? showWaitFuture;
 
+  /// If route been pushed above current route, the show should be paused.
+  final RouteObserver<ModalRoute<void>>? routeObserver;
+
   /// True to make it able to start.
   final bool enable;
 
@@ -86,6 +89,7 @@ class SpotlightShow extends StatefulWidget {
     Key? key,
     this.startWhenReady = true,
     this.showWaitFuture,
+    this.routeObserver,
     this.onSkip,
     this.onFinish,
     this.onWillPop,
@@ -155,10 +159,16 @@ class SpotlightShow extends StatefulWidget {
   }
 }
 
-class SpotlightShowState extends State<SpotlightShow> {
+class SpotlightShowState extends State<SpotlightShow> with RouteAware {
   OverlayEntry? _overlayEntry;
   final _antSet = <SpotlightAntState>{};
   final _antQueue = <SpotlightAntState>[];
+
+  // if given index, this will be used for counting index to start
+  int _startIndex = 0;
+
+  // if this widget is under the route, it should be set.
+  OverlayEntry? _pausedEntry;
 
   /// Let you able to control the gaffer's behavior
   final gaffer = GlobalKey<SpotlightGafferState>();
@@ -186,23 +196,56 @@ class SpotlightShowState extends State<SpotlightShow> {
   }
 
   @override
-  void dispose() {
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final route = ModalRoute.of(context);
+    if (route != null) {
+      widget.routeObserver?.subscribe(this, route);
+    }
+  }
+
+  @override
+  // if we are going under the route, stop showing the spotlight
+  @override
+  void didPushNext() {
     _overlayEntry?.remove();
+    _pausedEntry = _overlayEntry;
+    _overlayEntry = null;
+  }
+
+  // after the top route being pop, enable the show
+  @override
+  void didPopNext() {
+    if (_pausedEntry == null) {
+      // try starting the show.
+      start();
+    } else {
+      _overlayEntry = _pausedEntry;
+      _pausedEntry = null;
+      // the show already started, continue it.
+      Overlay.of(context).insert(_overlayEntry!);
+    }
+  }
+
+  @override
+  void dispose() {
+    _removeOverlayEntry();
+    widget.routeObserver?.unsubscribe(this);
     super.dispose();
   }
 
-  /// Is this show ready to start?
+  /// Is this show ready?
   ///
-  /// If this show is in perform, it will return false.
+  /// Only able to show if it is not performing and is the top route.
   ///
   /// See also:
   ///
   /// * [isNotReadyToStart], which will return the opposite result of this.
   /// * [isNotPerforming], whether this show is performing.
   bool get isReadyToStart {
-    if (_antQueue.isNotEmpty) {
+    if (_antQueue.isNotEmpty && _pausedEntry == null && isNotPerforming) {
       final index = _antQueue.first.widget.index;
-      return (index == null || index == 0) && isNotPerforming;
+      return index == null || index <= _startIndex;
     }
 
     return false;
@@ -231,19 +274,19 @@ class SpotlightShowState extends State<SpotlightShow> {
     if (_antQueue.isEmpty || !widget.enable) return;
 
     WidgetsBinding.instance.scheduleFrameCallback((timeStamp) {
-      if (isNotPerforming) {
+      if (isReadyToStart) {
         _overlayEntry = OverlayEntry(builder: (context) {
+          // TODO: should use better mechanism to count
+          _startIndex++;
           return SpotlightGaffer(
               key: gaffer,
               ants: _antQueue,
               onFinish: () {
-                _overlayEntry?.remove();
-                _overlayEntry = null;
+                _removeOverlayEntry();
                 widget.onFinish?.call();
               },
               onSkip: () {
-                _overlayEntry?.remove();
-                _overlayEntry = null;
+                _removeOverlayEntry();
                 widget.onSkip?.call();
               });
         });
@@ -309,9 +352,16 @@ class SpotlightShowState extends State<SpotlightShow> {
     _antQueue.removeWhere((e) => e == ant);
 
     if (_antQueue.isEmpty) {
-      _overlayEntry?.remove();
-      _overlayEntry = null;
+      _removeOverlayEntry();
     }
+  }
+
+  void _removeOverlayEntry() {
+    if (_pausedEntry == null) {
+      _overlayEntry?.remove();
+    }
+    _overlayEntry = null;
+    _pausedEntry = null;
   }
 }
 

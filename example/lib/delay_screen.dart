@@ -11,6 +11,7 @@ class DelayScreen extends StatefulWidget {
 
 class _DelayScreenState extends State<DelayScreen> {
   String waitFor = 'show';
+  bool pushed = false;
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +30,11 @@ class _DelayScreenState extends State<DelayScreen> {
             _Timer(
               text: waitFor,
               onDone: () {
-                setState(() {
-                  waitFor = 'show';
-                });
+                if (!pushed) {
+                  setState(() {
+                    waitFor = 'show';
+                  });
+                }
               },
             )
           ]);
@@ -51,7 +54,33 @@ class _DelayScreenState extends State<DelayScreen> {
       ),
       body: DefaultTextStyle(
         style: Theme.of(context).textTheme.headlineMedium!,
-        child: Center(child: child),
+        child: Column(
+          children: [
+            Center(child: child),
+            const SizedBox(height: 20),
+            FilledButton(
+              onPressed: () {
+                pushed = true;
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) {
+                    return Scaffold(
+                      appBar: AppBar(
+                        leading: IconButton(
+                          icon: const Icon(Icons.arrow_back_ios_new_outlined),
+                          onPressed: () => Navigator.of(context).pop(),
+                        ),
+                      ),
+                      body: const Center(
+                        child: Text('The spotlight should not show upon this page!'),
+                      ),
+                    );
+                  },
+                ));
+              },
+              child: const Text('Push some new page upon this one'),
+            ),
+          ],
+        ),
       ),
     );
   }

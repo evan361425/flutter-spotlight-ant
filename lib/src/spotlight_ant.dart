@@ -121,9 +121,9 @@ class SpotlightAnt extends StatefulWidget {
   /// Duration for zoom out the spotlight (finish).
   final Duration zoomOutDuration;
 
-  /// Duration for bump forward and reverse duration.
+  /// Duration for bump forward and reverse.
   ///
-  /// One cycle of bumping will cost [bumpDuration] * 2 time.
+  /// One cycle of bumping(forward + reverse) will cost 2 * [bumpDuration].
   final Duration bumpDuration;
 
   /// Bumping ratio, higher value will have larger bumping area.

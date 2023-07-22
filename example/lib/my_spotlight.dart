@@ -50,6 +50,8 @@ class _MySpotlightState extends SpotlightState<MySpotlight> {
 }
 
 class MyScaffold extends StatelessWidget {
+  static final observer = RouteObserver<ModalRoute<void>>();
+
   final AppBar? appBar;
 
   final WidgetBuilder? bodyBuilder;
@@ -78,6 +80,7 @@ class MyScaffold extends StatelessWidget {
           onFinish?.call();
         },
         onSkip: () => _MyDriver.print('onSkip'),
+        routeObserver: observer,
         child: Builder(builder: (context) {
           final btn = ElevatedButton(
             style: const ButtonStyle(

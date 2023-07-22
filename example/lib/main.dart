@@ -12,12 +12,10 @@ import 'animation_screen.dart' deferred as animation;
 
 void main() {
   setPathUrlStrategy();
-  final observer = RouteObserver<ModalRoute<void>>();
-
   runApp(MaterialApp(
     title: 'SpotlightAnt',
     onGenerateTitle: (context) => 'SpotlightAnt',
-    navigatorObservers: [observer],
+    navigatorObservers: [MyScaffold.observer],
     theme: ThemeData(useMaterial3: true, colorSchemeSeed: Colors.red),
     home: const StartPage(),
     debugShowCheckedModeBanner: false,
