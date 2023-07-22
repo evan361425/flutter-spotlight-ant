@@ -274,9 +274,9 @@ void main() {
     });
 
     testWidgets('should follow index', (tester) async {
-      await tester.pumpWidget(MaterialApp(
+      await tester.pumpWidget(const MaterialApp(
         home: SpotlightShow(
-          child: Column(children: const [
+          child: Column(children: [
             SpotlightAnt(
               index: 1,
               content: Text('content-1'),

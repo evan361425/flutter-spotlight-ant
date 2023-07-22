@@ -89,7 +89,7 @@ class _StartPageState extends State<StartPage> {
                   onPressed: () => launchUrl(Uri.parse(
                     'https://github.com/evan361425/flutter-spotlight-ant',
                   )),
-                  child: Row(mainAxisSize: MainAxisSize.min, children: const [
+                  child: const Row(mainAxisSize: MainAxisSize.min, children: [
                     Text('Go to GitHub '),
                     Icon(Icons.open_in_new_sharp),
                   ]),
