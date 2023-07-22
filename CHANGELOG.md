@@ -8,6 +8,10 @@ This document's format follow the context in [Keep a Changelog](https://keepacha
 
 Please check git diff.
 
+## [v0.7.0] - 2023-07-22
+
+-   ([a9d2691](https://github.com/evan361425/flutter-spotlight-ant/commit/a9d2691fa50160d3bcab0f9e293ee18a03601b24)) feat: allow watching routes - wu0dj2k7ao3
+
 ## [v0.6.0] - 2023-03-19
 
 -   ([f391326](https://github.com/evan361425/flutter-spotlight-ant/commit/f39132662c1be3f1659a0db3c8e15d7df3ce7945)) feat: allow custom onWillPop - wu0dj2k7ao3
@@ -47,7 +51,8 @@ fix example document
 
 Initial release
 
-[unreleased]: https://github.com/evan361425/flutter-spotlight-ant/compare/v0.6.0...HEAD
+[unreleased]: https://github.com/evan361425/flutter-spotlight-ant/compare/v0.7.0...HEAD
+[v0.7.0]: https://github.com/evan361425/flutter-spotlight-ant/compare/v0.6.0...v0.7.0
 [v0.6.0]: https://github.com/evan361425/flutter-spotlight-ant/compare/v0.5.0...v0.6.0
 [v0.5.0]: https://github.com/evan361425/flutter-spotlight-ant/compare/v0.4.0...v0.5.0
 [v0.4.0]: https://github.com/evan361425/flutter-spotlight-ant/compare/v0.3.0...v0.4.0
