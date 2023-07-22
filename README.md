@@ -115,6 +115,7 @@ The configuration of `SpotlightShow`:
 | - | - | - |
 | showAfterInit | `true` | If you want to fire it by program, set it to false |
 | showWaitFuture | `null` | Pass the `Future` and it will wait until it done and start the show. |
+| routeObserver | `null` | Give ability to pause the show when route been pushed above current route |
 | onSkip | `null` | Callback after tapping `SpotlightAntAction.skip`. |
 | onFinish | `null` | Callback after finish the show. |
 
@@ -149,7 +150,7 @@ Actions is also easy too:
 ```dart
 SpotlightAnt(
   skipAction: TextButton.icon(
-    onPressed: () => gaffer.skip(),
+    onPressed: () => SpotlightShow.of(context).skip(),
     label: const Text('MY Skip'),
     icon: const Icon(Icons.arrow_forward_ios_sharp),
   ),

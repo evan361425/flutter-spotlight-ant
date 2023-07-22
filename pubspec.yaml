@@ -7,7 +7,7 @@ description: >-
 repository: https://github.com/evan361425/flutter-spotlight-ant
 environment:
   flutter: ">=3.1.0-0"
-  sdk: ">=2.17.0 <3.0.0"
+  sdk: ">=2.17.0 <4.0.0"
 
 dependencies:
   flutter:

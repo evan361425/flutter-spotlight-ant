@@ -9,5 +9,6 @@ npm i -g @evan361425/version-bumper
 steps:
 
 ```bash
-bumper version --latestVersion vX.X.X
+bumper --latestVersion vX.X.X
+flutter pub publish
 ```
