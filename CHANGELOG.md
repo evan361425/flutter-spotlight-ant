@@ -8,6 +8,10 @@ This document's format follow the context in [Keep a Changelog](https://keepacha
 
 Please check git diff.
 
+## [v0.8.0] - 2023-07-22
+
+-   ([9155d55](https://github.com/evan361425/flutter-spotlight-ant/commit/9155d5503bd739896eba98439b1c1fcf78f8eb10)) fix: bump flutter to 3.10 - wu0dj2k7ao3
+
 ## [v0.7.0] - 2023-07-22
 
 -   ([a9d2691](https://github.com/evan361425/flutter-spotlight-ant/commit/a9d2691fa50160d3bcab0f9e293ee18a03601b24)) feat: allow watching routes - wu0dj2k7ao3
@@ -51,7 +55,8 @@ fix example document
 
 Initial release
 
-[unreleased]: https://github.com/evan361425/flutter-spotlight-ant/compare/v0.7.0...HEAD
+[unreleased]: https://github.com/evan361425/flutter-spotlight-ant/compare/v0.8.0...HEAD
+[v0.8.0]: https://github.com/evan361425/flutter-spotlight-ant/compare/v0.7.0...v0.8.0
 [v0.7.0]: https://github.com/evan361425/flutter-spotlight-ant/compare/v0.6.0...v0.7.0
 [v0.6.0]: https://github.com/evan361425/flutter-spotlight-ant/compare/v0.5.0...v0.6.0
 [v0.5.0]: https://github.com/evan361425/flutter-spotlight-ant/compare/v0.4.0...v0.5.0
