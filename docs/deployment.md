@@ -10,5 +10,4 @@ steps:
 
 ```bash
 bumper --latestVersion vX.X.X
-flutter pub publish
 ```
