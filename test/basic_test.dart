@@ -302,60 +302,32 @@ void main() {
       expect(find.text('content-2'), findsOneWidget);
     });
 
-    testWidgets('should pass pop event', (tester) async {
+    testWidgets('should skip when pop', (tester) async {
+      bool skipped = false;
       await tester.pumpWidget(MaterialApp(
-        routes: {
-          'ignore': (context) => const Scaffold(
-                body: SpotlightShow(
-                  child: Text('child'),
-                ),
-              ),
-          'custom': (context) => Scaffold(
-                body: SpotlightShow(
-                  onWillPop: (_) => Future.value(true),
-                  child: const Text('child'),
-                ),
-              ),
-        },
-        home: Scaffold(
-          body: Builder(
-            builder: (context) {
-              return Column(children: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pushNamed('ignore'),
-                  child: const Text('go ignore'),
-                ),
-                TextButton(
-                  onPressed: () => Navigator.of(context).pushNamed('custom'),
-                  child: const Text('go custom'),
-                )
-              ]);
-            },
+        home: SpotlightShow(
+          onSkip: () => skipped = true,
+          child: const SpotlightAnt(
+            content: Text('content'),
+            zoomInDuration: Duration.zero,
+            zoomOutDuration: Duration.zero,
+            contentFadeInDuration: Duration.zero,
+            child: Text('child'),
           ),
         ),
       ));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('go ignore'));
-      await tester.pumpAndSettle();
-
-      expect(find.text('go ignore'), findsNothing);
+      await tester.pump(const Duration(milliseconds: 5));
+      expect(find.text('content'), findsOneWidget);
 
       // Pop and pass the WillPopScope
       final dynamic widgetsAppState = tester.state(find.byType(WidgetsApp));
       await widgetsAppState.didPopRoute();
       await tester.pumpAndSettle();
 
-      expect(find.text('go ignore'), findsOneWidget);
-
-      await tester.tap(find.text('go custom'));
-      await tester.pumpAndSettle();
-
-      // Pop and pass the WillPopScope
-      await widgetsAppState.didPopRoute();
-      await tester.pumpAndSettle();
-
-      expect(find.text('go custom'), findsOneWidget);
+      expect(skipped, isTrue);
+      expect(find.text('content'), findsNothing);
     });
   });
 }

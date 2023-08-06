@@ -31,19 +31,6 @@ class SpotlightShow extends StatefulWidget {
   ///   * Programmatically execute [SpotlightShowState.finish].
   final VoidCallback? onFinish;
 
-  /// Callback when user try to pop the navigation.
-  ///
-  /// Default using:
-  ///
-  /// ```dart
-  /// if (state.isNotPerforming) {
-  ///   return true;
-  /// }
-  /// state.gaffer.currentState?.skip();
-  /// return false;
-  /// ```
-  final Future<bool> Function(SpotlightShowState state)? onWillPop;
-
   /// Immediate start the show after ready spotlight registered.
   ///
   /// This is useful if you are using special page view (e.g. [TabBarView]):
@@ -85,6 +72,9 @@ class SpotlightShow extends StatefulWidget {
   /// True to make it able to start.
   final bool enable;
 
+  /// Skip the show if user try to pop(aka BACK button in Android).
+  final bool skipWhenPop;
+
   const SpotlightShow({
     Key? key,
     this.startWhenReady = true,
@@ -92,7 +82,7 @@ class SpotlightShow extends StatefulWidget {
     this.routeObserver,
     this.onSkip,
     this.onFinish,
-    this.onWillPop,
+    this.skipWhenPop = true,
     this.enable = true,
     required this.child,
   }) : super(key: key);
@@ -161,11 +151,10 @@ class SpotlightShow extends StatefulWidget {
 
 class SpotlightShowState extends State<SpotlightShow> with RouteAware {
   OverlayEntry? _overlayEntry;
-  final _antSet = <SpotlightAntState>{};
   final _antQueue = <SpotlightAntState>[];
 
-  // if given index, this will be used for counting index to start
-  int _startIndex = 0;
+  // record this was done before and should not start it again
+  bool _wasDone = false;
 
   // if this widget is under the route, it should be set.
   OverlayEntry? _pausedEntry;
@@ -177,16 +166,12 @@ class SpotlightShowState extends State<SpotlightShow> with RouteAware {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        if (widget.onWillPop != null) {
-          return widget.onWillPop!(this);
+        if (widget.skipWhenPop && !isNotPerforming) {
+          gaffer.currentState?.skip();
+          return false;
         }
 
-        if (isNotPerforming) {
-          return true;
-        }
-
-        gaffer.currentState?.skip();
-        return false;
+        return true;
       },
       child: _ShowScope(
         showState: this,
@@ -216,8 +201,8 @@ class SpotlightShowState extends State<SpotlightShow> with RouteAware {
   // after the top route being pop, enable the show
   @override
   void didPopNext() {
-    if (_pausedEntry == null) {
-      // try starting the show.
+    if (!_wasDone && _pausedEntry == null) {
+      // if not done before then try starting the show.
       start();
     } else {
       _overlayEntry = _pausedEntry;
@@ -245,7 +230,7 @@ class SpotlightShowState extends State<SpotlightShow> with RouteAware {
   bool get isReadyToStart {
     if (_antQueue.isNotEmpty && _pausedEntry == null && isNotPerforming) {
       final index = _antQueue.first.widget.index;
-      return index == null || index <= _startIndex;
+      return index == null || index <= 0;
     }
 
     return false;
@@ -276,16 +261,16 @@ class SpotlightShowState extends State<SpotlightShow> with RouteAware {
     WidgetsBinding.instance.scheduleFrameCallback((timeStamp) {
       if (isReadyToStart) {
         _overlayEntry = OverlayEntry(builder: (context) {
-          // TODO: should use better mechanism to count
-          _startIndex++;
           return SpotlightGaffer(
               key: gaffer,
               ants: _antQueue,
               onFinish: () {
+                _wasDone = true;
                 _removeOverlayEntry();
                 widget.onFinish?.call();
               },
               onSkip: () {
+                _wasDone = true;
                 _removeOverlayEntry();
                 widget.onSkip?.call();
               });
@@ -311,9 +296,7 @@ class SpotlightShowState extends State<SpotlightShow> with RouteAware {
 
   /// Register [SpotlightAnt] programmatically.
   void register(SpotlightAntState ant) {
-    final success = _antSet.add(ant);
-
-    if (success) {
+    if (!_antQueue.contains(ant)) {
       _queue(ant);
     }
   }
@@ -322,7 +305,7 @@ class SpotlightShowState extends State<SpotlightShow> with RouteAware {
   ///
   /// If no more spotlights exist, it will finish show.
   void unregister(SpotlightAntState ant) {
-    final success = _antSet.remove(ant);
+    final success = _antQueue.remove(ant);
 
     if (success) {
       _dequeue(ant);
@@ -357,6 +340,7 @@ class SpotlightShowState extends State<SpotlightShow> with RouteAware {
   }
 
   void _removeOverlayEntry() {
+    // if in paused mode(_pausedEntry != null), it should already being removed
     if (_pausedEntry == null) {
       _overlayEntry?.remove();
     }
