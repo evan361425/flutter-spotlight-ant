@@ -201,9 +201,11 @@ class SpotlightShowState extends State<SpotlightShow> with RouteAware {
   // after the top route being pop, enable the show
   @override
   void didPopNext() {
-    if (!_wasDone && _pausedEntry == null) {
-      // if not done before then try starting the show.
-      start();
+    if (_pausedEntry == null) {
+      if (!_wasDone) {
+        // if not done before then try starting the show.
+        start();
+      }
     } else {
       _overlayEntry = _pausedEntry;
       _pausedEntry = null;
