@@ -8,6 +8,10 @@ This document's format follow the context in [Keep a Changelog](https://keepacha
 
 Please check git diff.
 
+## [v0.9.1] - 2023-08-12
+
+-   ([546cb5c](https://github.com/evan361425/flutter-spotlight-ant/commit/546cb5c7d616ebca364ddaa62f3492469f4a7118)) fix: check was done in sub-condition - wu0dj2k7ao3
+
 ## [v0.9.0] - 2023-08-06
 
 -   ([55cf852](https://github.com/evan361425/flutter-spotlight-ant/commit/55cf852c2dbfee9a9c8fe13b142bad0bf425d84a)) fix: if not done before then start after pop route - wu0dj2k7ao3
@@ -59,7 +63,8 @@ fix example document
 
 Initial release
 
-[unreleased]: https://github.com/evan361425/flutter-spotlight-ant/compare/v0.9.0...HEAD
+[unreleased]: https://github.com/evan361425/flutter-spotlight-ant/compare/v0.9.1...HEAD
+[v0.9.1]: https://github.com/evan361425/flutter-spotlight-ant/compare/v0.9.0...v0.9.1
 [v0.9.0]: https://github.com/evan361425/flutter-spotlight-ant/compare/v0.8.0...v0.9.0
 [v0.8.0]: https://github.com/evan361425/flutter-spotlight-ant/compare/v0.7.0...v0.8.0
 [v0.7.0]: https://github.com/evan361425/flutter-spotlight-ant/compare/v0.6.0...v0.7.0
