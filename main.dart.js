@@ -64305,8 +64305,8 @@ if(k.b(a)&&k.b(b)){k=this.a
 s=k.h(0,b)
 r=s==null?null:J.AQ(s)
 if(r!=null)for(s=r.length,q=t.N1,p=0;p<r.length;r.length===s||(0,A.N)(r),++p){o=r[p]
-if(!o.f&&o.r==null)J.ao8(o)
-else{o.d=o.r
+n=o.r
+if(n==null){if(!o.f)J.ao8(o)}else{o.d=n
 o.r=null
 n=o.c
 n.toString
