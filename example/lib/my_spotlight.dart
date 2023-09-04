@@ -26,19 +26,27 @@ class _MySpotlightState extends SpotlightState<MySpotlight> {
     return SpotlightAnt(
       enable: widget.enable,
       index: widget.index,
-      spotlightPadding: EdgeInsets.all(padding),
-      zoomInDuration: Duration(milliseconds: zoomIn.toInt()),
-      zoomOutDuration: Duration(milliseconds: zoomOut.toInt()),
-      bumpDuration: Duration(milliseconds: bump.toInt()),
-      contentFadeInDuration: Duration(milliseconds: fadeIn.toInt()),
+      spotlight: SpotlightConfig(
+        padding: EdgeInsets.all(padding),
+        builder: useCircle ? const SpotlightCircularBuilder() : const SpotlightRectBuilder(),
+        silent: spotlightSilent,
+        usingInkwell: spotlightInkwell,
+      ),
+      duration: SpotlightDurationConfig(
+        zoomIn: Duration(milliseconds: zoomIn.toInt()),
+        zoomOut: Duration(milliseconds: zoomOut.toInt()),
+        bump: Duration(milliseconds: bump.toInt()),
+        contentFadeIn: Duration(milliseconds: fadeIn.toInt()),
+      ),
       bumpRatio: bumpRatio,
-      backdropSilent: backdropSilent,
-      backdropUsingInkwell: backdropInkwell,
-      spotlightSilent: spotlightSilent,
-      spotlightUsingInkwell: spotlightInkwell,
-      spotlightBuilder: useCircle ? const SpotlightCircularBuilder() : const SpotlightRectBuilder(),
-      contentAlignment: alignment,
-      actions: actions,
+      backdrop: SpotlightBackdropConfig(
+        silent: backdropSilent,
+        usingInkwell: backdropInkwell,
+      ),
+      contentLayout: SpotlightContentLayoutConfig(
+        alignment: alignment,
+      ),
+      action: SpotlightActionConfig(enabled: actions),
       onShow: () => _MyDriver.print('onShow'),
       onShown: () => _MyDriver.print('onShown'),
       onDismiss: () => _MyDriver.print('onDismiss'),
@@ -80,7 +88,6 @@ class MyScaffold extends StatelessWidget {
           onFinish?.call();
         },
         onSkip: () => _MyDriver.print('onSkip'),
-        routeObserver: observer,
         child: Builder(builder: (context) {
           final btn = ElevatedButton(
             style: const ButtonStyle(

@@ -64,14 +64,14 @@ class SpotlightGafferState extends State<SpotlightGaffer> with TickerProviderSta
       if (currentAnt!.widget.content != null) _buildContent(),
     ]);
 
-    final onTap = currentAnt!.widget.backdropSilent ? () {} : next;
+    final onTap = currentAnt!.widget.backdrop.silent ? () {} : next;
 
     return Material(
       type: MaterialType.transparency,
-      child: currentAnt!.widget.backdropUsingInkwell
+      child: currentAnt!.widget.backdrop.usingInkwell
           ? InkWell(
               onTap: onTap,
-              splashColor: currentAnt!.widget.backdropSplashColor,
+              splashColor: currentAnt!.widget.backdrop.splashColor,
               child: spotlight,
             )
           : GestureDetector(
@@ -82,13 +82,13 @@ class SpotlightGafferState extends State<SpotlightGaffer> with TickerProviderSta
   }
 
   Widget _buildSpotlight(BuildContext context, Widget? child) {
-    final builder = currentAnt!.widget.spotlightBuilder;
+    final builder = currentAnt!.widget.spotlight.builder;
     final value = isBumping ? _bumpAnimation.value : _zoomAnimation.value;
     final r = currentAnt!.rect;
     final painter = builder.build(r, value, isBumping);
     final rect = builder.targetRect(r);
 
-    final onTap = currentAnt!.widget.spotlightSilent ? () {} : next;
+    final onTap = currentAnt!.widget.spotlight.silent ? () {} : next;
 
     return Stack(children: <Widget>[
       SizedBox(
@@ -99,10 +99,10 @@ class SpotlightGafferState extends State<SpotlightGaffer> with TickerProviderSta
       Positioned(
         left: rect.left,
         top: rect.top,
-        child: currentAnt!.widget.spotlightUsingInkwell
+        child: currentAnt!.widget.spotlight.usingInkwell
             ? InkWell(
                 borderRadius: BorderRadius.circular(builder.inkwellRadius(r)),
-                splashColor: currentAnt!.widget.spotlightSplashColor,
+                splashColor: currentAnt!.widget.spotlight.splashColor,
                 onTap: onTap,
                 child: SizedBox(
                   width: rect.width,
@@ -135,7 +135,7 @@ class SpotlightGafferState extends State<SpotlightGaffer> with TickerProviderSta
           opacity: _contentAnimation,
           child: Stack(children: [
             SizedBox.expand(child: currentAnt!.widget.content),
-            (currentAnt!.widget.actionBuilder ?? _buildActions).call(_getActions()),
+            (currentAnt!.widget.action.builder ?? _buildActions).call(_getActions()),
           ]),
         ),
       ),
@@ -156,13 +156,13 @@ class SpotlightGafferState extends State<SpotlightGaffer> with TickerProviderSta
 
   Iterable<Widget> _getActions() sync* {
     assert(() {
-      return currentAnt!.widget.actions.toSet().length == currentAnt!.widget.actions.length;
+      return currentAnt!.widget.action.enabled.toSet().length == currentAnt!.widget.action.enabled.length;
     }(), 'Spotlight actions must not repeated.');
 
-    for (final action in currentAnt!.widget.actions) {
+    for (final action in currentAnt!.widget.action.enabled) {
       switch (action) {
         case SpotlightAntAction.prev:
-          yield currentAnt!.widget.prevAction ??
+          yield currentAnt!.widget.action.prev ??
               IconButton(
                 onPressed: () => prev(),
                 tooltip: 'Previous spotlight',
@@ -171,7 +171,7 @@ class SpotlightGafferState extends State<SpotlightGaffer> with TickerProviderSta
               );
           break;
         case SpotlightAntAction.next:
-          yield currentAnt!.widget.nextAction ??
+          yield currentAnt!.widget.action.next ??
               IconButton(
                 onPressed: () => next(),
                 tooltip: 'Next spotlight',
@@ -180,7 +180,7 @@ class SpotlightGafferState extends State<SpotlightGaffer> with TickerProviderSta
               );
           break;
         case SpotlightAntAction.skip:
-          yield currentAnt!.widget.skipAction ??
+          yield currentAnt!.widget.action.skip ??
               IconButton(
                 onPressed: () => skip(),
                 tooltip: 'Skip spotlight show',
@@ -283,9 +283,9 @@ class SpotlightGafferState extends State<SpotlightGaffer> with TickerProviderSta
 
     setState(() {
       final ant = currentAnt!.widget;
-      _zoomController.duration = ant.zoomInDuration;
-      _zoomController.reverseDuration = ant.zoomOutDuration;
-      _contentController.duration = ant.contentFadeInDuration;
+      _zoomController.duration = ant.duration.zoomIn;
+      _zoomController.reverseDuration = ant.duration.zoomOut;
+      _contentController.duration = ant.duration.contentFadeIn;
       _bumpAnimation = Tween(begin: 0.0, end: ant.bumpRatio).animate(
         CurvedAnimation(
           parent: _bumpController,
@@ -308,10 +308,10 @@ class SpotlightGafferState extends State<SpotlightGaffer> with TickerProviderSta
           currentAnt!.widget.onShown?.call();
 
           _contentController.forward();
-          if (currentAnt!.widget.bumpDuration != Duration.zero) {
+          if (currentAnt!.widget.duration.bump != Duration.zero) {
             _bumpController.repeat(
               reverse: true,
-              period: currentAnt!.widget.bumpDuration,
+              period: currentAnt!.widget.duration.bump,
             );
           }
         }

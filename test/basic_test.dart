@@ -27,10 +27,12 @@ void main() {
           child: Column(children: [
             SpotlightAnt(
               content: const SpotlightContent(child: Text('content-1')),
-              zoomInDuration: const Duration(milliseconds: 5),
-              zoomOutDuration: const Duration(milliseconds: 5),
-              contentFadeInDuration: Duration.zero,
-              actions: actions,
+              duration: const SpotlightDurationConfig(
+                zoomIn: Duration(milliseconds: 5),
+                zoomOut: Duration(milliseconds: 5),
+                contentFadeIn: Duration.zero,
+              ),
+              action: const SpotlightActionConfig(enabled: actions),
               onShow: () => onShow++,
               onShown: () => onShown++,
               onDismiss: () => onDismiss++,
@@ -39,12 +41,18 @@ void main() {
             ),
             SpotlightAnt(
               content: const SpotlightContent(child: Text('content-2')),
-              zoomInDuration: const Duration(milliseconds: 5),
-              zoomOutDuration: const Duration(milliseconds: 5),
-              contentFadeInDuration: Duration.zero,
-              spotlightBuilder: const SpotlightRectBuilder(),
-              preferVertical: false,
-              actions: actions,
+              duration: const SpotlightDurationConfig(
+                zoomIn: Duration(milliseconds: 5),
+                zoomOut: Duration(milliseconds: 5),
+                contentFadeIn: Duration.zero,
+              ),
+              action: const SpotlightActionConfig(enabled: actions),
+              contentLayout: const SpotlightContentLayoutConfig(
+                prefer: ContentPreferLayout.largerRatio,
+              ),
+              spotlight: const SpotlightConfig(
+                builder: SpotlightRectBuilder(),
+              ),
               onShow: () => onShow += 2,
               onShown: () => onShown += 2,
               onDismiss: () => onDismiss += 2,
@@ -140,10 +148,10 @@ void main() {
             SpotlightAnt(
               enable: false,
               content: const Text('content-1'),
-              zoomInDuration: Duration.zero,
-              zoomOutDuration: Duration.zero,
-              contentFadeInDuration: Duration.zero,
-              preferHorizontal: true,
+              duration: SpotlightDurationConfig.zero,
+              contentLayout: const SpotlightContentLayoutConfig(
+                prefer: ContentPreferLayout.horizontal,
+              ),
               onShow: () => onShow = true,
               child: const Text('child-1'),
             ),
@@ -174,24 +182,26 @@ void main() {
           child: Column(children: [
             SpotlightAnt(
               content: const Text('content-1'),
-              zoomInDuration: Duration.zero,
-              zoomOutDuration: Duration.zero,
-              contentFadeInDuration: Duration.zero,
-              spotlightBuilder: const SpotlightBackDropBuilder(),
-              spotlightUsingInkwell: false,
-              backdropUsingInkwell: false,
+              duration: SpotlightDurationConfig.zero,
+              spotlight: const SpotlightConfig(
+                builder: SpotlightBackDropBuilder(),
+                usingInkwell: false,
+              ),
+              backdrop: const SpotlightBackdropConfig(
+                usingInkwell: false,
+              ),
               onShow: () => onShow++,
               onDismiss: () => onDismiss++,
               child: const Text('child-1'),
             ),
             SpotlightAnt(
               content: const Text('content-2'),
-              zoomInDuration: Duration.zero,
-              zoomOutDuration: Duration.zero,
-              contentFadeInDuration: Duration.zero,
-              spotlightBuilder: const SpotlightBackDropBuilder(),
-              spotlightSilent: true,
-              backdropSilent: true,
+              duration: SpotlightDurationConfig.zero,
+              spotlight: const SpotlightConfig(
+                silent: true,
+                builder: SpotlightBackDropBuilder(),
+              ),
+              backdrop: const SpotlightBackdropConfig(silent: true),
               onShow: () => onShow += 2,
               onDismiss: () => onDismiss += 2,
               child: const Text('child-2'),
@@ -254,9 +264,7 @@ void main() {
           child: Column(children: [
             SpotlightAnt(
               content: const Text('content-1'),
-              zoomInDuration: Duration.zero,
-              zoomOutDuration: Duration.zero,
-              contentFadeInDuration: Duration.zero,
+              duration: SpotlightDurationConfig.zero,
               onShow: () => onShow = true,
               child: const Text('child-1'),
             ),
@@ -280,17 +288,13 @@ void main() {
             SpotlightAnt(
               index: 1,
               content: Text('content-1'),
-              zoomInDuration: Duration.zero,
-              zoomOutDuration: Duration.zero,
-              contentFadeInDuration: Duration.zero,
+              duration: SpotlightDurationConfig.zero,
               child: Text('child-1'),
             ),
             SpotlightAnt(
               index: 0,
               content: Text('content-2'),
-              zoomInDuration: Duration.zero,
-              zoomOutDuration: Duration.zero,
-              contentFadeInDuration: Duration.zero,
+              duration: SpotlightDurationConfig.zero,
               child: Text('child-2'),
             ),
           ]),
@@ -309,9 +313,7 @@ void main() {
           onSkip: () => skipped = true,
           child: const SpotlightAnt(
             content: Text('content'),
-            zoomInDuration: Duration.zero,
-            zoomOutDuration: Duration.zero,
-            contentFadeInDuration: Duration.zero,
+            duration: SpotlightDurationConfig.zero,
             child: Text('child'),
           ),
         ),

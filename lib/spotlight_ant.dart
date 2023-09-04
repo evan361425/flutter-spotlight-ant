@@ -4,3 +4,8 @@ export 'src/spotlight_show.dart';
 export 'src/spotlights/spotlight_builder.dart';
 export 'src/spotlights/spotlight_circular_builder.dart';
 export 'src/spotlights/spotlight_rect_builder.dart';
+export 'src/configs/spotlight_action_config.dart';
+export 'src/configs/spotlight_backdrop_config.dart';
+export 'src/configs/spotlight_config.dart';
+export 'src/configs/spotlight_content_layout_config.dart';
+export 'src/configs/spotlight_duration_config.dart';

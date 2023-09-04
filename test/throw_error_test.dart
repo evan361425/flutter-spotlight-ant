@@ -22,9 +22,7 @@ void main() {
                 buildTimes++;
                 expect(SpotlightShow.of(context), equals(show.currentState));
                 return const SpotlightAnt(
-                  zoomInDuration: Duration.zero,
-                  zoomOutDuration: Duration.zero,
-                  contentFadeInDuration: Duration.zero,
+                  duration: SpotlightDurationConfig.zero,
                   child: Text('hi'),
                 );
               },

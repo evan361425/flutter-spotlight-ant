@@ -17,10 +17,10 @@ void main() {
               alignment: alignment,
               child: const SpotlightAnt(
                 content: Center(child: Text('content')),
-                zoomInDuration: Duration.zero,
-                zoomOutDuration: Duration.zero,
-                contentFadeInDuration: Duration.zero,
-                preferVertical: false,
+                duration: SpotlightDurationConfig.zero,
+                contentLayout: SpotlightContentLayoutConfig(
+                  prefer: ContentPreferLayout.largerRatio,
+                ),
                 child: Text('child'),
               ),
             ),

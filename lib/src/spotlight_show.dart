@@ -66,9 +66,6 @@ class SpotlightShow extends StatefulWidget {
   /// ```
   final Future? showWaitFuture;
 
-  /// If route been pushed above current route, the show should be paused.
-  final RouteObserver<ModalRoute<void>>? routeObserver;
-
   /// True to make it able to start.
   final bool enable;
 
@@ -79,7 +76,6 @@ class SpotlightShow extends StatefulWidget {
     Key? key,
     this.startWhenReady = true,
     this.showWaitFuture,
-    this.routeObserver,
     this.onSkip,
     this.onFinish,
     this.skipWhenPop = true,
@@ -149,15 +145,9 @@ class SpotlightShow extends StatefulWidget {
   }
 }
 
-class SpotlightShowState extends State<SpotlightShow> with RouteAware {
+class SpotlightShowState extends State<SpotlightShow> {
   OverlayEntry? _overlayEntry;
   final _antQueue = <SpotlightAntState>[];
-
-  // record this was done before and should not start it again
-  bool _wasDone = false;
-
-  // if this widget is under the route, it should be set.
-  OverlayEntry? _pausedEntry;
 
   /// Let you able to control the gaffer's behavior
   final gaffer = GlobalKey<SpotlightGafferState>();
@@ -181,43 +171,8 @@ class SpotlightShowState extends State<SpotlightShow> with RouteAware {
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final route = ModalRoute.of(context);
-    if (route != null) {
-      widget.routeObserver?.subscribe(this, route);
-    }
-  }
-
-  @override
-  // if we are going under the route, stop showing the spotlight
-  @override
-  void didPushNext() {
-    _overlayEntry?.remove();
-    _pausedEntry = _overlayEntry;
-    _overlayEntry = null;
-  }
-
-  // after the top route being pop, enable the show
-  @override
-  void didPopNext() {
-    if (_pausedEntry == null) {
-      if (!_wasDone) {
-        // if not done before then try starting the show.
-        start();
-      }
-    } else {
-      _overlayEntry = _pausedEntry;
-      _pausedEntry = null;
-      // the show already started, continue it.
-      Overlay.of(context).insert(_overlayEntry!);
-    }
-  }
-
-  @override
   void dispose() {
     _removeOverlayEntry();
-    widget.routeObserver?.unsubscribe(this);
     super.dispose();
   }
 
@@ -230,7 +185,7 @@ class SpotlightShowState extends State<SpotlightShow> with RouteAware {
   /// * [isNotReadyToStart], which will return the opposite result of this.
   /// * [isNotPerforming], whether this show is performing.
   bool get isReadyToStart {
-    if (_antQueue.isNotEmpty && _pausedEntry == null && isNotPerforming) {
+    if (_antQueue.isNotEmpty && isNotPerforming) {
       final index = _antQueue.first.widget.index;
       return index == null || index <= 0;
     }
@@ -267,12 +222,10 @@ class SpotlightShowState extends State<SpotlightShow> with RouteAware {
               key: gaffer,
               ants: _antQueue,
               onFinish: () {
-                _wasDone = true;
                 _removeOverlayEntry();
                 widget.onFinish?.call();
               },
               onSkip: () {
-                _wasDone = true;
                 _removeOverlayEntry();
                 widget.onSkip?.call();
               });
@@ -342,12 +295,8 @@ class SpotlightShowState extends State<SpotlightShow> with RouteAware {
   }
 
   void _removeOverlayEntry() {
-    // if in paused mode(_pausedEntry != null), it should already being removed
-    if (_pausedEntry == null) {
-      _overlayEntry?.remove();
-    }
+    _overlayEntry?.remove();
     _overlayEntry = null;
-    _pausedEntry = null;
   }
 }
 

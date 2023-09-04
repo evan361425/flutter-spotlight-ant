@@ -45,10 +45,14 @@ class _StartPageState extends State<StartPage> {
               fontSize: 26,
               child: Text('Configure your spotlight...'),
             ),
-            actions: const [SpotlightAntAction.prev, SpotlightAntAction.next],
-            bumpDuration: const Duration(milliseconds: 200),
-            zoomInDuration: const Duration(milliseconds: 300),
-            zoomOutDuration: const Duration(milliseconds: 300),
+            action: const SpotlightActionConfig(
+              enabled: [SpotlightAntAction.prev, SpotlightAntAction.next],
+            ),
+            duration: const SpotlightDurationConfig(
+              bump: Duration(milliseconds: 200),
+              zoomIn: Duration(milliseconds: 300),
+              zoomOut: Duration(milliseconds: 300),
+            ),
             bumpRatio: 1.0,
             child: IconButton(
               icon: const Icon(Icons.menu_sharp),
@@ -60,9 +64,13 @@ class _StartPageState extends State<StartPage> {
       ),
       floatingActionButtonWrapper: (btn) => SpotlightAnt(
         enable: isFirst,
-        spotlightBuilder: const SpotlightRectBuilder(borderRadius: 20),
-        actions: const [SpotlightAntAction.prev],
-        spotlightPadding: EdgeInsets.zero,
+        spotlight: const SpotlightConfig(
+          builder: SpotlightRectBuilder(borderRadius: 20),
+          padding: EdgeInsets.zero,
+        ),
+        action: const SpotlightActionConfig(
+          enabled: [SpotlightAntAction.prev],
+        ),
         content: const SpotlightContent(
           fontSize: 26,
           child: Text('and re-run the animation by pressing the button.'),
