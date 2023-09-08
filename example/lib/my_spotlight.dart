@@ -6,12 +6,14 @@ class MySpotlight extends StatefulWidget {
   final Widget? content;
   final int? index;
   final Widget child;
+  final String? monitorId;
   final bool enable;
 
   const MySpotlight({
     Key? key,
     this.content,
     this.index,
+    this.monitorId,
     this.enable = true,
     required this.child,
   }) : super(key: key);
@@ -26,6 +28,7 @@ class _MySpotlightState extends SpotlightState<MySpotlight> {
     return SpotlightAnt(
       enable: widget.enable,
       index: widget.index,
+      monitorId: widget.monitorId,
       spotlight: SpotlightConfig(
         padding: EdgeInsets.all(padding),
         builder: useCircle ? const SpotlightCircularBuilder() : const SpotlightRectBuilder(),

@@ -1,140 +1,97 @@
-// import 'package:flutter/material.dart';
-// import 'package:flutter_test/flutter_test.dart';
-// import 'package:spotlight_ant/spotlight_ant.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:spotlight_ant/spotlight_ant.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 void main() {
-//   group('Invisible Check', () {
-//     testWidgets('hide and show after visible', (tester) async {
-//       late BuildContext ctx;
-//       await tester.pumpWidget(MaterialApp(
-//         home: Scaffold(
-//           body: SpotlightShow(
-//             child: Builder(
-//               builder: (context) {
-//                 ctx = context;
-//                 return const Center(
-//                   child: SpotlightAnt(
-//                     duration: SpotlightDurationConfig.zero,
-//                     content: SpotlightContent(child: Text('WaLa')),
-//                     child: Text('Spotlight Target'),
-//                   ),
-//                 );
-//               },
-//             ),
-//           ),
-//         ),
-//       ));
-//       await tester.pumpAndSettle();
-//       await tester.pump(const Duration(milliseconds: 5));
+  group('Invisible Check', () {
+    testWidgets('not show if invisible', (tester) async {
+      final hider = GlobalKey<_HiderState>();
+      late BuildContext ctx;
+      await tester.pumpWidget(MaterialApp(
+        home: Scaffold(
+          body: SpotlightShow(
+            child: Builder(
+              builder: (context) {
+                ctx = context;
+                return Hider(key: hider);
+              },
+            ),
+          ),
+        ),
+      ));
+      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 5));
 
-//       // the show is started
-//       expect(find.text('Spotlight Target'), findsOneWidget);
-//       expect(find.text('WaLa'), findsOneWidget);
+      expect(find.text('Hider'), findsOneWidget);
+      // the show is not start
+      expect(find.text('Spotlight Target'), findsNothing);
 
-//       Navigator.of(ctx).push(MaterialPageRoute(
-//         builder: (context) {
-//           return Scaffold(
-//             body: TextButton(
-//               child: const Text('POP'),
-//               onPressed: () => Navigator.of(context).pop(),
-//             ),
-//           );
-//         },
-//       ));
-//       await tester.pump(const Duration(milliseconds: 10));
-//       await tester.pump(const Duration(milliseconds: 10));
+      Navigator.of(ctx).push(MaterialPageRoute(
+        builder: (context) {
+          return Scaffold(
+            body: TextButton(
+              child: const Text('POP'),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          );
+        },
+      ));
+      await tester.pumpAndSettle();
 
-//       // the show being paused
-//       expect(find.text('WaLa'), findsNothing);
+      expect(find.text('POP'), findsOneWidget);
 
-//       // pop back
-//       await tester.tap(find.text('POP'));
-//       await tester.pump(const Duration(milliseconds: 10));
-//       await tester.pump(const Duration(milliseconds: 10));
+      // try starting the show
+      hider.currentState?.show();
+      await tester.pumpAndSettle();
+      expect(find.text('WaLa'), findsNothing);
 
-//       // the show start again!
-//       expect(find.text('WaLa'), findsOneWidget);
-//     });
+      // pop back
+      await tester.tap(find.text('POP'));
+      await tester.pumpAndSettle();
 
-//     testWidgets('not show if invisible', (tester) async {
-//       final hider = GlobalKey<_HiderState>();
-//       late BuildContext ctx;
-//       await tester.pumpWidget(MaterialApp(
-//         home: Scaffold(
-//           body: SpotlightShow(
-//             child: Builder(
-//               builder: (context) {
-//                 ctx = context;
-//                 return Hider(key: hider);
-//               },
-//             ),
-//           ),
-//         ),
-//       ));
-//       await tester.pumpAndSettle();
-//       await tester.pump(const Duration(milliseconds: 5));
+      VisibilityDetectorController.instance.notifyNow();
+      await tester.pump(const Duration(milliseconds: 5));
+      await tester.pump(const Duration(milliseconds: 5));
 
-//       // the show is not start
-//       expect(find.text('Spotlight Target'), findsNothing);
+      // the show start
+      expect(find.text('WaLa'), findsOneWidget);
 
-//       Navigator.of(ctx).push(MaterialPageRoute(
-//         builder: (context) {
-//           return Scaffold(
-//             body: TextButton(
-//               child: const Text('POP'),
-//               onPressed: () => Navigator.of(context).pop(),
-//             ),
-//           );
-//         },
-//       ));
-//       await tester.pump(const Duration(milliseconds: 10));
-//       await tester.pump(const Duration(milliseconds: 10));
+      // avoid pending timer
+      // detailed in https://github.com/google/flutter.widgets/tree/master/packages/visibility_detector#widget-tests
+      await tester.pumpWidget(const Placeholder());
+      VisibilityDetectorController.instance.notifyNow();
+    });
+  });
+}
 
-//       expect(find.text('POP'), findsOneWidget);
+class Hider extends StatefulWidget {
+  const Hider({Key? key}) : super(key: key);
 
-//       // try starting the show
-//       hider.currentState?.show();
-//       await tester.pump(const Duration(milliseconds: 10));
-//       await tester.pump(const Duration(milliseconds: 10));
-//       expect(find.text('WaLa'), findsNothing);
+  @override
+  State<Hider> createState() => _HiderState();
+}
 
-//       // pop back
-//       await tester.tap(find.text('POP'));
-//       await tester.pump(const Duration(milliseconds: 10));
-//       await tester.pump(const Duration(milliseconds: 10));
+class _HiderState extends State<Hider> {
+  bool isShow = false;
 
-//       // the show start
-//       expect(find.text('WaLa'), findsOneWidget);
-//     });
-//   });
-// }
+  @override
+  Widget build(BuildContext context) {
+    return Column(children: [
+      const Text('Hider'),
+      if (isShow)
+        const SpotlightAnt(
+          duration: SpotlightDurationConfig.zero,
+          content: Text('WaLa'),
+          monitorId: 'hider',
+          child: Text('Spotlight Target'),
+        ),
+    ]);
+  }
 
-// class Hider extends StatefulWidget {
-//   const Hider({Key? key}) : super(key: key);
-
-//   @override
-//   State<Hider> createState() => _HiderState();
-// }
-
-// class _HiderState extends State<Hider> {
-//   bool isShow = false;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Column(children: [
-//       const Text('Hider'),
-//       if (isShow)
-//         const SpotlightAnt(
-//           duration: SpotlightDurationConfig.zero,
-//           content: Text('WaLa'),
-//           child: Text('Spotlight Target'),
-//         ),
-//     ]);
-//   }
-
-//   void show() {
-//     setState(() {
-//       isShow = true;
-//     });
-//   }
+  void show() {
+    setState(() {
+      isShow = true;
+    });
+  }
 }

@@ -7,19 +7,6 @@ class SpotlightContentLayoutConfig {
   final Alignment? alignment;
 
   /// Prefer content shown in which side.
-  ///
-  /// If set [preferHorizontal] and [preferVertical] set to false,
-  /// it will choose the largest ratio compare to window.
-  ///
-  /// For example, target is at `(0.7 * window_width, 0.4 * window_height)`
-  /// it will align to [Alignment.centerLeft], since
-  /// `|0.7 - 0.5| > |0.4 - 0.5|`
-  ///
-  /// If [preferVertical] set to true, it will choose
-  /// [Alignment.topCenter] or [Alignment.bottomCenter]
-  ///
-  /// If both [preferHorizontal] and [preferVertical] set to true,
-  /// [preferHorizontal] will take the procedure.
   final ContentPreferLayout prefer;
 
   const SpotlightContentLayoutConfig({

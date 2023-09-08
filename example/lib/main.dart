@@ -4,11 +4,12 @@ import 'package:spotlight_ant/spotlight_ant.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_strategy/url_strategy.dart';
 
-import 'my_spotlight.dart';
-import 'delay_screen.dart' deferred as delay;
-import 'random_screen.dart' deferred as random;
 import 'alignment_screen.dart' deferred as alignment;
 import 'animation_screen.dart' deferred as animation;
+import 'delay_screen.dart' deferred as delay;
+import 'my_spotlight.dart';
+import 'obscure_screen.dart' deferred as obscure;
+import 'random_screen.dart' deferred as random;
 
 void main() {
   setPathUrlStrategy();
@@ -150,6 +151,15 @@ class _StartPageState extends State<StartPage> {
                 ));
               },
               child: const Text('Delay'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                await obscure.loadLibrary();
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => obscure.ObscureScreen(),
+                ));
+              },
+              child: const Text('Obscure'),
             ),
           ]),
           IconButton(

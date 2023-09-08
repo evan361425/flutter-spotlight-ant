@@ -152,6 +152,8 @@ class SpotlightShowState extends State<SpotlightShow> {
   /// Let you able to control the gaffer's behavior
   final gaffer = GlobalKey<SpotlightGafferState>();
 
+  int _startAt = 0;
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -219,16 +221,24 @@ class SpotlightShowState extends State<SpotlightShow> {
       if (isReadyToStart) {
         _overlayEntry = OverlayEntry(builder: (context) {
           return SpotlightGaffer(
-              key: gaffer,
-              ants: _antQueue,
-              onFinish: () {
-                _removeOverlayEntry();
-                widget.onFinish?.call();
-              },
-              onSkip: () {
-                _removeOverlayEntry();
-                widget.onSkip?.call();
-              });
+            key: gaffer,
+            ants: _antQueue,
+            startAt: _startAt,
+            onFinish: () {
+              _removeOverlayEntry();
+              _startAt = 0;
+              widget.onFinish?.call();
+            },
+            onSkip: () {
+              _removeOverlayEntry();
+              _startAt = 0;
+              widget.onSkip?.call();
+            },
+            onPaused: (pausedAt) {
+              _removeOverlayEntry();
+              _startAt = pausedAt;
+            },
+          );
         });
         Overlay.of(context).insert(_overlayEntry!);
       }

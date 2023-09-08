@@ -82,27 +82,15 @@ The configuration of `SpotlightAnt`:
 
 | Name | Default | Desc. |
 | - | - | - |
-| enable | `true` | Whether show this ant or not |
-| spotlightBuilder | `SpotlightCircularBuilder` | Allow any builder that extends from `SpotlightBuilder`. |
-| spotlightPadding | `EdgeInsets.all(8)` | - |
-| spotlightSilent | `false` | Disable capturing spotlight's tap event which will start to show next spotlight. |
-| spotlightUsingInkwell | `true` | Use `GestureDetector` instead of `Inkwell`. |
-| spotlightSplashColor | `null` | `Inkwell` property. |
-| backdropSilent | `false` | Disable capturing backdrop's tap event which will start to show next spotlight. |
-| backdropUsingInkwell | `true` | - |
-| backdropSplashColor | `null` | - |
-| actions | `[SpotlightAntAction.skip]` | Actions showing in bottom, customize it by `actionBuilder`. |
-| actionBuilder | `null` | - |
-| nextAction | `null` | Change `SpotlightAntAction.next` default widget |
-| prevAction | `null` | - |
-| skipAction | `null` | - |
-| zoomInDuration | `Duration(milliseconds: 600)` | - |
-| zoomOutDuration | `Duration(milliseconds: 600)` | - |
-| bumpDuration | `Duration(milliseconds: 500)` | Argument for `AnimationController.repeat` |
+| enable | `true` | Whether show this ant or not. |
+| monitorId | `null` | Monitor widget's visibility and start the show after it shown. |
+| spotlight | [SpotlightConfig] | Customize spotlight. |
+| backdrop | [SpotlightBackdropConfig] | Customize backdrop. |
+| action | [SpotlightActionConfig] | Customize actions. |
+| duration | [SpotlightDurationConfig] | Customize animation duration. |
+| contentLayout | [SpotlightContentLayoutConfig] | Customize layout of content. |
 | bumpRatio | `0.1` | How big outer area you want in bump animation. |
 | content | `null` | Content beside spotlight. |
-| contentAlignment | `null` | Auto-detect it or specify it. |
-| contentFadeInDuration | `Duration(milliseconds: 300)` | - |
 | onShown | `null` | Callback before zoom in. |
 | onShow | `null` | Callback after zoom in. |
 | onDismiss | `null` | Callback before zoom out. |
@@ -119,6 +107,60 @@ The configuration of `SpotlightShow`:
 | onFinish | `null` | Callback after finish the show. |
 
 Go to [API doc](https://pub.dev/documentation/spotlight_ant/latest/spotlight_ant/spotlight_ant-library.html) for details.
+
+### SpotlightConfig
+
+Configuration for the spotlight.
+
+| Name | Default | Desc. |
+| - | - | - |
+| builder | `SpotlightCircularBuilder` | Allow any builder that extends from `SpotlightBuilder`. |
+| padding | `EdgeInsets.all(8)` | - |
+| silent | `false` | Disable capturing spotlight's tap event which will start to show next spotlight. |
+| usingInkwell | `true` | Use `GestureDetector` instead of `Inkwell`. |
+| splashColor | `null` | `Inkwell` property. |
+
+### SpotlightBackdropConfig
+
+Configuration for the backdrop.
+
+| Name | Default | Desc. |
+| - | - | - |
+| silent | `false` | Disable capturing backdrop's tap event which will start to show next spotlight. |
+| usingInkwell | `true` | Use `GestureDetector` instead of `Inkwell`. |
+| splashColor | `null` | `Inkwell` property. |
+
+### SpotlightActionConfig
+
+Configuration for the actions.
+
+| Name | Default | Desc. |
+| - | - | - |
+| enabled | `[SpotlightAntAction.skip]` | Actions showing in bottom, customize it by `actionBuilder` |
+| builder | `null` | Build the actions wrapper |
+| next | `null` | Change `SpotlightAntAction.next` default widget |
+| prev | `null` | - |
+| skip | `null` | - |
+
+### SpotlightDurationConfig
+
+Configuration for the animation duration.
+
+| Name | Default | Desc. |
+| - | - | - |
+| zoomIn | `Duration(milliseconds: 600)` | - |
+| zoomOut | `Duration(milliseconds: 600)` | - |
+| bump | `Duration(milliseconds: 500)` | Argument for `AnimationController.repeat` |
+| contentFadeIn | `Duration(milliseconds: 300)` | - |
+
+### SpotlightContentLayoutConfig
+
+Configuration for the layout of content.
+
+| Name | Default | Desc. |
+| - | - | - |
+| alignment | `null` | Auto-detect it or specify it. |
+| prefer | `ContentPreferLayout.vertical` | Prefer content shown in which side. |
 
 ## Customize
 
@@ -156,3 +198,9 @@ SpotlightAnt(
   // ...
 );
 ```
+
+[SpotlightConfig]: #spotlightconfig
+[SpotlightBackdropConfig]: #spotlightbackdropconfig
+[SpotlightActionConfig]: #spotlightactionconfig
+[SpotlightDurationConfig]: #spotlightdurationconfig
+[SpotlightContentLayoutConfig]: #spotlightcontentlayoutconfig

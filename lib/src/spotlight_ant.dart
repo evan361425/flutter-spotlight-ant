@@ -7,12 +7,23 @@ import 'package:spotlight_ant/src/configs/spotlight_content_layout_config.dart';
 import 'package:spotlight_ant/src/configs/spotlight_duration_config.dart';
 import 'package:spotlight_ant/src/configs/spotlight_config.dart';
 import 'package:spotlight_ant/src/spotlight_show.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 import 'spotlight_content.dart';
 
 /// Basic widget that contains the spotlight information.
 class SpotlightAnt extends StatefulWidget {
   /// Set to false will ignore this spotlight
   final bool enable;
+
+  /// Set non-null value to monitor widget's visibility and stop monitor after
+  /// it first 100% shown.
+  ///
+  /// Once it's shown, the spotlight show will continue to start and any
+  /// previous shown and finished ant will be ignored.
+  ///
+  /// monitorId must be unique among all [VisibilityDetector] and
+  /// [SliverVisibilityDetector] widgets to properly identify this widget.
+  final String? monitorId;
 
   /// Config spotlight behavior.
   final SpotlightConfig spotlight;
@@ -66,6 +77,7 @@ class SpotlightAnt extends StatefulWidget {
   const SpotlightAnt({
     Key? key,
     this.enable = true,
+    this.monitorId,
     this.spotlight = const SpotlightConfig(),
     this.backdrop = const SpotlightBackdropConfig(),
     this.action = const SpotlightActionConfig(),
@@ -87,9 +99,33 @@ class SpotlightAnt extends StatefulWidget {
 }
 
 class SpotlightAntState extends State<SpotlightAnt> {
+  /// If this ant required to be monitored([SpotlightAnt.monitorId] has set),
+  /// it might be paused to be shown.
+  bool paused = false;
+
   @override
   Widget build(BuildContext context) {
     SpotlightShow.maybeOf(context)?.register(this);
+
+    if (paused) {
+      final key = Key(widget.monitorId!);
+      return VisibilityDetector(
+        key: key,
+        onVisibilityChanged: (info) async {
+          if (paused && info.visibleFraction == 1.0) {
+            // no need to rebuild by setState since we are not changing UI.
+            paused = false;
+            SpotlightShow.of(context).start();
+
+            // avoid edit callback collection in callback
+            await Future.delayed(Duration.zero);
+            VisibilityDetectorController.instance.forget(key);
+          }
+        },
+        child: widget.child,
+      );
+    }
+
     return widget.child;
   }
 
@@ -97,6 +133,12 @@ class SpotlightAntState extends State<SpotlightAnt> {
   void deactivate() {
     SpotlightShow.maybeOf(context)?.unregister(this);
     super.deactivate();
+  }
+
+  @override
+  void initState() {
+    paused = widget.monitorId != null;
+    super.initState();
   }
 
   /// What the position of this ant.

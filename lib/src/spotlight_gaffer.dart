@@ -7,17 +7,25 @@ class SpotlightGaffer extends StatefulWidget {
   /// Passed from [SpotlightAnt].
   final List<SpotlightAntState> ants;
 
+  /// Start at which ant.
+  final int startAt;
+
   /// Callback after finish the show.
   final VoidCallback onFinish;
 
   /// Callback after skip the show.
   final VoidCallback onSkip;
 
+  /// Callback after any ant is [SpotlightAntState.paused].
+  final void Function(int pausedAt) onPaused;
+
   const SpotlightGaffer({
     Key? key,
     required this.ants,
+    required this.startAt,
     required this.onFinish,
     required this.onSkip,
+    required this.onPaused,
   })  : assert(ants.length > 0),
         super(key: key);
 
@@ -206,6 +214,9 @@ class SpotlightGafferState extends State<SpotlightGaffer> with TickerProviderSta
     ));
     _contentAnimation = Tween(begin: 0.0, end: 1.0).animate(_contentController);
 
+    // start at -1 to make different with 0 when ants is empty
+    currentIndex = widget.startAt - 1;
+
     Future.delayed(Duration.zero, _next);
   }
 
@@ -278,6 +289,12 @@ class SpotlightGafferState extends State<SpotlightGaffer> with TickerProviderSta
     currentAnt = widget.ants[index];
     if (!antMounted || !currentAnt!.widget.enable) {
       Future.delayed(Duration.zero, _next);
+      return;
+    }
+
+    // abort this show if some actors are being paused
+    if (currentAnt!.paused) {
+      widget.onPaused(index);
       return;
     }
 
