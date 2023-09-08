@@ -8,6 +8,11 @@ This document's format follow the context in [Keep a Changelog](https://keepacha
 
 Please check git diff.
 
+## [v1.0.0] - 2023-09-08
+
+-   ([e4a0222](https://github.com/evan361425/flutter-spotlight-ant/commit/e4a0222c3910971096ef056961058d7e42b6daee)) feat: allow monitor visibility by monitorId - wu0dj2k7ao3
+-   ([a84957f](https://github.com/evan361425/flutter-spotlight-ant/commit/a84957f59941bbfaa7f879d07b1d06d0e42c8d93)) fix: merge into one config class - wu0dj2k7ao3
+
 ## [v0.9.1] - 2023-08-12
 
 -   ([546cb5c](https://github.com/evan361425/flutter-spotlight-ant/commit/546cb5c7d616ebca364ddaa62f3492469f4a7118)) fix: check was done in sub-condition - wu0dj2k7ao3
@@ -63,7 +68,8 @@ fix example document
 
 Initial release
 
-[unreleased]: https://github.com/evan361425/flutter-spotlight-ant/compare/v0.9.1...HEAD
+[unreleased]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.0.0...HEAD
+[v1.0.0]: https://github.com/evan361425/flutter-spotlight-ant/compare/v0.9.1...v1.0.0
 [v0.9.1]: https://github.com/evan361425/flutter-spotlight-ant/compare/v0.9.0...v0.9.1
 [v0.9.0]: https://github.com/evan361425/flutter-spotlight-ant/compare/v0.8.0...v0.9.0
 [v0.8.0]: https://github.com/evan361425/flutter-spotlight-ant/compare/v0.7.0...v0.8.0
