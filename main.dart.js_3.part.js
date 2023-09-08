@@ -1,7 +1,10 @@
-self.$__dart_deferred_initializers__=self.$__dart_deferred_initializers__||Object.create(null)
+((a,b,c)=>{a[b]=a[b]||{}
+a[b][c]=a[b][c]||[]
+a[b][c].push({p:"main.dart.js_3",e:"beginPart"})})(self,"$__dart_deferred_initializers__","eventLog")
 $__dart_deferred_initializers__.current=function(a,b,c,$){var A,B
-A=c[8]
+A=c[9]
 B=c[0]
-var z=a.updateTypes([]);(function constants(){A.Bu=new B.dv(61703,"MaterialIcons",null,!1)
-A.e5=new B.ey(A.Bu,null,null,null)})()}
-$__dart_deferred_initializers__["dUdC/mVuFpWxm8atby1F0v0WgI4="] = $__dart_deferred_initializers__.current
+var z=a.updateTypes([]);(function constants(){A.BG=new B.d7(61703,"MaterialIcons",null,!1)
+A.cS=new B.dV(A.BG,null,null,null)})()};
+((a,b)=>{a[b]=a.current
+a.eventLog.push({p:"main.dart.js_3",e:"endPart",h:b})})($__dart_deferred_initializers__,"5wlPYoLEKFBMJRp+aSkMQ1GH/9k=");
