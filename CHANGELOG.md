@@ -8,6 +8,10 @@ This document's format follow the context in [Keep a Changelog](https://keepacha
 
 Please check git diff.
 
+## [v1.0.1] - 2023-09-09
+
+-   ([2df6179](https://github.com/evan361425/flutter-spotlight-ant/commit/2df6179f5a0c45d339574c29fa8509c44104a7b3)) fix: only monitor if ant is enabled - wu0dj2k7ao3
+
 ## [v1.0.0] - 2023-09-08
 
 -   ([e4a0222](https://github.com/evan361425/flutter-spotlight-ant/commit/e4a0222c3910971096ef056961058d7e42b6daee)) feat: allow monitor visibility by monitorId - wu0dj2k7ao3
@@ -68,7 +72,8 @@ fix example document
 
 Initial release
 
-[unreleased]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.0.0...HEAD
+[unreleased]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.0.1...HEAD
+[v1.0.1]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.0.0...v1.0.1
 [v1.0.0]: https://github.com/evan361425/flutter-spotlight-ant/compare/v0.9.1...v1.0.0
 [v0.9.1]: https://github.com/evan361425/flutter-spotlight-ant/compare/v0.9.0...v0.9.1
 [v0.9.0]: https://github.com/evan361425/flutter-spotlight-ant/compare/v0.8.0...v0.9.0
