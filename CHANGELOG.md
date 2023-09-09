@@ -8,6 +8,10 @@ This document's format follow the context in [Keep a Changelog](https://keepacha
 
 Please check git diff.
 
+## [v1.0.2] - 2023-09-09
+
+-   ([4bef289](https://github.com/evan361425/flutter-spotlight-ant/commit/4bef289257872ca517aac9ce4df2386c24cceb1a)) fix: null safety to start paused show - wu0dj2k7ao3
+
 ## [v1.0.1] - 2023-09-09
 
 -   ([2df6179](https://github.com/evan361425/flutter-spotlight-ant/commit/2df6179f5a0c45d339574c29fa8509c44104a7b3)) fix: only monitor if ant is enabled - wu0dj2k7ao3
@@ -72,7 +76,8 @@ fix example document
 
 Initial release
 
-[unreleased]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.0.1...HEAD
+[unreleased]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.0.2...HEAD
+[v1.0.2]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.0.1...v1.0.2
 [v1.0.1]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.0.0...v1.0.1
 [v1.0.0]: https://github.com/evan361425/flutter-spotlight-ant/compare/v0.9.1...v1.0.0
 [v0.9.1]: https://github.com/evan361425/flutter-spotlight-ant/compare/v0.9.0...v0.9.1
