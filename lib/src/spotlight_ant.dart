@@ -137,7 +137,7 @@ class SpotlightAntState extends State<SpotlightAnt> {
 
   @override
   void initState() {
-    paused = widget.monitorId != null;
+    paused = widget.monitorId != null && widget.enable;
     super.initState();
   }
 
