@@ -69567,7 +69567,8 @@ while(true)switch(s){case 0:p=q.a
 s=p.d&&a.ga9Q()===1?2:3
 break
 case 2:p.d=!1
-A.Ht(q.b).hJ(0)
+p=A.Ht(q.b)
+if(p!=null)p.hJ(0)
 s=4
 return A.aa(A.lW(B.o,null,t.z),$async$$1)
 case 4:$.ahS()
