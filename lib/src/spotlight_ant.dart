@@ -115,7 +115,7 @@ class SpotlightAntState extends State<SpotlightAnt> {
           if (paused && info.visibleFraction == 1.0) {
             // no need to rebuild by setState since we are not changing UI.
             paused = false;
-            SpotlightShow.of(context).start();
+            SpotlightShow.maybeOf(context)?.start();
 
             // avoid edit callback collection in callback
             await Future.delayed(Duration.zero);
