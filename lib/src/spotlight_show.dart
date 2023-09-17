@@ -158,7 +158,7 @@ class SpotlightShowState extends State<SpotlightShow> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        if (widget.skipWhenPop && !isNotPerforming) {
+        if (widget.skipWhenPop && isPerforming) {
           gaffer.currentState?.skip();
           return false;
         }
@@ -187,7 +187,7 @@ class SpotlightShowState extends State<SpotlightShow> {
   /// * [isNotReadyToStart], which will return the opposite result of this.
   /// * [isNotPerforming], whether this show is performing.
   bool get isReadyToStart {
-    if (_antQueue.isNotEmpty && isNotPerforming) {
+    if (_antQueue.isNotEmpty && !isPerforming) {
       final index = _antQueue.first.widget.index;
       return index == null || index <= 0;
     }
@@ -203,7 +203,7 @@ class SpotlightShowState extends State<SpotlightShow> {
   bool get isNotReadyToStart => !isReadyToStart;
 
   /// Whether this show is performing.
-  bool get isNotPerforming => _overlayEntry == null;
+  bool get isPerforming => _overlayEntry != null;
 
   /// Start the show.
   ///
@@ -215,7 +215,7 @@ class SpotlightShowState extends State<SpotlightShow> {
   /// * [skip], will turn off the show, and call the [SpotlightShow.onSkip].
   /// * [finish], will turn off the show, and call the [SpotlightShow.onFinish].
   void start() {
-    if (_antQueue.isEmpty || !widget.enable) return;
+    if (_antQueue.isEmpty || isPerforming || !widget.enable) return;
 
     WidgetsBinding.instance.scheduleFrameCallback((timeStamp) {
       if (isReadyToStart) {

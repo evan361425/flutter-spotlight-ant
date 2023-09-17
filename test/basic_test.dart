@@ -66,7 +66,7 @@ void main() {
 
       expect(show.currentState?.isReadyToStart, isFalse);
       expect(show.currentState?.isNotReadyToStart, isTrue);
-      expect(show.currentState?.isNotPerforming, isFalse);
+      expect(show.currentState?.isPerforming, isTrue);
       expect(onShow + onShown + onDismiss + onDismissed + onSkip + onFinish, isZero);
 
       // zoom in
