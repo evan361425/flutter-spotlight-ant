@@ -69855,11 +69855,12 @@ this.aN()},
 gLQ(){var s,r=this.e
 if(r.length!==0&&this.d==null){s=B.b.gM(r).a.z
 return s==null||s<=0}return!1},
-hJ(a){var s
-if(this.e.length!==0){this.a.toString
+hJ(a){var s,r=this
+if(r.e.length!==0)if(r.d==null){r.a.toString
 s=!1}else s=!0
+else s=!0
 if(s)return
-$.az.vW(new A.a2x(this))},
+$.az.vW(new A.a2x(r))},
 a_e(a){var s,r=this,q=r.e
 q.push(a)
 if(a.a.z!=null)B.b.f4(q,new A.a2q())
