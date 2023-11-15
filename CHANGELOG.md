@@ -10,7 +10,7 @@ Please check git diff.
 
 ## [v1.0.4] - 2023-11-15
 
-
+-   ([#5](https://github.com/evan361425/flutter-spotlight-ant/pull/5))  fix: extend action builder method - ened
 
 ## [v1.0.3] - 2023-09-17
 
