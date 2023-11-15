@@ -8,6 +8,10 @@ This document's format follow the context in [Keep a Changelog](https://keepacha
 
 Please check git diff.
 
+## [v1.0.4] - 2023-11-15
+
+
+
 ## [v1.0.3] - 2023-09-17
 
 -   ([7af69c5](https://github.com/evan361425/flutter-spotlight-ant/commit/7af69c5abfc9ddc7a8838bb4cc5a153bb5522e85)) fix: start only not performing - wu0dj2k7ao3
@@ -80,7 +84,8 @@ fix example document
 
 Initial release
 
-[unreleased]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.0.3...HEAD
+[unreleased]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.0.4...HEAD
+[v1.0.4]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.0.3...v1.0.4
 [v1.0.3]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.0.2...v1.0.3
 [v1.0.2]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.0.1...v1.0.2
 [v1.0.1]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.0.0...v1.0.1
