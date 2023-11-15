@@ -136,7 +136,7 @@ Configuration for the actions.
 
 | Name | Default | Desc. |
 | - | - | - |
-| enabled | `[SpotlightAntAction.skip]` | Actions showing in bottom, customize it by `actionBuilder` |
+| enabled | `[SpotlightAntAction.skip]` | Actions showing in bottom, customize it by `SpotlightActionConfig.builder` |
 | builder | `null` | Build the actions wrapper |
 | next | `null` | Change `SpotlightAntAction.next` default widget |
 | prev | `null` | - |
@@ -190,10 +190,12 @@ Actions is also easy too:
 
 ```dart
 SpotlightAnt(
-  skipAction: TextButton.icon(
-    onPressed: () => SpotlightShow.of(context).skip(),
-    label: const Text('MY Skip'),
-    icon: const Icon(Icons.arrow_forward_ios_sharp),
+  action: SpotlightActionConfig(
+    skip: TextButton.icon(
+      onPressed: () => SpotlightShow.of(context).skip(),
+      label: const Text('MY Skip'),
+      icon: const Icon(Icons.arrow_forward_ios_sharp),
+    ),
   ),
   // ...
 );
