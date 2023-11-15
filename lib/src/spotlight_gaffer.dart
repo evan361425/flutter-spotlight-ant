@@ -143,14 +143,14 @@ class SpotlightGafferState extends State<SpotlightGaffer> with TickerProviderSta
           opacity: _contentAnimation,
           child: Stack(children: [
             SizedBox.expand(child: currentAnt!.widget.content),
-            (currentAnt!.widget.action.builder ?? _buildActions).call(_getActions()),
+            (currentAnt!.widget.action.builder ?? _buildActions).call(context, _getActions()),
           ]),
         ),
       ),
     );
   }
 
-  Widget _buildActions(Iterable<Widget> actions) {
+  Widget _buildActions(BuildContext context, Iterable<Widget> actions) {
     return Positioned(
       bottom: 16,
       left: 16,

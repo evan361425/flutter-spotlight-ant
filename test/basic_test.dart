@@ -32,7 +32,20 @@ void main() {
                 zoomOut: Duration(milliseconds: 5),
                 contentFadeIn: Duration.zero,
               ),
-              action: const SpotlightActionConfig(enabled: actions),
+              action: SpotlightActionConfig(
+                enabled: actions,
+                builder: (context, actions) {
+                  return Positioned(
+                    bottom: 16,
+                    left: 16,
+                    right: 16,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: actions.toList(),
+                    ),
+                  );
+                },
+              ),
               onShow: () => onShow++,
               onShown: () => onShown++,
               onDismiss: () => onDismiss++,
