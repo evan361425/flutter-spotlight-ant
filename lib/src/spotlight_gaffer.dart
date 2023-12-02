@@ -90,42 +90,48 @@ class SpotlightGafferState extends State<SpotlightGaffer> with TickerProviderSta
   }
 
   Widget _buildSpotlight(BuildContext context, Widget? child) {
-    final builder = currentAnt!.widget.spotlight.builder;
-    final value = isBumping ? _bumpAnimation.value : _zoomAnimation.value;
-    final r = currentAnt!.rect;
-    final painter = builder.build(r, value, isBumping);
-    final rect = builder.targetRect(r);
+    Widget widget = const SizedBox.shrink();
 
-    final onTap = currentAnt!.widget.spotlight.silent ? () {} : next;
+    if (mounted && antMounted) {
+      final builder = currentAnt!.widget.spotlight.builder;
+      final value = isBumping ? _bumpAnimation.value : _zoomAnimation.value;
+      final r = currentAnt!.rect;
+      final painter = builder.build(r, value, isBumping);
+      final rect = builder.targetRect(r);
 
-    return Stack(children: <Widget>[
-      SizedBox(
-        width: double.maxFinite,
-        height: double.maxFinite,
-        child: CustomPaint(painter: painter),
-      ),
-      Positioned(
-        left: rect.left,
-        top: rect.top,
-        child: currentAnt!.widget.spotlight.usingInkwell
-            ? InkWell(
-                borderRadius: BorderRadius.circular(builder.inkwellRadius(r)),
-                splashColor: currentAnt!.widget.spotlight.splashColor,
-                onTap: onTap,
-                child: SizedBox(
-                  width: rect.width,
-                  height: rect.height,
+      final onTap = currentAnt!.widget.spotlight.silent ? () {} : next;
+
+      widget = Stack(children: <Widget>[
+        SizedBox(
+          width: double.maxFinite,
+          height: double.maxFinite,
+          child: CustomPaint(painter: painter),
+        ),
+        Positioned(
+          left: rect.left,
+          top: rect.top,
+          child: currentAnt!.widget.spotlight.usingInkwell
+              ? InkWell(
+                  borderRadius: BorderRadius.circular(builder.inkwellRadius(r)),
+                  splashColor: currentAnt!.widget.spotlight.splashColor,
+                  onTap: onTap,
+                  child: SizedBox(
+                    width: rect.width,
+                    height: rect.height,
+                  ),
+                )
+              : GestureDetector(
+                  onTap: onTap,
+                  child: SizedBox(
+                    width: rect.width,
+                    height: rect.height,
+                  ),
                 ),
-              )
-            : GestureDetector(
-                onTap: onTap,
-                child: SizedBox(
-                  width: rect.width,
-                  height: rect.height,
-                ),
-              ),
-      )
-    ]);
+        )
+      ]);
+    }
+
+    return widget;
   }
 
   Widget _buildContent() {
