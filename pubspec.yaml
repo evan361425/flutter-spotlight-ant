@@ -1,7 +1,7 @@
 name: spotlight_ant
 package: spotlight_ant
-# bumper-checker: v1.0.4
-version: 1.0.4
+# bumper-checker: v1.0.5
+version: 1.0.5
 description: >-
   Spotlight the widget by wrapping it and with highly flexible configuration.
 repository: https://github.com/evan361425/flutter-spotlight-ant

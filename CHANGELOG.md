@@ -8,6 +8,10 @@ This document's format follow the context in [Keep a Changelog](https://keepacha
 
 Please check git diff.
 
+## [v1.0.5] - 2023-12-02
+
+-   ([932d093](https://github.com/evan361425/flutter-spotlight-ant/commit/932d093de34279678be7eec79943a77a937e529f)) fix: build spotlight only when mounted - wu0dj2k7ao3
+
 ## [v1.0.4] - 2023-11-15
 
 -   ([#5](https://github.com/evan361425/flutter-spotlight-ant/pull/5))  fix: extend action builder method - ened
@@ -84,7 +88,8 @@ fix example document
 
 Initial release
 
-[unreleased]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.0.4...HEAD
+[unreleased]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.0.5...HEAD
+[v1.0.5]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.0.4...v1.0.5
 [v1.0.4]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.0.3...v1.0.4
 [v1.0.3]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.0.2...v1.0.3
 [v1.0.2]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.0.1...v1.0.2
