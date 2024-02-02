@@ -176,31 +176,34 @@ class SpotlightGafferState extends State<SpotlightGaffer> with TickerProviderSta
     for (final action in currentAnt!.widget.action.enabled) {
       switch (action) {
         case SpotlightAntAction.prev:
-          yield currentAnt!.widget.action.prev ??
-              IconButton(
-                onPressed: () => prev(),
-                tooltip: 'Previous spotlight',
-                color: Colors.white,
-                icon: const Icon(Icons.arrow_back_ios_sharp),
-              );
+          yield currentAnt!.widget.action.prev != null
+              ? currentAnt!.widget.action.prev!(prev)
+              : IconButton(
+                  onPressed: () => prev(),
+                  tooltip: 'Previous spotlight',
+                  color: Colors.white,
+                  icon: const Icon(Icons.arrow_back_ios_sharp),
+                );
           break;
         case SpotlightAntAction.next:
-          yield currentAnt!.widget.action.next ??
-              IconButton(
-                onPressed: () => next(),
-                tooltip: 'Next spotlight',
-                color: Colors.white,
-                icon: const Icon(Icons.arrow_forward_ios_sharp),
-              );
+          yield currentAnt!.widget.action.next != null
+              ? currentAnt!.widget.action.next!(next)
+              : IconButton(
+                  onPressed: () => next(),
+                  tooltip: 'Next spotlight',
+                  color: Colors.white,
+                  icon: const Icon(Icons.arrow_forward_ios_sharp),
+                );
           break;
         case SpotlightAntAction.skip:
-          yield currentAnt!.widget.action.skip ??
-              IconButton(
-                onPressed: () => skip(),
-                tooltip: 'Skip spotlight show',
-                color: Colors.white,
-                icon: const Icon(Icons.close_sharp),
-              );
+          yield currentAnt!.widget.action.skip != null
+              ? currentAnt!.widget.action.skip!(skip)
+              : IconButton(
+                  onPressed: () => skip(),
+                  tooltip: 'Skip spotlight show',
+                  color: Colors.white,
+                  icon: const Icon(Icons.close_sharp),
+                );
           break;
       }
     }
