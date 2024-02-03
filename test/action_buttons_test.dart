@@ -18,9 +18,9 @@ void main() {
 
     testWidgets('basic', (WidgetTester tester) async {
       final show = GlobalKey<SpotlightShowState>();
-      final nextButton = ValueKey('next');
-      final prevButton = ValueKey('prev');
-      final skipButton = ValueKey('skip');
+      const nextButton = ValueKey('next');
+      const prevButton = ValueKey('prev');
+      const skipButton = ValueKey('skip');
 
       int onShown = 0;
       int onDismissed = 0;
