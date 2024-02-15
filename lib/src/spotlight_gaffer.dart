@@ -176,27 +176,27 @@ class SpotlightGafferState extends State<SpotlightGaffer> with TickerProviderSta
     for (final action in currentAnt!.widget.action.enabled) {
       switch (action) {
         case SpotlightAntAction.prev:
-          yield currentAnt!.widget.action.prev ??
+          yield currentAnt!.widget.action.prev?.call(prev) ??
               IconButton(
-                onPressed: () => prev(),
+                onPressed: prev,
                 tooltip: 'Previous spotlight',
                 color: Colors.white,
                 icon: const Icon(Icons.arrow_back_ios_sharp),
               );
           break;
         case SpotlightAntAction.next:
-          yield currentAnt!.widget.action.next ??
+          yield currentAnt!.widget.action.next?.call(next) ??
               IconButton(
-                onPressed: () => next(),
+                onPressed: next,
                 tooltip: 'Next spotlight',
                 color: Colors.white,
                 icon: const Icon(Icons.arrow_forward_ios_sharp),
               );
           break;
         case SpotlightAntAction.skip:
-          yield currentAnt!.widget.action.skip ??
+          yield currentAnt!.widget.action.skip?.call(skip) ??
               IconButton(
-                onPressed: () => skip(),
+                onPressed: skip,
                 tooltip: 'Skip spotlight show',
                 color: Colors.white,
                 icon: const Icon(Icons.close_sharp),

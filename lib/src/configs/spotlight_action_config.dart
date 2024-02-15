@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spotlight_ant/spotlight_ant.dart';
 import 'package:spotlight_ant/src/spotlight_ant.dart';
 
 class SpotlightActionConfig {
@@ -28,13 +29,13 @@ class SpotlightActionConfig {
   /// Default using:
   /// ```dart
   /// IconButton(
-  ///   onPressed: () => prev(),
+  ///   onPressed: () => next(),
   ///   tooltip: 'Next spotlight',
   ///   color: Colors.white,
   ///   icon: const Icon(Icons.arrow_forward_ios_sharp),
   /// );
   /// ```
-  final Widget? next;
+  final Widget Function(VoidCallback callback)? next;
 
   /// Pressed the action widget will go to previous spotlight.
   ///
@@ -47,7 +48,7 @@ class SpotlightActionConfig {
   ///   icon: const Icon(Icons.arrow_back_ios_sharp),
   /// );
   /// ```
-  final Widget? prev;
+  final Widget Function(VoidCallback callback)? prev;
 
   /// Pressed the action widget will skip all spotlights.
   ///
@@ -60,7 +61,7 @@ class SpotlightActionConfig {
   ///   icon: const Icon(Icons.close_sharp),
   /// );
   /// ```
-  final Widget? skip;
+  final Widget Function(VoidCallback callback)? skip;
 
   const SpotlightActionConfig({
     this.enabled = const [SpotlightAntAction.skip],
