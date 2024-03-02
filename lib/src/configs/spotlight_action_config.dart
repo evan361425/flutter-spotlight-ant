@@ -73,6 +73,7 @@ class SpotlightActionConfig {
   ///   color: Colors.white,
   ///   icon: const Icon(Icons.check_sharp),
   /// );
+  /// ```
   final Widget Function(VoidCallback callback)? finish;
 
   const SpotlightActionConfig({
