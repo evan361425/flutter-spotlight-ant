@@ -101,10 +101,13 @@ The configuration of `SpotlightShow`:
 
 | Name | Default | Desc. |
 | - | - | - |
-| showAfterInit | `true` | If you want to fire it by program, set it to false |
+| enable | `true` | Wheather enable the show |
+| startWhenReady | `true` | If you want to fire it by program, set it to false |
 | showWaitFuture | `null` | Pass the `Future` and it will wait until it done and start the show. |
 | onSkip | `null` | Callback after tapping `SpotlightAntAction.skip`. |
 | onFinish | `null` | Callback after finish the show. |
+| popAction | `SpotlightAntAction.skip` | Action after pressing pop button. |
+| readinessChecker | `null` | A function to check whether the show is ready to start. |
 
 Go to [API doc](https://pub.dev/documentation/spotlight_ant/latest/spotlight_ant/spotlight_ant-library.html) for details.
 

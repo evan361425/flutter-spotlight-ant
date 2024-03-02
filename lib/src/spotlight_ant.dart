@@ -211,4 +211,5 @@ enum SpotlightAntAction {
   prev,
   next,
   skip,
+  finish,
 }

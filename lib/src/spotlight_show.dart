@@ -69,17 +69,21 @@ class SpotlightShow extends StatefulWidget {
   /// True to make it able to start.
   final bool enable;
 
-  /// Skip the show if user try to pop(aka BACK button in Android).
-  final bool skipWhenPop;
+  /// If user try to pop(aka BACK button in Android) which action to take.
+  ///
+  /// Set to null will do nothing and pass the pop event.
+  ///
+  /// Default is [SpotlightAntAction.skip].
+  final SpotlightAntAction? popAction;
 
   const SpotlightShow({
     Key? key,
+    this.enable = true,
     this.startWhenReady = true,
     this.showWaitFuture,
     this.onSkip,
     this.onFinish,
-    this.skipWhenPop = true,
-    this.enable = true,
+    this.popAction = SpotlightAntAction.skip,
     required this.child,
   }) : super(key: key);
 
@@ -156,14 +160,12 @@ class SpotlightShowState extends State<SpotlightShow> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        if (widget.skipWhenPop && isPerforming) {
-          gaffer.currentState?.skip();
-          return false;
+    return PopScope(
+      canPop: widget.popAction == null || !isPerforming,
+      onPopInvoked: (popped) {
+        if (!popped) {
+          perform(widget.popAction!);
         }
-
-        return true;
       },
       child: _ShowScope(
         showState: this,
@@ -241,6 +243,8 @@ class SpotlightShowState extends State<SpotlightShow> {
           );
         });
         Overlay.of(context).insert(_overlayEntry!);
+        // force rebuild to make sure the PopScope property has updated.
+        setState(() {});
       }
     });
   }
@@ -258,6 +262,23 @@ class SpotlightShowState extends State<SpotlightShow> {
 
   /// Go to previous spotlight properly.
   void prev() => gaffer.currentState?.prev();
+
+  void perform(SpotlightAntAction action) {
+    switch (action) {
+      case SpotlightAntAction.next:
+        next();
+        break;
+      case SpotlightAntAction.prev:
+        prev();
+        break;
+      case SpotlightAntAction.skip:
+        skip();
+        break;
+      case SpotlightAntAction.finish:
+        finish();
+        break;
+    }
+  }
 
   /// Register [SpotlightAnt] programmatically.
   void register(SpotlightAntState ant) {
@@ -305,8 +326,12 @@ class SpotlightShowState extends State<SpotlightShow> {
   }
 
   void _removeOverlayEntry() {
-    _overlayEntry?.remove();
-    _overlayEntry = null;
+    if (_overlayEntry != null) {
+      _overlayEntry!.remove();
+      _overlayEntry = null;
+      // force rebuild to make sure the PopScope property has updated.
+      setState(() {});
+    }
   }
 }
 
