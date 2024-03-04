@@ -345,5 +345,47 @@ void main() {
       expect(skipped, isTrue);
       expect(find.text('content'), findsNothing);
     });
+
+    testWidgets('should follow readinessChecker', (tester) async {
+      const delay = Duration(milliseconds: 50);
+      var checkCounter = 0;
+      await tester.pumpWidget(MaterialApp(
+        home: SpotlightShow(
+          readinessChecker: (ants) {
+            checkCounter++;
+            return ants.length == 2;
+          },
+          child: Column(children: [
+            const SpotlightAnt(
+              content: Text('content-1'),
+              duration: SpotlightDurationConfig.zero,
+              child: Text('child-1'),
+            ),
+            FutureBuilder(
+              future: Future.delayed(delay).then((_) => 1),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return const Text('waiting');
+                }
+                return const SpotlightAnt(
+                  content: Text('content-2'),
+                  duration: SpotlightDurationConfig.zero,
+                  child: Text('child-2'),
+                );
+              },
+            ),
+          ]),
+        ),
+      ));
+
+      await tester.pumpAndSettle();
+      expect(find.text('content-1'), findsNothing);
+      await tester.pump(delay);
+      await tester.pump(const Duration(milliseconds: 1));
+      await tester.pump(const Duration(milliseconds: 1));
+      expect(find.text('content-1'), findsOneWidget);
+      // check ant-1, ant-2 and check after scheduleFrameCallback
+      expect(checkCounter, equals(3));
+    });
   });
 }

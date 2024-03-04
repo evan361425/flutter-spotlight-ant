@@ -76,6 +76,15 @@ class SpotlightShow extends StatefulWidget {
   /// Default is [SpotlightAntAction.skip].
   final SpotlightAntAction? popAction;
 
+  /// A function to check whether the show is ready to start.
+  ///
+  /// Default will check whether spotlights' [SpotlightAnt.index] is null or
+  /// less than or equal to 0.
+  ///
+  /// * [ants] is the list of [SpotlightAntState] that is registered (it might
+  /// not contain all of the ants if some are not built).
+  final bool Function(List<SpotlightAntState> ants)? readinessChecker;
+
   const SpotlightShow({
     Key? key,
     this.enable = true,
@@ -84,6 +93,7 @@ class SpotlightShow extends StatefulWidget {
     this.onSkip,
     this.onFinish,
     this.popAction = SpotlightAntAction.skip,
+    this.readinessChecker,
     required this.child,
   }) : super(key: key);
 
@@ -190,9 +200,13 @@ class SpotlightShowState extends State<SpotlightShow> {
   /// See also:
   ///
   /// * [isNotReadyToStart], which will return the opposite result of this.
-  /// * [isNotPerforming], whether this show is performing.
+  /// * [isPerforming], whether this show is performing.
   bool get isReadyToStart {
     if (_antQueue.isNotEmpty && !isPerforming) {
+      if (widget.readinessChecker != null) {
+        return widget.readinessChecker!(_antQueue);
+      }
+
       final index = _antQueue.first.widget.index;
       return index == null || index <= 0;
     }
@@ -223,6 +237,8 @@ class SpotlightShowState extends State<SpotlightShow> {
     if (_antQueue.isEmpty || isPerforming || !widget.enable) return;
 
     WidgetsBinding.instance.scheduleFrameCallback((timeStamp) {
+      // after the frame is rendered, ant might be disappeared.
+      // so we need to check again.
       if (isReadyToStart) {
         _overlayEntry = OverlayEntry(builder: (context) {
           return SpotlightGaffer(
