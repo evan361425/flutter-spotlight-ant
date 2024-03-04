@@ -202,6 +202,15 @@ class SpotlightGafferState extends State<SpotlightGaffer> with TickerProviderSta
                 icon: const Icon(Icons.close_sharp),
               );
           break;
+        case SpotlightAntAction.finish:
+          yield currentAnt!.widget.action.finish?.call(finish) ??
+              IconButton(
+                onPressed: finish,
+                tooltip: 'Finish spotlight show',
+                color: Colors.white,
+                icon: const Icon(Icons.check_sharp),
+              );
+          break;
       }
     }
   }

@@ -227,7 +227,7 @@ void main() {
       await tester.pump(const Duration(milliseconds: 1)); // zoom in
       expect(onShow, equals(1));
 
-      show.currentState?.next();
+      show.currentState?.perform(SpotlightAntAction.next);
       await tester.pump(const Duration(milliseconds: 1)); // zoom out and in
       expect(onDismiss, equals(1));
       expect(onShow, equals(3));
@@ -237,7 +237,7 @@ void main() {
       await tester.pump(const Duration(milliseconds: 1));
       expect(onDismiss, equals(1));
 
-      show.currentState?.prev();
+      show.currentState?.perform(SpotlightAntAction.prev);
       await tester.pump(const Duration(milliseconds: 1));
       expect(onDismiss, equals(3));
       expect(onShow, equals(4));
@@ -253,13 +253,13 @@ void main() {
       expect(onFinish, equals(0));
 
       // already finish should not fire again
-      show.currentState?.skip();
+      show.currentState?.perform(SpotlightAntAction.skip);
       await tester.pump(const Duration(milliseconds: 1));
       expect(onSkip, equals(1));
 
       show.currentState?.start();
       await tester.pump(const Duration(milliseconds: 1));
-      show.currentState?.finish();
+      show.currentState?.perform(SpotlightAntAction.finish);
       await tester.pump(const Duration(milliseconds: 1));
       expect(onFinish, equals(1));
       expect(onSkip, equals(1));
@@ -324,6 +324,7 @@ void main() {
       await tester.pumpWidget(MaterialApp(
         home: SpotlightShow(
           onSkip: () => skipped = true,
+          popAction: SpotlightAntAction.skip,
           child: const SpotlightAnt(
             content: Text('content'),
             duration: SpotlightDurationConfig.zero,

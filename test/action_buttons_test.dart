@@ -4,11 +4,6 @@ import 'package:spotlight_ant/spotlight_ant.dart';
 
 void main() {
   group('Spotlight Ant and Custom Action button overrides', () {
-    const actions = [
-      SpotlightAntAction.prev,
-      SpotlightAntAction.skip,
-      SpotlightAntAction.next,
-    ];
     const duration = SpotlightDurationConfig(
       zoomIn: Duration(milliseconds: 5),
       zoomOut: Duration(milliseconds: 5),
@@ -17,6 +12,12 @@ void main() {
     );
 
     testWidgets('basic', (WidgetTester tester) async {
+      const actions = [
+        SpotlightAntAction.prev,
+        SpotlightAntAction.skip,
+        SpotlightAntAction.finish,
+        SpotlightAntAction.next,
+      ];
       final show = GlobalKey<SpotlightShowState>();
       const nextButton = ValueKey('next');
       const prevButton = ValueKey('prev');
@@ -106,6 +107,58 @@ void main() {
       await tester.pump(const Duration(milliseconds: 6));
       expect(find.text('content-1'), findsNothing);
       expect(find.text('content-2'), findsNothing);
+
+      expect(onSkip, equals(1));
+      expect(onFinish, equals(0));
+    });
+
+    testWidgets('finish', (tester) async {
+      final show = GlobalKey<SpotlightShowState>();
+      const button = ValueKey('finish');
+
+      int onSkip = 0;
+      int onFinish = 0;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: SpotlightShow(
+            key: show,
+            onSkip: () => onSkip++,
+            onFinish: () => onFinish++,
+            child: Column(
+              children: [
+                SpotlightAnt(
+                  duration: duration,
+                  content: const SpotlightContent(child: Text('content-1')),
+                  action: SpotlightActionConfig(
+                    enabled: [SpotlightAntAction.finish],
+                    finish: (callback) => ElevatedButton(
+                      key: button,
+                      onPressed: () => callback(),
+                      child: const Text('Finish'),
+                    ),
+                  ),
+                  child: const Text('widget-1'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      await tester.pump(const Duration(milliseconds: 1));
+      await tester.pump(const Duration(milliseconds: 6));
+      expect(find.text('content-1'), findsOneWidget);
+
+      // finish
+      await tester.tap(find.byKey(button));
+      await tester.pump(const Duration(milliseconds: 1));
+      await tester.pump(const Duration(milliseconds: 6));
+      expect(find.text('content-1'), findsNothing);
+      expect(onSkip, equals(0));
+      expect(onFinish, equals(1));
     });
   });
 }

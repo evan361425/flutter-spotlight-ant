@@ -63,11 +63,25 @@ class SpotlightActionConfig {
   /// ```
   final Widget Function(VoidCallback callback)? skip;
 
+  /// Pressed the action widget will finish the spotlight show.
+  ///
+  /// Default using:
+  /// ```dart
+  /// IconButton(
+  ///   onPressed: () => finish(),
+  ///   tooltip: 'Finish spotlight show',
+  ///   color: Colors.white,
+  ///   icon: const Icon(Icons.check_sharp),
+  /// );
+  /// ```
+  final Widget Function(VoidCallback callback)? finish;
+
   const SpotlightActionConfig({
     this.enabled = const [SpotlightAntAction.skip],
     this.builder,
     this.next,
     this.prev,
     this.skip,
+    this.finish,
   });
 }
