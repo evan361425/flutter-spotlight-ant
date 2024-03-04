@@ -160,12 +160,15 @@ class SpotlightShowState extends State<SpotlightShow> {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: widget.popAction == null || !isPerforming,
-      onPopInvoked: (popped) {
-        if (!popped) {
+    // ignore: deprecated_member_use
+    return WillPopScope(
+      onWillPop: () async {
+        final canPop = widget.popAction == null || !isPerforming;
+        if (!canPop) {
           perform(widget.popAction!);
         }
+
+        return canPop;
       },
       child: _ShowScope(
         showState: this,
