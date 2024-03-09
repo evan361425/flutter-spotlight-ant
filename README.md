@@ -111,6 +111,12 @@ The configuration of `SpotlightShow`:
 
 Go to [API doc](https://pub.dev/documentation/spotlight_ant/latest/spotlight_ant/spotlight_ant-library.html) for details.
 
+> You can enable debug mode by:
+>
+> ```dart
+> SpotlightAnt.debug = true;
+> ```
+
 ### SpotlightConfig
 
 Configuration for the spotlight.
@@ -189,13 +195,13 @@ class _Painter extends SpotlightPainter {
 }
 ```
 
-Actions is also easy too:
+Actions is also easy to customize:
 
 ```dart
 SpotlightAnt(
   action: SpotlightActionConfig(
-    skip: TextButton.icon(
-      onPressed: () => SpotlightShow.of(context).skip(),
+    skip: (cb) => TextButton.icon(
+      onPressed: () => cb(),
       label: const Text('MY Skip'),
       icon: const Icon(Icons.arrow_forward_ios_sharp),
     ),

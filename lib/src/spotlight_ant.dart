@@ -12,6 +12,9 @@ import 'spotlight_content.dart';
 
 /// Basic widget that contains the spotlight information.
 class SpotlightAnt extends StatefulWidget {
+  /// Set to true will show debug information.
+  static bool debug = false;
+
   /// Set to false will ignore this spotlight
   final bool enable;
 

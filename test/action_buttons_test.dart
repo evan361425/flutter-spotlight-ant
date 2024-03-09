@@ -161,4 +161,6 @@ void main() {
       expect(onFinish, equals(1));
     });
   });
+
+  setUpAll(() => SpotlightAnt.debug = true);
 }

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:spotlight_ant/src/spotlight_ant.dart';
 
@@ -250,6 +252,7 @@ class SpotlightGafferState extends State<SpotlightGaffer> with TickerProviderSta
 
   /// Go to next spotlight properly.
   void next() {
+    if (SpotlightAnt.debug) log('[ant] performing next');
     if (currentIndex < widget.ants.length - 1) {
       _startZoomOut().then((success) {
         if (success) {
@@ -271,6 +274,7 @@ class SpotlightGafferState extends State<SpotlightGaffer> with TickerProviderSta
 
   /// Go to previous spotlight properly.
   void prev() {
+    if (SpotlightAnt.debug) log('[ant] performing prev');
     if (currentIndex > 0) {
       _startZoomOut().then((success) {
         if (success) {
@@ -286,6 +290,7 @@ class SpotlightGafferState extends State<SpotlightGaffer> with TickerProviderSta
   /// but won't call the [SpotlightAnt.onSkip].
   void finish() {
     _startZoomOut().then((success) {
+      if (SpotlightAnt.debug) log('[ant] execute finish callback');
       widget.onFinish();
     });
   }
@@ -296,6 +301,7 @@ class SpotlightGafferState extends State<SpotlightGaffer> with TickerProviderSta
   /// but won't call the [SpotlightAnt.onFinish].
   void skip() {
     _startZoomOut().then((success) {
+      if (SpotlightAnt.debug) log('[ant] execute skip callback');
       widget.onSkip();
     });
   }
@@ -335,6 +341,7 @@ class SpotlightGafferState extends State<SpotlightGaffer> with TickerProviderSta
 
       // Start animation
       _zoomController.forward().then((value) {
+        if (SpotlightAnt.debug) log('[ant] ready to bump');
         isBumping = true;
         if (antMounted) {
           currentAnt!.widget.onShown?.call();
@@ -353,6 +360,7 @@ class SpotlightGafferState extends State<SpotlightGaffer> with TickerProviderSta
 
   Future<bool> _startZoomOut() async {
     if (isBumping) {
+      if (SpotlightAnt.debug) log('[ant] finish the bump');
       isBumping = false;
       currentAnt!.widget.onDismiss?.call();
       _bumpController.stop();

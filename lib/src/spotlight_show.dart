@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/widgets.dart';
 import 'spotlight_ant.dart';
 import 'spotlight_gaffer.dart';
@@ -246,8 +248,7 @@ class SpotlightShowState extends State<SpotlightShow> {
           );
         });
         Overlay.of(context).insert(_overlayEntry!);
-        // force rebuild to make sure the PopScope property has updated.
-        setState(() {});
+        if (SpotlightAnt.debug) log('[ant] started the show');
       }
     });
   }
@@ -286,6 +287,7 @@ class SpotlightShowState extends State<SpotlightShow> {
   /// Register [SpotlightAnt] programmatically.
   void register(SpotlightAntState ant) {
     if (!_antQueue.contains(ant)) {
+      if (SpotlightAnt.debug) log('[ant] registered $ant');
       _queue(ant);
     }
   }
@@ -297,6 +299,7 @@ class SpotlightShowState extends State<SpotlightShow> {
     final success = _antQueue.remove(ant);
 
     if (success) {
+      if (SpotlightAnt.debug) log('[ant] unregister $ant');
       _dequeue(ant);
     }
   }
@@ -315,6 +318,7 @@ class SpotlightShowState extends State<SpotlightShow> {
     }
 
     if (isReadyToStart && widget.startWhenReady) {
+      if (SpotlightAnt.debug) log('[ant] ready to start the show');
       final future = widget.showWaitFuture ?? Future.delayed(Duration.zero);
       future.then((value) => start());
     }
@@ -324,6 +328,7 @@ class SpotlightShowState extends State<SpotlightShow> {
     _antQueue.removeWhere((e) => e == ant);
 
     if (_antQueue.isEmpty) {
+      if (SpotlightAnt.debug) log('[ant] the show is finish');
       _removeOverlayEntry();
     }
   }
@@ -332,8 +337,6 @@ class SpotlightShowState extends State<SpotlightShow> {
     if (_overlayEntry != null) {
       _overlayEntry!.remove();
       _overlayEntry = null;
-      // force rebuild to make sure the PopScope property has updated.
-      setState(() {});
     }
   }
 }
