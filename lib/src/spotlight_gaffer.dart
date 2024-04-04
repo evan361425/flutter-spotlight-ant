@@ -22,14 +22,13 @@ class SpotlightGaffer extends StatefulWidget {
   final void Function(int pausedAt) onPaused;
 
   const SpotlightGaffer({
-    Key? key,
+    super.key,
     required this.ants,
     required this.startAt,
     required this.onFinish,
     required this.onSkip,
     required this.onPaused,
-  })  : assert(ants.length > 0),
-        super(key: key);
+  }) : assert(ants.length > 0);
 
   @override
   State<SpotlightGaffer> createState() => SpotlightGafferState();

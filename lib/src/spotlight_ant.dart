@@ -3,11 +3,12 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:spotlight_ant/src/configs/spotlight_action_config.dart';
 import 'package:spotlight_ant/src/configs/spotlight_backdrop_config.dart';
+import 'package:spotlight_ant/src/configs/spotlight_config.dart';
 import 'package:spotlight_ant/src/configs/spotlight_content_layout_config.dart';
 import 'package:spotlight_ant/src/configs/spotlight_duration_config.dart';
-import 'package:spotlight_ant/src/configs/spotlight_config.dart';
 import 'package:spotlight_ant/src/spotlight_show.dart';
 import 'package:visibility_detector/visibility_detector.dart';
+
 import 'spotlight_content.dart';
 
 /// Basic widget that contains the spotlight information.
@@ -78,7 +79,7 @@ class SpotlightAnt extends StatefulWidget {
   final Widget child;
 
   const SpotlightAnt({
-    Key? key,
+    super.key,
     this.enable = true,
     this.monitorId,
     this.spotlight = const SpotlightConfig(),
@@ -94,8 +95,7 @@ class SpotlightAnt extends StatefulWidget {
     this.onDismiss,
     this.onDismissed,
     required this.child,
-  })  : assert(index == null || index >= 0),
-        super(key: key);
+  }) : assert(index == null || index >= 0);
 
   @override
   State<StatefulWidget> createState() => SpotlightAntState();

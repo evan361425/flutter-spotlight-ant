@@ -16,13 +16,13 @@ class SpotlightContent extends StatelessWidget {
   final EdgeInsets padding;
 
   const SpotlightContent({
-    Key? key,
+    super.key,
     required this.child,
     this.textColor = Colors.white,
     this.fontSize,
     // this.fontSize =
     this.padding = const EdgeInsets.fromLTRB(8, 8, 8, 64),
-  }) : super(key: key); // coverage:ignore-line
+  });
 
   @override
   Widget build(BuildContext context) {

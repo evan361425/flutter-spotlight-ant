@@ -66,7 +66,7 @@ void main() {
 }
 
 class Hider extends StatefulWidget {
-  const Hider({Key? key}) : super(key: key);
+  const Hider({super.key});
 
   @override
   State<Hider> createState() => _HiderState();

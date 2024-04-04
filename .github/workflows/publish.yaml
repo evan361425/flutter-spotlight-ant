@@ -17,17 +17,27 @@ jobs:
     environment: pub.dev
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.10.x"
           cache: true
           channel: "stable"
       # Minimal package setup and dry run checks.
       - name: Install dependencies
-        run: flutter pub get
+        run: dart pub get
       - name: Publish - dry run
-        run: flutter pub publish --dry-run
-      # Publishing..., it will keep asking
-      # - name: Publish to pub.dev
-      #   run: flutter pub publish --force
+        run: dart pub publish --dry-run
+      # Publishing, see
+      # https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/about-security-hardening-with-openid-connect#updating-your-actions-for-oidc
+      - name: Login
+        run: |
+          set -eo pipefail
+          token=$(curl --retry 5 --retry-connrefused -sLS \
+            -H "User-Agent: actions/oidc-client" \
+            -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+            "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=https://pub.dev" | jq -r '.value')
+          echo "PUB_TOKEN=$token" >> $GITHUB_ENV
+          export PUB_TOKEN=$token
+          flutter pub token add https://pub.dev --env-var PUB_TOKEN
+      - name: Publish to pub.dev
+        run: dart pub publish --force

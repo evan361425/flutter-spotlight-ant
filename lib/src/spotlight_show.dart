@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/widgets.dart';
+
 import 'spotlight_ant.dart';
 import 'spotlight_gaffer.dart';
 
@@ -79,7 +80,7 @@ class SpotlightShow extends StatefulWidget {
   final SpotlightAntAction? popAction;
 
   const SpotlightShow({
-    Key? key,
+    super.key,
     this.enable = true,
     this.startWhenReady = true,
     this.showWaitFuture,
@@ -87,7 +88,7 @@ class SpotlightShow extends StatefulWidget {
     this.onFinish,
     this.popAction = SpotlightAntAction.skip,
     required this.child,
-  }) : super(key: key);
+  });
 
   @override
   State<StatefulWidget> createState() => SpotlightShowState();

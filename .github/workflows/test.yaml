@@ -6,12 +6,9 @@ on:
   push:
     branches:
       - master
-    paths-ignore:
-      - "**.md"
-      - ".github/**"
-      - ".vscode/**"
-      - "example/**"
-      - pubspec.yaml
+    paths:
+      - "lib/**"
+      - "test/**"
   pull_request:
 
   # Allows you to run this workflow manually from the Actions tab
@@ -22,17 +19,11 @@ jobs:
     name: Check code format and testing
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-
-      # Setup Java environment in order to build the Android app.
-      # - uses: actions/setup-java@v1
-      #   with:
-      #     java-version: "12.x"
+      - uses: actions/checkout@v4
 
       # Setup the flutter environment.
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.13.x"
           cache: true
           channel: "stable"
 
@@ -45,7 +36,7 @@ jobs:
         run: flutter analyze .
 
       - name: Format
-        run: dart format --set-exit-if-changed --line-length 120 .
+        run: make format
 
       # Run widget tests for our flutter project.
       - name: Testing
@@ -58,6 +49,8 @@ jobs:
 
       - name: Coverage to codecov
         if: github.event_name != 'pull_request'
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v4
         with:
           file: coverage/lcov.info
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: evan361425/flutter-spotlight-ant
