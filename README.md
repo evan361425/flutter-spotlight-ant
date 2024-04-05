@@ -125,7 +125,8 @@ Configuration for the spotlight.
 | - | - | - |
 | builder | `SpotlightCircularBuilder` | Allow any builder that extends from `SpotlightBuilder`. |
 | padding | `EdgeInsets.all(8)` | - |
-| silent | `false` | Disable capturing spotlight's tap event which will start to show next spotlight. |
+| silent | `false` | Disable capturing spotlight's tap event which will stop show next spotlight. |
+| onTap | `null` | Return `SpotlightAction` to determine what to do next, return null to do nothing. |
 | usingInkwell | `true` | Use `GestureDetector` instead of `Inkwell`. |
 | splashColor | `null` | `Inkwell` property. |
 
@@ -136,6 +137,7 @@ Configuration for the backdrop.
 | Name | Default | Desc. |
 | - | - | - |
 | silent | `false` | Disable capturing backdrop's tap event which will start to show next spotlight. |
+| onTap | `null` | Return `SpotlightAction` to determine what to do next, return null to do nothing. |
 | usingInkwell | `true` | Use `GestureDetector` instead of `Inkwell`. |
 | splashColor | `null` | `Inkwell` property. |
 

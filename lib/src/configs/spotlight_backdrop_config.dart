@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
 
+import '../spotlight_ant.dart';
+
 class SpotlightBackdropConfig {
-  /// Set to false will not build backdrop.
+  /// Set to true will skip building the backdrop.
   ///
   /// Backdrop is use to close the spotlight when tapping anywhere.
   final bool silent;
+
+  /// Define the action after the backdrop tapped.
+  ///
+  /// Return null to do nothing.
+  ///
+  /// Default using: [SpotlightAntAction.next]
+  final Future<SpotlightAntAction?> Function()? onTap;
 
   /// Using [InkWell] or [GestureDetector] on backdrop.
   final bool usingInkwell;
@@ -20,5 +29,6 @@ class SpotlightBackdropConfig {
     this.silent = false,
     this.usingInkwell = true,
     this.splashColor,
+    this.onTap,
   });
 }

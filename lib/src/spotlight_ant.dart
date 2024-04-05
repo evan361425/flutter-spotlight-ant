@@ -214,5 +214,9 @@ enum SpotlightAntAction {
   prev,
   next,
   skip,
-  finish,
+  finish;
+
+  Future<SpotlightAntAction?> meOr(Future<SpotlightAntAction?> Function()? cb) async {
+    return cb == null ? this : await cb();
+  }
 }

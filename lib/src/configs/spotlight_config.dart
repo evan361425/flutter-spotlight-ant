@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:spotlight_ant/src/spotlights/spotlight_builder.dart';
-import 'package:spotlight_ant/src/spotlights/spotlight_circular_builder.dart';
-import 'package:spotlight_ant/src/spotlights/spotlight_rect_builder.dart';
+
+import '../spotlight_ant.dart';
+import '../spotlights/spotlight_builder.dart';
+import '../spotlights/spotlight_circular_builder.dart';
+import '../spotlights/spotlight_rect_builder.dart';
 
 class SpotlightConfig {
   /// Building painter for spotlight.
@@ -17,10 +19,17 @@ class SpotlightConfig {
   /// Padding of spotlight.
   final EdgeInsets padding;
 
-  /// Listen `onTap` event on the spotlight to dismiss the tutorial.
+  /// Disable listen `onTap` event on the spotlight to dismiss the tutorial.
   ///
   /// Setting true will make it unable to go next when tapping the spotlight.
   final bool silent;
+
+  /// Define the action after the spotlight tapped.
+  ///
+  /// Return null to do nothing.
+  ///
+  /// Default using: [SpotlightAntAction.next]
+  final Future<SpotlightAntAction?> Function()? onTap;
 
   /// Using [InkWell] or [GestureDetector] on spotlight.
   final bool usingInkwell;
@@ -36,6 +45,7 @@ class SpotlightConfig {
     this.builder = const SpotlightCircularBuilder(),
     this.padding = const EdgeInsets.all(8),
     this.silent = false,
+    this.onTap,
     this.usingInkwell = true,
     this.splashColor,
   });

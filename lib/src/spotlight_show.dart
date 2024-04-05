@@ -284,22 +284,8 @@ class SpotlightShowState extends State<SpotlightShow> {
   /// Go to previous spotlight properly.
   void prev() => gaffer.currentState?.prev();
 
-  void perform(SpotlightAntAction action) {
-    switch (action) {
-      case SpotlightAntAction.next:
-        next();
-        break;
-      case SpotlightAntAction.prev:
-        prev();
-        break;
-      case SpotlightAntAction.skip:
-        skip();
-        break;
-      case SpotlightAntAction.finish:
-        finish();
-        break;
-    }
-  }
+  /// Perform action decided by [SpotlightAntAction].
+  void perform(SpotlightAntAction action) => gaffer.currentState?.perform(action);
 
   /// Register [SpotlightAnt] programmatically.
   void register(SpotlightAntState ant) {

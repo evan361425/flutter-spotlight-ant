@@ -73,20 +73,20 @@ class SpotlightGafferState extends State<SpotlightGaffer> with TickerProviderSta
       if (currentAnt!.widget.content != null) _buildContent(),
     ]);
 
-    final onTap = currentAnt!.widget.backdrop.silent ? () {} : next;
-
     return Material(
       type: MaterialType.transparency,
-      child: currentAnt!.widget.backdrop.usingInkwell
-          ? InkWell(
-              onTap: onTap,
-              splashColor: currentAnt!.widget.backdrop.splashColor,
-              child: spotlight,
-            )
-          : GestureDetector(
-              onTap: onTap,
-              child: spotlight,
-            ),
+      child: currentAnt!.widget.backdrop.silent
+          ? spotlight
+          : currentAnt!.widget.backdrop.usingInkwell
+              ? InkWell(
+                  onTap: _onBackdropTap,
+                  splashColor: currentAnt!.widget.backdrop.splashColor,
+                  child: spotlight,
+                )
+              : GestureDetector(
+                  onTap: _onBackdropTap,
+                  child: spotlight,
+                ),
     );
   }
 
@@ -100,7 +100,25 @@ class SpotlightGafferState extends State<SpotlightGaffer> with TickerProviderSta
       final painter = builder.build(r, value, isBumping);
       final rect = builder.targetRect(r);
 
-      final onTap = currentAnt!.widget.spotlight.silent ? () {} : next;
+      Widget child = SizedBox(
+        width: rect.width,
+        height: rect.height,
+      );
+
+      if (!currentAnt!.widget.spotlight.silent) {
+        child = currentAnt!.widget.spotlight.usingInkwell
+            ? InkWell(
+                key: const Key('evan'),
+                borderRadius: BorderRadius.circular(builder.inkwellRadius(r)),
+                splashColor: currentAnt!.widget.spotlight.splashColor,
+                onTap: _onSpotlightTap,
+                child: child,
+              )
+            : GestureDetector(
+                onTap: _onSpotlightTap,
+                child: child,
+              );
+      }
 
       widget = Stack(children: <Widget>[
         SizedBox(
@@ -111,23 +129,7 @@ class SpotlightGafferState extends State<SpotlightGaffer> with TickerProviderSta
         Positioned(
           left: rect.left,
           top: rect.top,
-          child: currentAnt!.widget.spotlight.usingInkwell
-              ? InkWell(
-                  borderRadius: BorderRadius.circular(builder.inkwellRadius(r)),
-                  splashColor: currentAnt!.widget.spotlight.splashColor,
-                  onTap: onTap,
-                  child: SizedBox(
-                    width: rect.width,
-                    height: rect.height,
-                  ),
-                )
-              : GestureDetector(
-                  onTap: onTap,
-                  child: SizedBox(
-                    width: rect.width,
-                    height: rect.height,
-                  ),
-                ),
+          child: child,
         )
       ]);
     }
@@ -285,8 +287,8 @@ class SpotlightGafferState extends State<SpotlightGaffer> with TickerProviderSta
 
   /// Finish the show.
   ///
-  /// This call the [SpotlightAnt.onFinish],
-  /// but won't call the [SpotlightAnt.onSkip].
+  /// This call the [SpotlightGaffer.onFinish],
+  /// but won't call the [SpotlightGaffer.onSkip].
   void finish() {
     _startZoomOut().then((success) {
       if (SpotlightAnt.debug) log('[ant] execute finish callback');
@@ -296,13 +298,49 @@ class SpotlightGafferState extends State<SpotlightGaffer> with TickerProviderSta
 
   /// Skip the show.
   ///
-  /// This call the [SpotlightAnt.onSkip],
-  /// but won't call the [SpotlightAnt.onFinish].
+  /// This call the [SpotlightGaffer.onSkip],
+  /// but won't call the [SpotlightGaffer.onFinish].
   void skip() {
     _startZoomOut().then((success) {
       if (SpotlightAnt.debug) log('[ant] execute skip callback');
       widget.onSkip();
     });
+  }
+
+  /// Perform the action.
+  ///
+  /// If the action is null, it will be ignored.
+  void perform(SpotlightAntAction? action) {
+    switch (action) {
+      case SpotlightAntAction.next:
+        next();
+        break;
+      case SpotlightAntAction.prev:
+        prev();
+        break;
+      case SpotlightAntAction.skip:
+        skip();
+        break;
+      case SpotlightAntAction.finish:
+        finish();
+        break;
+      case null:
+        break;
+    }
+  }
+
+  void _onBackdropTap() async {
+    final act = await SpotlightAntAction.next.meOr(currentAnt?.widget.backdrop.onTap);
+
+    if (SpotlightAnt.debug) log('[ant] backdrop tapped for $act');
+    perform(act);
+  }
+
+  void _onSpotlightTap() async {
+    final act = await SpotlightAntAction.next.meOr(currentAnt?.widget.spotlight.onTap);
+
+    if (SpotlightAnt.debug) log('[ant] spotlight tapped for $act');
+    perform(act);
   }
 
   void _startZoomIn(int index) async {

@@ -180,89 +180,119 @@ void main() {
       expect(onFinish, isTrue);
     });
 
-    testWidgets('control by show', (WidgetTester tester) async {
-      final show = GlobalKey<SpotlightShowState>();
-      int onShow = 0;
-      int onDismiss = 0;
-      int onSkip = 0;
-      int onFinish = 0;
+    group('control by show', () {
+      Future<void> exec(
+        WidgetTester tester,
+        GlobalKey<SpotlightShowState> show,
+        void Function(SpotlightAntAction) act,
+      ) async {
+        int onShow = 0;
+        int onDismiss = 0;
+        int onSkip = 0;
+        int onFinish = 0;
 
-      await tester.pumpWidget(MaterialApp(
-        home: SpotlightShow(
-          key: show,
-          onSkip: () => onSkip++,
-          onFinish: () => onFinish++,
-          child: Column(children: [
-            SpotlightAnt(
-              content: const Text('content-1'),
-              duration: SpotlightDurationConfig.zero,
-              spotlight: const SpotlightConfig(
-                builder: SpotlightBackDropBuilder(),
-                usingInkwell: false,
+        await tester.pumpWidget(MaterialApp(
+          home: SpotlightShow(
+            key: show,
+            onSkip: () => onSkip++,
+            onFinish: () => onFinish++,
+            child: Column(children: [
+              SpotlightAnt(
+                content: const Text('content-1'),
+                duration: SpotlightDurationConfig.zero,
+                spotlight: const SpotlightConfig(
+                  builder: SpotlightBackDropBuilder(),
+                  usingInkwell: false,
+                ),
+                backdrop: const SpotlightBackdropConfig(
+                  usingInkwell: false,
+                ),
+                onShow: () => onShow++,
+                onDismiss: () => onDismiss++,
+                child: const Text('child-1'),
               ),
-              backdrop: const SpotlightBackdropConfig(
-                usingInkwell: false,
+              SpotlightAnt(
+                content: const Text('content-2'),
+                duration: SpotlightDurationConfig.zero,
+                spotlight: const SpotlightConfig(
+                  silent: true,
+                  builder: SpotlightBackDropBuilder(),
+                ),
+                backdrop: const SpotlightBackdropConfig(silent: true),
+                onShow: () => onShow += 2,
+                onDismiss: () => onDismiss += 2,
+                child: const Text('child-2'),
               ),
-              onShow: () => onShow++,
-              onDismiss: () => onDismiss++,
-              child: const Text('child-1'),
-            ),
-            SpotlightAnt(
-              content: const Text('content-2'),
-              duration: SpotlightDurationConfig.zero,
-              spotlight: const SpotlightConfig(
-                silent: true,
-                builder: SpotlightBackDropBuilder(),
-              ),
-              backdrop: const SpotlightBackdropConfig(silent: true),
-              onShow: () => onShow += 2,
-              onDismiss: () => onDismiss += 2,
-              child: const Text('child-2'),
-            ),
-          ]),
-        ),
-      ));
-      await tester.pumpAndSettle();
+            ]),
+          ),
+        ));
+        await tester.pumpAndSettle();
 
-      await tester.pump(const Duration(milliseconds: 1)); // zoom in
-      expect(onShow, equals(1));
+        await tester.pump(const Duration(milliseconds: 1)); // zoom in
+        expect(onShow, equals(1));
 
-      show.currentState?.perform(SpotlightAntAction.next);
-      await tester.pump(const Duration(milliseconds: 1)); // zoom out and in
-      expect(onDismiss, equals(1));
-      expect(onShow, equals(3));
+        act(SpotlightAntAction.next);
+        await tester.pump(const Duration(milliseconds: 1)); // zoom out and in
+        expect(onDismiss, equals(1));
+        expect(onShow, equals(3));
 
-      // silent should not fire tap event
-      await tester.tapAt(Offset.zero);
-      await tester.pump(const Duration(milliseconds: 1));
-      expect(onDismiss, equals(1));
+        // silent should not fire tap event
+        await tester.tapAt(Offset.zero);
+        await tester.pump(const Duration(milliseconds: 1));
+        expect(onDismiss, equals(1));
 
-      show.currentState?.perform(SpotlightAntAction.prev);
-      await tester.pump(const Duration(milliseconds: 1));
-      expect(onDismiss, equals(3));
-      expect(onShow, equals(4));
+        act(SpotlightAntAction.prev);
+        await tester.pump(const Duration(milliseconds: 1));
+        expect(onDismiss, equals(3));
+        expect(onShow, equals(4));
 
-      // skip by WillPopScope
-      final dynamic widgetsAppState = tester.state(find.byType(WidgetsApp));
-      await widgetsAppState.didPopRoute();
-      await tester.pump(const Duration(milliseconds: 1));
+        // skip by WillPopScope
+        final dynamic widgetsAppState = tester.state(find.byType(WidgetsApp));
+        await widgetsAppState.didPopRoute();
+        await tester.pump(const Duration(milliseconds: 1));
 
-      expect(onDismiss, equals(4));
-      expect(onShow, equals(4));
-      expect(onSkip, equals(1));
-      expect(onFinish, equals(0));
+        expect(onDismiss, equals(4));
+        expect(onShow, equals(4));
+        expect(onSkip, equals(1));
+        expect(onFinish, equals(0));
 
-      // already finish should not fire again
-      show.currentState?.perform(SpotlightAntAction.skip);
-      await tester.pump(const Duration(milliseconds: 1));
-      expect(onSkip, equals(1));
+        // already finish should not fire again
+        act(SpotlightAntAction.skip);
+        await tester.pump(const Duration(milliseconds: 1));
+        expect(onSkip, equals(1));
 
-      show.currentState?.start();
-      await tester.pump(const Duration(milliseconds: 1));
-      show.currentState?.perform(SpotlightAntAction.finish);
-      await tester.pump(const Duration(milliseconds: 1));
-      expect(onFinish, equals(1));
-      expect(onSkip, equals(1));
+        show.currentState?.start();
+        await tester.pump(const Duration(milliseconds: 1));
+        act(SpotlightAntAction.finish);
+        await tester.pump(const Duration(milliseconds: 1));
+        expect(onFinish, equals(1));
+        expect(onSkip, equals(1));
+      }
+
+      testWidgets('by perform', (WidgetTester tester) async {
+        final show = GlobalKey<SpotlightShowState>();
+        await exec(tester, show, (act) => show.currentState?.perform(act));
+      });
+
+      testWidgets('directly', (WidgetTester tester) async {
+        final show = GlobalKey<SpotlightShowState>();
+        await exec(tester, show, (act) {
+          switch (act) {
+            case SpotlightAntAction.next:
+              show.currentState?.next();
+              break;
+            case SpotlightAntAction.prev:
+              show.currentState?.prev();
+              break;
+            case SpotlightAntAction.skip:
+              show.currentState?.skip();
+              break;
+            case SpotlightAntAction.finish:
+              show.currentState?.finish();
+              break;
+          }
+        });
+      });
     });
 
     testWidgets('should finish press next in last ant', (tester) async {
@@ -387,5 +417,50 @@ void main() {
       // check ant-1, ant-2 and check after scheduleFrameCallback
       expect(checkCounter, equals(3));
     });
+
+    testWidgets('customize backdrop and spotlight tap event', (tester) async {
+      bool backdropTapped = false;
+      bool spotlightTapped = false;
+      await tester.pumpWidget(MaterialApp(
+        home: Scaffold(
+          body: SpotlightShow(
+            child: Center(
+              child: SpotlightAnt(
+                content: const Text('content'),
+                duration: SpotlightDurationConfig.zero,
+                backdrop: SpotlightBackdropConfig(
+                  onTap: () async {
+                    backdropTapped = true;
+                    return null;
+                  },
+                ),
+                spotlight: SpotlightConfig(
+                  builder: const SpotlightBackDropBuilder(),
+                  onTap: () async {
+                    spotlightTapped = true;
+                    return null;
+                  },
+                ),
+                child: const Text('child'),
+              ),
+            ),
+          ),
+        ),
+      ));
+      await tester.pumpAndSettle();
+
+      await tester.pump(const Duration(milliseconds: 5));
+      expect(find.text('content'), findsOneWidget);
+
+      await tester.tapAt(const Offset(5, 5));
+      await tester.pump(const Duration(milliseconds: 1));
+      expect(backdropTapped, isTrue);
+
+      await tester.tapAt(tester.getCenter(find.text('child')));
+      await tester.pump(const Duration(milliseconds: 1));
+      expect(spotlightTapped, isTrue);
+    });
+
+    setUpAll(() => SpotlightAnt.debug = true);
   });
 }
