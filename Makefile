@@ -20,7 +20,7 @@ test-coverage: ## Run tests with coverage
 
 ##@ Build
 .PHONY: bump
-bump: ## install-bumper ## Bump version
+bump: install-bumper ## Bump version
 	@read -p "Enter new version: " version; \
 	if [[ ! $$version =~ ^[0-9]+\.[0-9]+\.[0-9]+$$ ]]; then \
 		echo "Version must be in x.x.x format"; \
