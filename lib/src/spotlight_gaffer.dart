@@ -12,6 +12,11 @@ class SpotlightGaffer extends StatefulWidget {
   /// Start at which ant.
   final int startAt;
 
+  /// Hide the action is not operable.
+  ///
+  /// E.g. [SpotlightAntAction.next] is not operable at the last ant.
+  final bool hideIfNotAble;
+
   /// Callback after finish the show.
   final VoidCallback onFinish;
 
@@ -25,6 +30,7 @@ class SpotlightGaffer extends StatefulWidget {
     super.key,
     required this.ants,
     required this.startAt,
+    required this.hideIfNotAble,
     required this.onFinish,
     required this.onSkip,
     required this.onPaused,
@@ -179,22 +185,26 @@ class SpotlightGafferState extends State<SpotlightGaffer> with TickerProviderSta
     for (final action in currentAnt!.widget.action.enabled) {
       switch (action) {
         case SpotlightAntAction.prev:
-          yield currentAnt!.widget.action.prev?.call(prev) ??
-              IconButton(
-                onPressed: prev,
-                tooltip: 'Previous spotlight',
-                color: Colors.white,
-                icon: const Icon(Icons.arrow_back_ios_sharp),
-              );
+          if (!widget.hideIfNotAble || currentIndex > 0) {
+            yield currentAnt!.widget.action.prev?.call(prev) ??
+                IconButton(
+                  onPressed: prev,
+                  tooltip: 'Previous spotlight',
+                  color: Colors.white,
+                  icon: const Icon(Icons.arrow_back_ios_sharp),
+                );
+          }
           break;
         case SpotlightAntAction.next:
-          yield currentAnt!.widget.action.next?.call(next) ??
-              IconButton(
-                onPressed: next,
-                tooltip: 'Next spotlight',
-                color: Colors.white,
-                icon: const Icon(Icons.arrow_forward_ios_sharp),
-              );
+          if (!widget.hideIfNotAble || currentIndex < widget.ants.length - 1) {
+            yield currentAnt!.widget.action.next?.call(next) ??
+                IconButton(
+                  onPressed: next,
+                  tooltip: 'Next spotlight',
+                  color: Colors.white,
+                  icon: const Icon(Icons.arrow_forward_ios_sharp),
+                );
+          }
           break;
         case SpotlightAntAction.skip:
           yield currentAnt!.widget.action.skip?.call(skip) ??

@@ -72,6 +72,11 @@ class SpotlightShow extends StatefulWidget {
   /// True to make it able to start.
   final bool enable;
 
+  /// Hide the action is not operable.
+  ///
+  /// E.g. [SpotlightAntAction.next] is not operable at the last ant.
+  final bool hideIfNotAble;
+
   /// If user try to pop(aka BACK button in Android) which action to take.
   ///
   /// Set to null will do nothing and pass the pop event.
@@ -91,6 +96,7 @@ class SpotlightShow extends StatefulWidget {
   const SpotlightShow({
     super.key,
     this.enable = true,
+    this.hideIfNotAble = true,
     this.startWhenReady = true,
     this.showWaitFuture,
     this.onSkip,
@@ -250,6 +256,7 @@ class SpotlightShowState extends State<SpotlightShow> {
             key: gaffer,
             ants: _antQueue,
             startAt: _startAt,
+            hideIfNotAble: widget.hideIfNotAble,
             onFinish: () {
               _removeOverlayEntry();
               _startAt = 0;

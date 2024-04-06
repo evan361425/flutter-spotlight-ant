@@ -101,8 +101,9 @@ The configuration of `SpotlightShow`:
 
 | Name | Default | Desc. |
 | - | - | - |
-| enable | `true` | Wheather enable the show |
-| startWhenReady | `true` | If you want to fire it by program, set it to false |
+| enable | `true` | Wheather enable the show. |
+| hideIfNotAble | `true` | Hide the action is not operable. |
+| startWhenReady | `true` | If you want to fire it by program, set it to false. |
 | showWaitFuture | `null` | Pass the `Future` and it will wait until it done and start the show. |
 | onSkip | `null` | Callback after tapping `SpotlightAntAction.skip`. |
 | onFinish | `null` | Callback after finish the show. |
