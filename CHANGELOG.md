@@ -8,6 +8,15 @@ This document's format follow the context in [Keep a Changelog](https://keepacha
 
 Please check git diff.
 
+## [v1.1.0] - 2024-04-06
+
+-   ([3abb8f0](https://github.com/evan361425/flutter-spotlight-ant/commit/3abb8f0e4b0dafdf4dca7056206ff8f93cb0360b)) feat: hide not operable action - wu0dj2k7ao3
+-   ([feb834d](https://github.com/evan361425/flutter-spotlight-ant/commit/feb834d8b85bae2572d6a337685708d7162d146f)) feat: allow cb before tapped - wu0dj2k7ao3
+-   ([#8](https://github.com/evan361425/flutter-spotlight-ant/pull/8)) feat: add readinessCheck - wu0dj2k7ao3
+-   ([2670811](https://github.com/evan361425/flutter-spotlight-ant/commit/267081158a5de80c6c712d7ef15e74e20a74f372)) fix: use v3 analysis - wu0dj2k7ao3
+-   ([440982c](https://github.com/evan361425/flutter-spotlight-ant/commit/440982c230e2f6a055fa9c233e5b7b1df4038b72)) feat: add debug mode - wu0dj2k7ao3
+-   ([#9](https://github.com/evan361425/flutter-spotlight-ant/pull/9)) feat: add finish action and custom pop action - wu0dj2k7ao3
+
 ## [v1.0.6] - 2024-02-15
 
 -   ([#6](https://github.com/evan361425/flutter-spotlight-ant/pull/6)) fix: actions using callbacks avoid dep. lookup - sebastian.roth
@@ -92,7 +101,8 @@ fix example document
 
 Initial release
 
-[unreleased]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.0.6...HEAD
+[unreleased]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.1.0...HEAD
+[v1.1.0]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.0.6...v1.1.0
 [v1.0.6]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.0.5...v1.0.6
 [v1.0.5]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.0.4...v1.0.5
 [v1.0.4]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.0.3...v1.0.4
