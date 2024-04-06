@@ -18,7 +18,7 @@ dependencies:
     path: ../
   url_launcher: ^6.1.8
   url_strategy: ^0.2.0
-  go_router: ^13.2.2
+  go_router: ^13.2.0
 
 dev_dependencies:
   flutter_lints: ^1.0.0
@@ -27,4 +27,4 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/spotlight-ant.png
+  - assets/spotlight-ant.png
