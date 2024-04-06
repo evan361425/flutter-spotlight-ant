@@ -18,16 +18,8 @@ class RandomScreen extends StatelessWidget {
     orders.shuffle();
     return MyScaffold(
       appBar: AppBar(
-        title: InkWell(
-          onTap: () => Navigator.of(context).pop(),
-          child: const Text('Random Index'),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () => Navigator.of(context).pop(),
-            icon: const Icon(Icons.home_outlined),
-          )
-        ],
+        title: const Text('Random Example'),
+        actions: const [BackButton()],
       ),
       body: Stack(children: [
         for (int i = 0; i < 4; i++)
@@ -40,7 +32,7 @@ class RandomScreen extends StatelessWidget {
                 border: Border.all(),
                 borderRadius: BorderRadius.circular(100),
               ),
-              child: MySpotlight(
+              child: Spotlight(
                 index: orders[i],
                 content: Material(
                   color: Colors.indigo,

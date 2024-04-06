@@ -25,7 +25,7 @@ class _DelayScreenState extends State<DelayScreen> {
             },
           )
         : Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-            const MySpotlight(child: Text('Hello SpotlightAnt')),
+            const Spotlight(child: Text('Hello SpotlightAnt')),
             const SizedBox(height: 16),
             _Timer(
               text: waitFor,
@@ -41,16 +41,8 @@ class _DelayScreenState extends State<DelayScreen> {
 
     return MyScaffold(
       appBar: AppBar(
-        title: InkWell(
-          onTap: () => Navigator.of(context).pop(),
-          child: const Text('Delay Example'),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () => Navigator.of(context).pop(),
-            icon: const Icon(Icons.home_outlined),
-          )
-        ],
+        title: const Text('Delay Example'),
+        actions: const [BackButton()],
       ),
       body: DefaultTextStyle(
         style: Theme.of(context).textTheme.headlineMedium!,

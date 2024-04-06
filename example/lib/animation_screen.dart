@@ -28,22 +28,14 @@ class AnimationScreenState extends State<AnimationScreen> with TickerProviderSta
 
     return MyScaffold(
       appBar: AppBar(
-        title: InkWell(
-          onTap: () => Navigator.of(context).pop(),
-          child: const Text('Animation Example'),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () => Navigator.of(context).pop(),
-            icon: const Icon(Icons.home_outlined),
-          )
-        ],
+        title: const Text('Animation Example'),
+        actions: const [BackButton()],
       ),
       body: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
           final Size biggest = constraints.biggest;
           return Stack(children: <Widget>[
-            MySpotlight(
+            Spotlight(
               child: PositionedTransition(
                 rect: RelativeRectTween(
                   begin: RelativeRect.fromSize(

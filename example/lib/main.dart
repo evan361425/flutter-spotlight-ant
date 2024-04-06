@@ -1,26 +1,73 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_test_example/alignment_screen.dart';
+import 'package:flutter_test_example/animation_screen.dart';
+import 'package:flutter_test_example/delay_screen.dart';
+import 'package:flutter_test_example/obscure_screen.dart';
+import 'package:flutter_test_example/random_screen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 import 'package:spotlight_ant/spotlight_ant.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_strategy/url_strategy.dart';
 
-import 'alignment_screen.dart' deferred as alignment;
-import 'animation_screen.dart' deferred as animation;
-import 'delay_screen.dart' deferred as delay;
 import 'my_spotlight.dart';
-import 'obscure_screen.dart' deferred as obscure;
-import 'random_screen.dart' deferred as random;
 
 void main() {
   setPathUrlStrategy();
-  runApp(MaterialApp(
-    title: 'SpotlightAnt',
-    onGenerateTitle: (context) => 'SpotlightAnt',
-    navigatorObservers: [MyScaffold.observer],
-    theme: ThemeData(useMaterial3: true, colorSchemeSeed: Colors.red),
-    home: const StartPage(),
-    debugShowCheckedModeBanner: false,
-  ));
+  runApp(App(GoRouter(
+    initialLocation: '/flutter-spotlight-ant',
+    routes: [
+      GoRoute(
+        name: 'home',
+        path: '/flutter-spotlight-ant',
+        builder: (ctx, state) => const StartPage(),
+        routes: [
+          GoRoute(
+            path: 'alignment',
+            name: 'alignment',
+            builder: (ctx, state) => const AlignmentScreen(),
+          ),
+          GoRoute(
+            path: 'animation',
+            name: 'animation',
+            builder: (ctx, state) => const AnimationScreen(),
+          ),
+          GoRoute(
+            path: 'random',
+            name: 'random',
+            builder: (ctx, state) => const RandomScreen(),
+          ),
+          GoRoute(
+            path: 'delay',
+            name: 'delay',
+            builder: (ctx, state) => const DelayScreen(),
+          ),
+          GoRoute(
+            path: 'obscure',
+            name: 'obscure',
+            builder: (ctx, state) => const ObscureScreen(),
+          ),
+        ],
+      ),
+    ],
+  )));
+}
+
+class App extends StatelessWidget {
+  final GoRouter router;
+
+  const App(this.router, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp.router(
+      title: 'SpotlightAnt',
+      routerConfig: router,
+      onGenerateTitle: (context) => 'SpotlightAnt',
+      theme: ThemeData(useMaterial3: true, colorSchemeSeed: Colors.red),
+      debugShowCheckedModeBanner: false,
+    );
+  }
 }
 
 class StartPage extends StatefulWidget {
@@ -31,17 +78,18 @@ class StartPage extends StatefulWidget {
 }
 
 class _StartPageState extends State<StartPage> {
-  bool isFirst = true;
+  ValueNotifier<bool> isFirst = ValueNotifier(true);
 
   @override
   Widget build(BuildContext context) {
     return MyScaffold(
-      onFinish: () => setState(() => isFirst = false),
+      onFinish: () => isFirst.value = false,
       appBar: AppBar(
         title: const Text('SpotlightAnt Example'),
-        leading: Builder(
-          builder: (context) => SpotlightAnt(
-            enable: isFirst,
+        leading: ListenableBuilder(
+          listenable: isFirst,
+          builder: (context, _) => SpotlightAnt(
+            enable: isFirst.value,
             content: const SpotlightContent(
               fontSize: 26,
               child: Text('Configure your spotlight...'),
@@ -63,24 +111,27 @@ class _StartPageState extends State<StartPage> {
           ),
         ),
       ),
-      floatingActionButtonWrapper: (btn) => SpotlightAnt(
-        enable: isFirst,
-        spotlight: const SpotlightConfig(
-          builder: SpotlightRectBuilder(borderRadius: 20),
-          padding: EdgeInsets.zero,
+      floatingActionButtonWrapper: (ctx, btn) => ListenableBuilder(
+        listenable: isFirst,
+        builder: (context, _) => SpotlightAnt(
+          enable: isFirst.value,
+          spotlight: const SpotlightConfig(
+            builder: SpotlightRectBuilder(borderRadius: 20),
+            padding: EdgeInsets.zero,
+          ),
+          action: const SpotlightActionConfig(
+            enabled: [SpotlightAntAction.prev],
+          ),
+          content: const SpotlightContent(
+            fontSize: 26,
+            child: Text('and re-run the animation by pressing the button.'),
+          ),
+          child: btn,
         ),
-        action: const SpotlightActionConfig(
-          enabled: [SpotlightAntAction.prev],
-        ),
-        content: const SpotlightContent(
-          fontSize: 26,
-          child: Text('and re-run the animation by pressing the button.'),
-        ),
-        child: btn,
       ),
-      bodyBuilder: (context) => Center(
+      body: Center(
         child: Column(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-          MySpotlight(
+          Spotlight(
             content: SpotlightContent(
               child: Column(children: [
                 const CircleAvatar(
@@ -111,54 +162,31 @@ class _StartPageState extends State<StartPage> {
               child: const Text('Welcome !', style: TextStyle(fontSize: 32)),
             ),
           ),
-          OutlinedButton(
-            onPressed: () => SpotlightShow.of(context).start(),
-            child: const Text('Run Again'),
+          Builder(
+            builder: (context) => OutlinedButton(
+              onPressed: () => SpotlightShow.of(context).start(),
+              child: const Text('Run Again'),
+            ),
           ),
           Wrap(spacing: 8.0, runSpacing: 8.0, children: [
             ElevatedButton(
-              onPressed: () async {
-                await alignment.loadLibrary();
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => alignment.AlignmentScreen(),
-                ));
-              },
+              onPressed: () => context.pushNamed('alignment'),
               child: const Text('Alignment'),
             ),
             ElevatedButton(
-              onPressed: () async {
-                await animation.loadLibrary();
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => animation.AnimationScreen(),
-                ));
-              },
+              onPressed: () => context.pushNamed('animation'),
               child: const Text('Animation'),
             ),
             ElevatedButton(
-              onPressed: () async {
-                await random.loadLibrary();
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => random.RandomScreen(),
-                ));
-              },
+              onPressed: () => context.pushNamed('random'),
               child: const Text('Random Index'),
             ),
             ElevatedButton(
-              onPressed: () async {
-                await delay.loadLibrary();
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => delay.DelayScreen(),
-                ));
-              },
+              onPressed: () => context.pushNamed('delay'),
               child: const Text('Delay'),
             ),
             ElevatedButton(
-              onPressed: () async {
-                await obscure.loadLibrary();
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => obscure.ObscureScreen(),
-                ));
-              },
+              onPressed: () => context.pushNamed('obscure'),
               child: const Text('Obscure'),
             ),
           ]),

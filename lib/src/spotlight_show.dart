@@ -173,6 +173,8 @@ class SpotlightShowState extends State<SpotlightShow> {
 
   @override
   Widget build(BuildContext context) {
+    // should use PopScope after issue fixed:
+    // https://github.com/flutter/flutter/issues/138614
     // ignore: deprecated_member_use
     return WillPopScope(
       onWillPop: () async {

@@ -16,16 +16,8 @@ class ObscureScreenState extends State<ObscureScreen> {
   Widget build(BuildContext context) {
     return MyScaffold(
       appBar: AppBar(
-        title: InkWell(
-          onTap: () => Navigator.of(context).pop(),
-          child: const Text('Obscure Example'),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () => Navigator.of(context).pop(),
-            icon: const Icon(Icons.home_outlined),
-          )
-        ],
+        title: const Text('Obscure Example'),
+        actions: const [BackButton()],
       ),
       body: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         TextButton(
@@ -60,7 +52,7 @@ class ObscureScreenState extends State<ObscureScreen> {
             });
           },
           trailing: isShown
-              ? const MySpotlight(
+              ? const Spotlight(
                   monitorId: 'obscure-test',
                   child: Icon(Icons.star),
                 )

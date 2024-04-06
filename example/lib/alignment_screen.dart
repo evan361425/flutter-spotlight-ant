@@ -21,16 +21,8 @@ class AlignmentScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return MyScaffold(
       appBar: AppBar(
-        title: InkWell(
-          onTap: () => Navigator.of(context).pop(),
-          child: const Text('Alignment Example'),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () => Navigator.of(context).pop(),
-            icon: const Icon(Icons.home_outlined),
-          )
-        ],
+        title: const Text('Alignment Example'),
+        actions: const [BackButton()],
       ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
@@ -54,7 +46,7 @@ class _AlignTarget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Align(
       alignment: a,
-      child: MySpotlight(
+      child: Spotlight(
         content: Material(
           color: Colors.indigo,
           child: Center(
