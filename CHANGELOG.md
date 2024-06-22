@@ -8,6 +8,10 @@ This document's format follow the context in [Keep a Changelog](https://keepacha
 
 Please check git diff.
 
+## [v1.1.1] - 2024-06-22
+
+- ([7eba56f](https://github.com/evan361425/flutter-spotlight-ant/commit/7eba56ff6d889c40d6b142195d5b77a48ec2b1c3)) fix: add log for more details - wu0dj2k7ao3
+
 ## [v1.1.0] - 2024-04-06
 
 -   ([3abb8f0](https://github.com/evan361425/flutter-spotlight-ant/commit/3abb8f0e4b0dafdf4dca7056206ff8f93cb0360b)) feat: hide not operable action - wu0dj2k7ao3
@@ -101,7 +105,8 @@ fix example document
 
 Initial release
 
-[unreleased]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.1.0...HEAD
+[unreleased]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.1.1...HEAD
+[v1.1.1]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.1.0...v1.1.1
 [v1.1.0]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.0.6...v1.1.0
 [v1.0.6]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.0.5...v1.0.6
 [v1.0.5]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.0.4...v1.0.5
