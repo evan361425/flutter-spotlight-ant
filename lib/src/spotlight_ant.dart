@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -102,7 +103,7 @@ class SpotlightAnt extends StatefulWidget {
 }
 
 class SpotlightAntState extends State<SpotlightAnt> {
-  /// If this ant required to be monitored([SpotlightAnt.monitorId] has set),
+  /// If this ant required to be monitored ([SpotlightAnt.monitorId] has set),
   /// it might be paused to be shown.
   bool paused = false;
 
@@ -120,7 +121,7 @@ class SpotlightAntState extends State<SpotlightAnt> {
             paused = false;
             SpotlightShow.maybeOf(context)?.start();
 
-            // avoid edit callback collection in callback
+            // avoid edit visibility's callback collection in callback itself
             await Future.delayed(Duration.zero);
             VisibilityDetectorController.instance.forget(key);
           }
@@ -216,7 +217,7 @@ enum SpotlightAntAction {
   skip,
   finish;
 
-  Future<SpotlightAntAction?> meOr(Future<SpotlightAntAction?> Function()? cb) async {
+  FutureOr<SpotlightAntAction?> meOr(FutureOr<SpotlightAntAction?> Function()? cb) async {
     return cb == null ? this : await cb();
   }
 }

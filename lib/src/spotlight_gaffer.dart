@@ -114,7 +114,6 @@ class SpotlightGafferState extends State<SpotlightGaffer> with TickerProviderSta
       if (!currentAnt!.widget.spotlight.silent) {
         child = currentAnt!.widget.spotlight.usingInkwell
             ? InkWell(
-                key: const Key('evan'),
                 borderRadius: BorderRadius.circular(builder.inkwellRadius(r)),
                 splashColor: currentAnt!.widget.spotlight.splashColor,
                 onTap: _onSpotlightTap,
@@ -263,7 +262,7 @@ class SpotlightGafferState extends State<SpotlightGaffer> with TickerProviderSta
 
   /// Go to next spotlight properly.
   void next() {
-    if (SpotlightAnt.debug) log('[ant] performing next');
+    if (SpotlightAnt.debug) log('performing next', name: 'ant');
     if (currentIndex < widget.ants.length - 1) {
       _startZoomOut().then((success) {
         if (success) {
@@ -285,7 +284,7 @@ class SpotlightGafferState extends State<SpotlightGaffer> with TickerProviderSta
 
   /// Go to previous spotlight properly.
   void prev() {
-    if (SpotlightAnt.debug) log('[ant] performing prev');
+    if (SpotlightAnt.debug) log('performing prev', name: 'ant');
     if (currentIndex > 0) {
       _startZoomOut().then((success) {
         if (success) {
@@ -301,7 +300,7 @@ class SpotlightGafferState extends State<SpotlightGaffer> with TickerProviderSta
   /// but won't call the [SpotlightGaffer.onSkip].
   void finish() {
     _startZoomOut().then((success) {
-      if (SpotlightAnt.debug) log('[ant] execute finish callback');
+      if (SpotlightAnt.debug) log('execute finish callback', name: 'ant');
       widget.onFinish();
     });
   }
@@ -312,7 +311,7 @@ class SpotlightGafferState extends State<SpotlightGaffer> with TickerProviderSta
   /// but won't call the [SpotlightGaffer.onFinish].
   void skip() {
     _startZoomOut().then((success) {
-      if (SpotlightAnt.debug) log('[ant] execute skip callback');
+      if (SpotlightAnt.debug) log('execute skip callback', name: 'ant');
       widget.onSkip();
     });
   }
@@ -342,14 +341,14 @@ class SpotlightGafferState extends State<SpotlightGaffer> with TickerProviderSta
   void _onBackdropTap() async {
     final act = await SpotlightAntAction.next.meOr(currentAnt?.widget.backdrop.onTap);
 
-    if (SpotlightAnt.debug) log('[ant] backdrop tapped for $act');
+    if (SpotlightAnt.debug) log('backdrop tapped for $act', name: 'ant');
     perform(act);
   }
 
   void _onSpotlightTap() async {
     final act = await SpotlightAntAction.next.meOr(currentAnt?.widget.spotlight.onTap);
 
-    if (SpotlightAnt.debug) log('[ant] spotlight tapped for $act');
+    if (SpotlightAnt.debug) log('spotlight tapped for $act', name: 'ant');
     perform(act);
   }
 
@@ -362,10 +361,12 @@ class SpotlightGafferState extends State<SpotlightGaffer> with TickerProviderSta
 
     // abort this show if some actors are being paused
     if (currentAnt!.paused) {
+      if (SpotlightAnt.debug) log('paused at $index', name: 'ant');
       widget.onPaused(index);
       return;
     }
 
+    if (SpotlightAnt.debug) log('start zoom in', name: 'ant');
     setState(() {
       final ant = currentAnt!.widget;
       _zoomController.duration = ant.duration.zoomIn;
@@ -388,7 +389,7 @@ class SpotlightGafferState extends State<SpotlightGaffer> with TickerProviderSta
 
       // Start animation
       _zoomController.forward().then((value) {
-        if (SpotlightAnt.debug) log('[ant] ready to bump');
+        if (SpotlightAnt.debug) log('finish zoom in, start to bump', name: 'ant');
         isBumping = true;
         if (antMounted) {
           currentAnt!.widget.onShown?.call();
@@ -407,7 +408,7 @@ class SpotlightGafferState extends State<SpotlightGaffer> with TickerProviderSta
 
   Future<bool> _startZoomOut() async {
     if (isBumping) {
-      if (SpotlightAnt.debug) log('[ant] finish the bump');
+      if (SpotlightAnt.debug) log('finish the bump', name: 'ant');
       isBumping = false;
       currentAnt!.widget.onDismiss?.call();
       _bumpController.stop();

@@ -274,7 +274,7 @@ class SpotlightShowState extends State<SpotlightShow> {
           );
         });
         Overlay.of(context).insert(_overlayEntry!);
-        if (SpotlightAnt.debug) log('[ant] started the show');
+        if (SpotlightAnt.debug) log('started the show', name: 'ant');
       }
     });
   }
@@ -299,7 +299,7 @@ class SpotlightShowState extends State<SpotlightShow> {
   /// Register [SpotlightAnt] programmatically.
   void register(SpotlightAntState ant) {
     if (!_antQueue.contains(ant)) {
-      if (SpotlightAnt.debug) log('[ant] registered $ant');
+      if (SpotlightAnt.debug) log('registered $ant', name: 'ant');
       _queue(ant);
     }
   }
@@ -311,7 +311,7 @@ class SpotlightShowState extends State<SpotlightShow> {
     final success = _antQueue.remove(ant);
 
     if (success) {
-      if (SpotlightAnt.debug) log('[ant] unregister $ant');
+      if (SpotlightAnt.debug) log('unregister $ant', name: 'ant');
       _dequeue(ant);
     }
   }
@@ -330,7 +330,7 @@ class SpotlightShowState extends State<SpotlightShow> {
     }
 
     if (isReadyToStart && widget.startWhenReady) {
-      if (SpotlightAnt.debug) log('[ant] ready to start the show');
+      if (SpotlightAnt.debug) log('ready to start the show', name: 'ant');
       final future = widget.showWaitFuture ?? Future.delayed(Duration.zero);
       future.then((value) => start());
     }
@@ -340,7 +340,7 @@ class SpotlightShowState extends State<SpotlightShow> {
     _antQueue.removeWhere((e) => e == ant);
 
     if (_antQueue.isEmpty) {
-      if (SpotlightAnt.debug) log('[ant] the show is finish');
+      if (SpotlightAnt.debug) log('the show is finish', name: 'ant');
       _removeOverlayEntry();
     }
   }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../spotlight_ant.dart';
@@ -29,7 +31,7 @@ class SpotlightConfig {
   /// Return null to do nothing.
   ///
   /// Default using: [SpotlightAntAction.next]
-  final Future<SpotlightAntAction?> Function()? onTap;
+  final FutureOr<SpotlightAntAction?> Function()? onTap;
 
   /// Using [InkWell] or [GestureDetector] on spotlight.
   final bool usingInkwell;
