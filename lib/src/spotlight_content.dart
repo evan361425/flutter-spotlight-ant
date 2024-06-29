@@ -20,7 +20,6 @@ class SpotlightContent extends StatelessWidget {
     required this.child,
     this.textColor = Colors.white,
     this.fontSize,
-    // this.fontSize =
     this.padding = const EdgeInsets.fromLTRB(8, 8, 8, 64),
   });
 
