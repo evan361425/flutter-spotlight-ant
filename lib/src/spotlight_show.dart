@@ -204,6 +204,15 @@ class SpotlightShowState extends State<SpotlightShow> {
     super.dispose();
   }
 
+  /// Programatically reset the show.
+  ///
+  /// This will remove all the registered [SpotlightAnt] and discard the show.
+  void reset() {
+    _removeOverlayEntry();
+    _startAt = 0;
+    _antQueue.clear();
+  }
+
   /// Is this show ready?
   ///
   /// Only able to show if it is not performing and is the top route.

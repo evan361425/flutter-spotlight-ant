@@ -97,9 +97,7 @@ class MyScaffold extends StatelessWidget {
         child: Builder(builder: (context) {
           final btn = ElevatedButton(
             style: const ButtonStyle(
-              minimumSize: MaterialStatePropertyAll(
-                Size(double.infinity, 48),
-              ),
+              minimumSize: WidgetStatePropertyAll(Size(double.infinity, 48)),
             ),
             onPressed: () => SpotlightShow.of(context).start(),
             child: const Text('Re-run the spotlight show!'),
