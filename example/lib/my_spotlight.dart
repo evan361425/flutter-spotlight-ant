@@ -4,6 +4,7 @@ import 'package:spotlight_ant/spotlight_ant.dart';
 
 class Spotlight extends StatefulWidget {
   final bool enable;
+  final bool traceChild;
   final String? monitorId;
   final int? index;
 
@@ -18,6 +19,7 @@ class Spotlight extends StatefulWidget {
     this.index,
     this.monitorId,
     this.enable = true,
+    this.traceChild = false,
     required this.child,
   }) : super(key: key);
 
@@ -36,6 +38,7 @@ class _SpotlightState extends State<Spotlight> {
             enable: widget.enable,
             index: widget.index,
             monitorId: widget.monitorId,
+            traceChild: widget.traceChild,
             spotlight: SpotlightConfig(
               padding: EdgeInsets.all(c.padding.value),
               builder: c.useCircle.value ? const SpotlightCircularBuilder() : const SpotlightRectBuilder(),

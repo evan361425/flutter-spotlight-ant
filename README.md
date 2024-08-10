@@ -90,6 +90,7 @@ The configuration of `SpotlightAnt`:
 | duration | [SpotlightDurationConfig] | Customize animation duration. |
 | contentLayout | [SpotlightContentLayoutConfig] | Customize layout of content. |
 | bumpRatio | `0.1` | How big outer area you want in bump animation. |
+| traceChild | `false` | Trace the position of the child. |
 | content | `null` | Content beside spotlight. |
 | onShown | `null` | Callback before zoom in. |
 | onShow | `null` | Callback after zoom in. |

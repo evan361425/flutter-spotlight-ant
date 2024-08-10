@@ -104,7 +104,7 @@ class _StartPageState extends State<StartPage> {
             ),
             bumpRatio: 1.0,
             child: IconButton(
-              icon: const Icon(Icons.menu_sharp),
+              icon: const Icon(Icons.settings),
               onPressed: () => Scaffold.of(context).openDrawer(),
               tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
             ),

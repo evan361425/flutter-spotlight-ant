@@ -148,6 +148,9 @@ void main() {
       expect(onDismissed, equals(6));
       expect(onSkip, equals(1));
       expect(onFinish, equals(0));
+
+      show.currentState?.reset();
+      expect(show.currentState?.isNotReadyToStart, isTrue);
     });
 
     testWidgets('should disable', (WidgetTester tester) async {

@@ -97,53 +97,60 @@ class SpotlightGafferState extends State<SpotlightGaffer> with TickerProviderSta
   }
 
   Widget _buildSpotlight(BuildContext context, Widget? child) {
-    Widget widget = const SizedBox.shrink();
+    Widget result = const SizedBox.shrink();
 
     if (mounted && antMounted) {
-      final builder = currentAnt!.widget.spotlight.builder;
-      final value = isBumping ? _bumpAnimation.value : _zoomAnimation.value;
       final r = currentAnt!.rect;
-      final painter = builder.build(r, value, isBumping);
-      final rect = builder.targetRect(r);
-
-      Widget child = SizedBox(
-        width: rect.width,
-        height: rect.height,
-      );
-
-      if (!currentAnt!.widget.spotlight.silent) {
-        child = currentAnt!.widget.spotlight.usingInkwell
-            ? InkWell(
-                borderRadius: BorderRadius.circular(builder.inkwellRadius(r)),
-                splashColor: currentAnt!.widget.spotlight.splashColor,
-                onTap: _onSpotlightTap,
-                child: child,
-              )
-            : GestureDetector(
-                onTap: _onSpotlightTap,
-                child: child,
-              );
-      }
-
-      widget = Stack(children: <Widget>[
-        SizedBox(
-          width: double.maxFinite,
-          height: double.maxFinite,
-          child: CustomPaint(painter: painter),
-        ),
-        Positioned(
-          left: rect.left,
-          top: rect.top,
-          child: child,
-        )
-      ]);
+      if (r != null) result = _mustBuildSpotlight(r);
     }
 
-    return widget;
+    return result;
+  }
+
+  Widget _mustBuildSpotlight(Rect r) {
+    final builder = currentAnt!.widget.spotlight.builder;
+    final value = isBumping ? _bumpAnimation.value : _zoomAnimation.value;
+    final painter = builder.build(r, value, isBumping);
+    final rect = builder.targetRect(r);
+
+    Widget child = SizedBox(
+      width: rect.width,
+      height: rect.height,
+    );
+
+    if (!currentAnt!.widget.spotlight.silent) {
+      child = currentAnt!.widget.spotlight.usingInkwell
+          ? InkWell(
+              borderRadius: BorderRadius.circular(builder.inkwellRadius(r)),
+              splashColor: currentAnt!.widget.spotlight.splashColor,
+              onTap: _onSpotlightTap,
+              child: child,
+            )
+          : GestureDetector(
+              onTap: _onSpotlightTap,
+              child: child,
+            );
+    }
+
+    return Stack(children: <Widget>[
+      SizedBox(
+        width: double.maxFinite,
+        height: double.maxFinite,
+        child: CustomPaint(painter: painter),
+      ),
+      Positioned(
+        left: rect.left,
+        top: rect.top,
+        child: child,
+      )
+    ]);
   }
 
   Widget _buildContent() {
     final p = currentAnt!.position;
+    if (p == null) {
+      return const SizedBox.shrink();
+    }
 
     return Positioned(
       left: p[0],

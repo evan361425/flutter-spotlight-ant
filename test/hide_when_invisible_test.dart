@@ -5,7 +5,7 @@ import 'package:visibility_detector/visibility_detector.dart';
 
 void main() {
   group('Invisible Check', () {
-    testWidgets('not show if invisible', (tester) async {
+    testWidgets('not show if invisible and will be paused', (tester) async {
       final hider = GlobalKey<_HiderState>();
       late BuildContext ctx;
       await tester.pumpWidget(MaterialApp(
@@ -63,6 +63,8 @@ void main() {
       VisibilityDetectorController.instance.notifyNow();
     });
   });
+
+  setUpAll(() => SpotlightAnt.debug = true);
 }
 
 class Hider extends StatefulWidget {

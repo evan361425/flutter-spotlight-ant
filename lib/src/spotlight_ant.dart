@@ -48,6 +48,12 @@ class SpotlightAnt extends StatefulWidget {
   /// Bumping ratio, higher value will have larger bumping area.
   final double bumpRatio;
 
+  /// Trace the position of the child.
+  ///
+  /// If your widget will be animated, set this to true to make sure the
+  /// spotlight will follow the child.
+  final bool traceChild;
+
   /// Order of the show.
   ///
   /// Make sure all of the [SpotlightAnt]s have not set the index, or all of the
@@ -89,6 +95,7 @@ class SpotlightAnt extends StatefulWidget {
     this.duration = const SpotlightDurationConfig(),
     this.contentLayout = const SpotlightContentLayoutConfig(),
     this.bumpRatio = 0.1,
+    this.traceChild = false,
     this.index,
     this.content,
     this.onShown,
@@ -106,6 +113,8 @@ class SpotlightAntState extends State<SpotlightAnt> {
   /// If this ant required to be monitored ([SpotlightAnt.monitorId] has set),
   /// it might be paused to be shown.
   bool paused = false;
+
+  Rect? _rect;
 
   @override
   Widget build(BuildContext context) {
@@ -145,24 +154,21 @@ class SpotlightAntState extends State<SpotlightAnt> {
     super.initState();
   }
 
-  /// What the position of this ant.
-  Rect get rect {
-    final renderBox = context.findRenderObject();
-    final box = renderBox is RenderBox ? renderBox : null;
-    final state = context.findAncestorStateOfType<NavigatorState>();
-    final offset = box?.localToGlobal(
-          Offset.zero,
-          ancestor: state?.context.findRenderObject(),
-        ) ??
-        Offset.zero;
-    final size = box?.size ?? Size.zero;
+  /// Widget position in rectangle.
+  ///
+  /// see: https://stackoverflow.com/a/71568630/12089368
+  Rect? get rect {
+    if (_rect == null || widget.traceChild) {
+      final renderBox = context.findRenderObject();
+      final matrix = renderBox?.getTransformTo(null);
+      // getting global position of renderBox
+      if (matrix != null && renderBox?.paintBounds != null) {
+        final rect = MatrixUtils.transformRect(matrix, renderBox!.paintBounds);
+        _rect = widget.spotlight.padding.inflateRect(rect);
+      }
+    }
 
-    return Rect.fromLTRB(
-      offset.dx - widget.spotlight.padding.left,
-      offset.dy - widget.spotlight.padding.top,
-      offset.dx + size.width + widget.spotlight.padding.right,
-      offset.dy + size.height + widget.spotlight.padding.bottom,
-    );
+    return _rect;
   }
 
   /// Get current position for [Positioned]
@@ -174,9 +180,13 @@ class SpotlightAntState extends State<SpotlightAnt> {
   /// * bottom (nullable)
   /// * width
   /// * height
-  List<double?> get position {
+  List<double?>? get position {
     final w = MediaQuery.of(context).size;
     final r = this.rect;
+    if (r == null) {
+      return null;
+    }
+
     final c = r.center;
 
     final a = widget.contentLayout.alignment ?? getAlignment(w, c);

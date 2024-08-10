@@ -35,7 +35,9 @@ class AnimationScreenState extends State<AnimationScreen> with TickerProviderSta
         builder: (BuildContext context, BoxConstraints constraints) {
           final Size biggest = constraints.biggest;
           return Stack(children: <Widget>[
+            Center(child: Text('Set `traceChild` to true', style: Theme.of(context).textTheme.labelMedium)),
             Spotlight(
+              traceChild: true,
               child: PositionedTransition(
                 rect: RelativeRectTween(
                   begin: RelativeRect.fromSize(
