@@ -8,6 +8,10 @@ This document's format follow the context in [Keep a Changelog](https://keepacha
 
 Please check git diff.
 
+## [v1.3.0] - 2024-08-10
+
+- ([8925f74](https://github.com/evan361425/flutter-spotlight-ant/commit/8925f74f7d160087486070eeb77890b60d5ed5e1)) feat: default not tracing widget - wu0dj2k7ao3
+
 ## [v1.2.0] - 2024-08-05
 
 - ([a9e42ab](https://github.com/evan361425/flutter-spotlight-ant/commit/a9e42ab9618ab8735664c5c49817db400359ec65)) feat: allow reset the show by program - wu0dj2k7ao3
@@ -109,7 +113,8 @@ fix example document
 
 Initial release
 
-[unreleased]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.2.0...HEAD
+[unreleased]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.3.0...HEAD
+[v1.3.0]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.2.0...v1.3.0
 [v1.2.0]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.1.1...v1.2.0
 [v1.1.1]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.1.0...v1.1.1
 [v1.1.0]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.0.6...v1.1.0
