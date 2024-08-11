@@ -54,13 +54,12 @@ class SpotlightAnt extends StatefulWidget {
   /// spotlight will follow the child.
   final bool traceChild;
 
-  /// Order of the show.
+  /// Order in the show.
   ///
-  /// Make sure all of the [SpotlightAnt]s have not set the index, or all of the
-  /// ants have set the index.
+  /// null index will be treated as the first.
   ///
-  /// Once you set the index, [SpotlightShow] will wait for the ant with index 0
-  /// and start the show.
+  /// When [SpotlightShow.waitForZeroIndexOrNull] is true, the show will only
+  /// start if we found the first ant with index 0 or null.
   final int? index;
 
   /// Content beside the spotlight.

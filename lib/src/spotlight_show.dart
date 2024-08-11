@@ -61,6 +61,14 @@ class SpotlightShow extends StatefulWidget {
   /// ```
   final bool startWhenReady;
 
+  /// Only start the show when the first spotlight is at index <= 0 or null.
+  ///
+  /// You can have a show that can wait until desired ant is register in
+  /// the widget tree.
+  ///
+  /// This is default to true for backward compatibility.
+  final bool waitForZeroIndexOrNull;
+
   /// Wait until the [Future] has done and start the spotlight show.
   ///
   /// Default using:
@@ -98,6 +106,7 @@ class SpotlightShow extends StatefulWidget {
     this.enable = true,
     this.hideIfNotAble = true,
     this.startWhenReady = true,
+    this.waitForZeroIndexOrNull = true,
     this.showWaitFuture,
     this.onSkip,
     this.onFinish,
@@ -204,7 +213,7 @@ class SpotlightShowState extends State<SpotlightShow> {
     super.dispose();
   }
 
-  /// Programatically reset the show.
+  /// Reset the show by programmatically.
   ///
   /// This will remove all the registered [SpotlightAnt] and discard the show.
   void reset() {
@@ -227,8 +236,12 @@ class SpotlightShowState extends State<SpotlightShow> {
         return widget.readinessChecker!(_antQueue);
       }
 
-      final index = _antQueue.first.widget.index;
-      return index == null || index <= 0;
+      if (widget.waitForZeroIndexOrNull) {
+        final index = _antQueue.first.widget.index;
+        return index == null || index <= 0;
+      }
+
+      return true;
     }
 
     return false;
@@ -328,15 +341,17 @@ class SpotlightShowState extends State<SpotlightShow> {
   void _queue(SpotlightAntState ant) {
     _antQueue.add(ant);
 
-    if (ant.widget.index != null) {
-      assert(
-        _antQueue.every((e) => e.widget.index != null),
-        'Should make sure all SpotlightAnt under SpotlightShow have '
-        'either all null or all indexed.',
-      );
-
-      _antQueue.sort((a, b) => a.widget.index! - b.widget.index!);
-    }
+    _antQueue.sort((a, b) {
+      final aIsNull = a.widget.index == null;
+      final bIsNull = b.widget.index == null;
+      return aIsNull && bIsNull
+          ? 0
+          : aIsNull
+              ? -1 // a smaller than b
+              : bIsNull
+                  ? 1 // a greater than b
+                  : a.widget.index!.compareTo(b.widget.index!);
+    });
 
     if (isReadyToStart && widget.startWhenReady) {
       if (SpotlightAnt.debug) log('ready to start the show', name: 'ant');

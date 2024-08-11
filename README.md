@@ -91,6 +91,7 @@ The configuration of `SpotlightAnt`:
 | contentLayout | [SpotlightContentLayoutConfig] | Customize layout of content. |
 | bumpRatio | `0.1` | How big outer area you want in bump animation. |
 | traceChild | `false` | Trace the position of the child. |
+| index | `null` | Order in the show. |
 | content | `null` | Content beside spotlight. |
 | onShown | `null` | Callback before zoom in. |
 | onShow | `null` | Callback after zoom in. |
@@ -105,6 +106,7 @@ The configuration of `SpotlightShow`:
 | enable | `true` | Wheather enable the show. |
 | hideIfNotAble | `true` | Hide the action is not operable. |
 | startWhenReady | `true` | If you want to fire it by program, set it to false. |
+| waitForZeroIndexOrNull | `true` | Only start the show when the first spotlight is at index <= 0 or null. |
 | showWaitFuture | `null` | Pass the `Future` and it will wait until it done and start the show. |
 | onSkip | `null` | Callback after tapping `SpotlightAntAction.skip`. |
 | onFinish | `null` | Callback after finish the show. |
