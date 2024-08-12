@@ -180,12 +180,12 @@ class SpotlightAntState extends State<SpotlightAnt> {
   /// * width
   /// * height
   List<double?>? get position {
-    final w = MediaQuery.of(context).size;
     final r = this.rect;
     if (r == null) {
       return null;
     }
 
+    final w = MediaQuery.of(context).size;
     final c = r.center;
 
     final a = widget.contentLayout.alignment ?? getAlignment(w, c);

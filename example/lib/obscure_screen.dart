@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'my_spotlight.dart';
 
 class ObscureScreen extends StatefulWidget {
-  const ObscureScreen({Key? key}) : super(key: key);
+  const ObscureScreen({super.key});
 
   @override
   State<ObscureScreen> createState() => ObscureScreenState();

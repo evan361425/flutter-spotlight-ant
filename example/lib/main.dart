@@ -71,7 +71,7 @@ class App extends StatelessWidget {
 }
 
 class StartPage extends StatefulWidget {
-  const StartPage({Key? key}) : super(key: key);
+  const StartPage({super.key});
 
   @override
   State<StartPage> createState() => _StartPageState();

@@ -15,7 +15,7 @@ class AlignmentScreen extends StatelessWidget {
     Alignment.bottomRight,
   ];
 
-  const AlignmentScreen({Key? key}) : super(key: key);
+  const AlignmentScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -35,10 +35,7 @@ class AlignmentScreen extends StatelessWidget {
 }
 
 class _AlignTarget extends StatelessWidget {
-  const _AlignTarget({
-    Key? key,
-    required this.a,
-  }) : super(key: key);
+  const _AlignTarget({required this.a});
 
   final Alignment a;
 

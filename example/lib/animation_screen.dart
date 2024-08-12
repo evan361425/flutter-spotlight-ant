@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'my_spotlight.dart';
 
 class AnimationScreen extends StatefulWidget {
-  const AnimationScreen({Key? key}) : super(key: key);
+  const AnimationScreen({super.key});
 
   @override
   State<AnimationScreen> createState() => AnimationScreenState();

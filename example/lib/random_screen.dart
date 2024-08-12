@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'my_spotlight.dart';
 
 class RandomScreen extends StatelessWidget {
-  const RandomScreen({Key? key}) : super(key: key);
+  const RandomScreen({super.key});
 
   static const alignments = [
     Alignment.topLeft,

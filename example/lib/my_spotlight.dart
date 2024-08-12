@@ -14,14 +14,14 @@ class Spotlight extends StatefulWidget {
   static final config = Config();
 
   const Spotlight({
-    Key? key,
+    super.key,
     this.content,
     this.index,
     this.monitorId,
     this.enable = true,
     this.traceChild = false,
     required this.child,
-  }) : super(key: key);
+  });
 
   @override
   State<Spotlight> createState() => _SpotlightState();
@@ -81,12 +81,12 @@ class MyScaffold extends StatelessWidget {
   final Widget Function(BuildContext context, Widget widget)? floatingActionButtonWrapper;
 
   const MyScaffold({
-    Key? key,
+    super.key,
     this.onFinish,
     this.appBar,
     required this.body,
     this.floatingActionButtonWrapper,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -119,7 +119,7 @@ class MyScaffold extends StatelessWidget {
 }
 
 class _MyDriver extends StatefulWidget {
-  const _MyDriver({Key? key}) : super(key: key);
+  const _MyDriver();
 
   @override
   State<_MyDriver> createState() => _MyDriverState();

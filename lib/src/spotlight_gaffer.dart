@@ -191,7 +191,9 @@ class SpotlightGafferState extends State<SpotlightGaffer> with TickerProviderSta
     for (final action in currentAnt!.widget.action.enabled) {
       switch (action) {
         case SpotlightAntAction.prev:
-          if (!widget.hideIfNotAble || currentIndex > 0) {
+          if (widget.hideIfNotAble && currentIndex == 0) {
+            yield const Spacer();
+          } else if (!widget.hideIfNotAble || currentIndex > 0) {
             yield currentAnt!.widget.action.prev?.call(prev) ??
                 IconButton(
                   onPressed: prev,
@@ -202,7 +204,9 @@ class SpotlightGafferState extends State<SpotlightGaffer> with TickerProviderSta
           }
           break;
         case SpotlightAntAction.next:
-          if (!widget.hideIfNotAble || currentIndex < widget.ants.length - 1) {
+          if (widget.hideIfNotAble && currentIndex == widget.ants.length - 1) {
+            yield const Spacer();
+          } else if (!widget.hideIfNotAble || currentIndex < widget.ants.length - 1) {
             yield currentAnt!.widget.action.next?.call(next) ??
                 IconButton(
                   onPressed: next,

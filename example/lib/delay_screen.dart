@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'my_spotlight.dart';
 
 class DelayScreen extends StatefulWidget {
-  const DelayScreen({Key? key}) : super(key: key);
+  const DelayScreen({super.key});
 
   @override
   State<DelayScreen> createState() => _DelayScreenState();
@@ -86,10 +86,9 @@ class _Timer extends StatefulWidget {
   final VoidCallback onDone;
 
   const _Timer({
-    Key? key,
     required this.text,
     required this.onDone,
-  }) : super(key: key);
+  });
 
   @override
   State<_Timer> createState() => _TimerState();

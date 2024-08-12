@@ -464,6 +464,38 @@ void main() {
       expect(spotlightTapped, isTrue);
     });
 
+    testWidgets('null index is prefer than number index', (tester) async {
+      await tester.pumpWidget(const MaterialApp(
+        home: SpotlightShow(
+          child: Column(children: [
+            SpotlightAnt(
+              content: Text('content-1'),
+              duration: SpotlightDurationConfig.zero,
+              index: 0,
+              child: Text('child-1'),
+            ),
+            SpotlightAnt(
+              content: Text('content-2'),
+              duration: SpotlightDurationConfig.zero,
+              index: null,
+              child: Text('child-2'),
+            ),
+            SpotlightAnt(
+              content: Text('content-1'),
+              duration: SpotlightDurationConfig.zero,
+              index: 1,
+              child: Text('child-1'),
+            ),
+          ]),
+        ),
+      ));
+
+      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 1));
+      await tester.pump(const Duration(milliseconds: 1));
+      expect(find.text('content-2'), findsOneWidget);
+    });
+
     setUpAll(() => SpotlightAnt.debug = true);
   });
 }
