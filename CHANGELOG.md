@@ -8,6 +8,10 @@ This document's format follow the context in [Keep a Changelog](https://keepacha
 
 Please check git diff.
 
+## [v1.4.1] - 2024-08-12
+
+- ([5a1925d](https://github.com/evan361425/flutter-spotlight-ant/commit/5a1925dd8fdecffb29d01e0388ccf2de43b708de)) fix: show spacer if not proper action widget - wu0dj2k7ao3
+
 ## [v1.4.0] - 2024-08-11
 
 - ([b0e07af](https://github.com/evan361425/flutter-spotlight-ant/commit/b0e07aff5b9819921aaa56ad706529416f1eaa1e)) feat: allow mixed index - wu0dj2k7ao3
@@ -117,7 +121,8 @@ fix example document
 
 Initial release
 
-[unreleased]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.4.0...HEAD
+[unreleased]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.4.1...HEAD
+[v1.4.1]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.4.0...v1.4.1
 [v1.4.0]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.3.0...v1.4.0
 [v1.3.0]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.2.0...v1.3.0
 [v1.2.0]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.1.1...v1.2.0
