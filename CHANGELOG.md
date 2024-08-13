@@ -8,6 +8,10 @@ This document's format follow the context in [Keep a Changelog](https://keepacha
 
 Please check git diff.
 
+## [v1.4.3] - 2024-08-13
+
+
+
 ## [v1.4.2] - 2024-08-13
 
 - ([a32b40c](https://github.com/evan361425/flutter-spotlight-ant/commit/a32b40c8a5f75cc5b5fa1794482d3a26671192d0)) fix: correct example page root path - wu0dj2k7ao3
@@ -125,7 +129,8 @@ fix example document
 
 Initial release
 
-[unreleased]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.4.2...HEAD
+[unreleased]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.4.3...HEAD
+[v1.4.3]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.4.2...v1.4.3
 [v1.4.2]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.4.1...v1.4.2
 [v1.4.1]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.4.0...v1.4.1
 [v1.4.0]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.3.0...v1.4.0
