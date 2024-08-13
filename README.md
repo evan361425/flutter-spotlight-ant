@@ -83,15 +83,15 @@ The configuration of `SpotlightAnt`:
 | Name | Default | Desc. |
 | - | - | - |
 | enable | `true` | Whether show this ant or not. |
-| monitorId | `null` | Monitor widget's visibility and start the show after it shown, see [example](https://evan361425.github.io/flutter-spotlight-ant/obscure). |
+| monitorId | `null` | Monitor widget's visibility and start the show after it shown, see [example](https://evan361425.github.io/flutter-spotlight-ant?r=obscure). |
 | spotlight | [SpotlightConfig] | Customize spotlight. |
 | backdrop | [SpotlightBackdropConfig] | Customize backdrop. |
 | action | [SpotlightActionConfig] | Customize actions. |
 | duration | [SpotlightDurationConfig] | Customize animation duration. |
 | contentLayout | [SpotlightContentLayoutConfig] | Customize layout of content. |
 | bumpRatio | `0.1` | How big outer area you want in bump animation. |
-| traceChild | `false` | Trace the position of the child, see [example](https://evan361425.github.io/flutter-spotlight-ant/animation). |
-| index | `null` | Order in the show, see [example](https://evan361425.github.io/flutter-spotlight-ant/random). |
+| traceChild | `false` | Trace the position of the child, see [example](https://evan361425.github.io/flutter-spotlight-ant?r=animation). |
+| index | `null` | Order in the show, see [example](https://evan361425.github.io/flutter-spotlight-ant?r=random). |
 | content | `null` | Content beside spotlight. |
 | onShown | `null` | Callback before zoom in. |
 | onShow | `null` | Callback after zoom in. |
@@ -170,7 +170,7 @@ Configuration for the animation duration.
 
 ### SpotlightContentLayoutConfig
 
-Configuration for the layout of content, see [example](https://evan361425.github.io/flutter-spotlight-ant/alignment).
+Configuration for the layout of content, see [example](https://evan361425.github.io/flutter-spotlight-ant?r=alignment).
 
 | Name | Default | Desc. |
 | - | - | - |

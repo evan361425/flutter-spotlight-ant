@@ -90,6 +90,7 @@ class _StartPageState extends State<StartPage> {
           listenable: isFirst,
           builder: (context, _) => SpotlightAnt(
             enable: isFirst.value,
+            index: 1,
             content: const SpotlightContent(
               fontSize: 26,
               child: Text('Configure your spotlight...'),
@@ -114,6 +115,7 @@ class _StartPageState extends State<StartPage> {
       floatingActionButtonWrapper: (ctx, btn) => ListenableBuilder(
         listenable: isFirst,
         builder: (context, _) => SpotlightAnt(
+          index: 2,
           enable: isFirst.value,
           spotlight: const SpotlightConfig(
             builder: SpotlightRectBuilder(borderRadius: 20),
@@ -132,6 +134,8 @@ class _StartPageState extends State<StartPage> {
       body: Center(
         child: Column(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
           Spotlight(
+            index: 0,
+            monitorId: 'example.start',
             content: SpotlightContent(
               child: Column(children: [
                 const CircleAvatar(
@@ -199,5 +203,18 @@ class _StartPageState extends State<StartPage> {
         ]),
       ),
     );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final delegate = GoRouter.of(context).routerDelegate;
+    final RouteMatch lastMatch = delegate.currentConfiguration.last;
+    final RouteMatchList matchList =
+        lastMatch is ImperativeRouteMatch ? lastMatch.matches : delegate.currentConfiguration;
+    final redirect = matchList.uri.queryParameters['r'];
+    if (redirect != null && ['alignment', 'animation', 'random', 'delay', 'obscure'].contains(redirect)) {
+      context.pushNamed(redirect);
+    }
   }
 }
