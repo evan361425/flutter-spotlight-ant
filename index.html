@@ -101,7 +101,7 @@
         // Wait for registration to finish before dropping the <script> tag.
         // Otherwise, the browser will load the script multiple times,
         // potentially different versions.
-        var serviceWorkerUrl = 'flutter_service_worker.js?v="1381589536"';
+        var serviceWorkerUrl = 'flutter_service_worker.js?v="375092666"';
         navigator.serviceWorker.register(serviceWorkerUrl)
           .then((reg) => {
             function waitForActivation(serviceWorker) {
@@ -116,7 +116,7 @@
               // No active web worker and we have installed or are installing
               // one for the first time. Simply wait for it to activate.
               waitForActivation(reg.installing ?? reg.waiting);
-            } else if (!reg.active.scriptURL.endsWith('"1381589536"')) {
+            } else if (!reg.active.scriptURL.endsWith('"375092666"')) {
               // When the app updates the serviceWorkerVersion changes, so we
               // need to ask the service worker to update.
               console.log('New service worker available.');
