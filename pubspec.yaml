@@ -1,6 +1,6 @@
 name: spotlight_ant
 package: spotlight_ant
-version: 1.4.1
+version: 1.4.2
 description: >-
   Spotlight the widget by wrapping it and with highly flexible configuration.
 repository: https://github.com/evan361425/flutter-spotlight-ant
