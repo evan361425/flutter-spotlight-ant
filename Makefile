@@ -18,6 +18,16 @@ test-coverage: ## Run tests with coverage
 	flutter test --coverage
 	genhtml coverage/lcov.info -o coverage/html
 
+.PHONY: build-example
+build-example: ## Compile for GithHub Pages
+	cd example && \
+		flutter build web --release \
+		--web-renderer html
+
+.PHONY: serve-example
+serve-example: ## Serve example in local
+	cd example/build/web && python3 -m http.server
+
 ##@ Build
 .PHONY: bump
 bump: install-bumper ## Bump version
@@ -33,7 +43,11 @@ bump: install-bumper ## Bump version
 	fi; \
 	sed -i.bk '3s/version: *.*.*/version: '$$version'/' pubspec.yaml; \
 	rm pubspec.yaml.bk; \
-	bumper --latestVersion=v$$version
+	bumper --latestVersion=v$$version \
+		--repoLink https://github.com/evan361425/flutter-spotlight-ant \
+		--tagNames production \
+		--tagPatterns 'v[0-9]+.[0-9]+.[0-9]+$$' \
+		--changelogTemplate '{content}'
 
 ##@ Tools
 .PHONY: install-bumper

@@ -58,7 +58,7 @@ class SpotlightAnt extends StatefulWidget {
   ///
   /// null index will be treated as the first.
   ///
-  /// When [SpotlightShow.waitForZeroIndexOrNull] is true, the show will only
+  /// When [SpotlightShow.waitForZeroOrNullIndex] is true, the show will only
   /// start if we found the first ant with index 0 or null.
   final int? index;
 

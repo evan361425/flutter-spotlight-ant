@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <!--
     If you are serving your web app in a path other than the root, change the
@@ -38,7 +39,7 @@
       -ms-transform: translate(-50%, -50%);
       transform: translate(-50%, -50%);
     }
-    
+
     .loader {
       border: 16px solid #f3f3f3;
       border-radius: 50%;
@@ -51,26 +52,29 @@
       -webkit-animation: spin 2s linear infinite;
       animation: spin 2s linear infinite;
     }
-    
+
     @-webkit-keyframes spin {
       0% {
         -webkit-transform: rotate(0deg);
       }
+
       100% {
         -webkit-transform: rotate(360deg);
       }
     }
-    
+
     @keyframes spin {
       0% {
         transform: rotate(0deg);
       }
+
       100% {
         transform: rotate(360deg);
       }
     }
   </style>
 </head>
+
 <body>
   <div class="loading">
     <div class="loader"></div>
@@ -79,7 +83,6 @@
        application. For more information, see:
        https://developers.google.com/web/fundamentals/primers/service-workers -->
   <script>
-    var serviceWorkerVersion = null;
     var scriptLoaded = false;
     function loadMainDartJs() {
       if (scriptLoaded) {
@@ -98,7 +101,7 @@
         // Wait for registration to finish before dropping the <script> tag.
         // Otherwise, the browser will load the script multiple times,
         // potentially different versions.
-        var serviceWorkerUrl = 'flutter_service_worker.js?v=' + serviceWorkerVersion;
+        var serviceWorkerUrl = 'flutter_service_worker.js?v={{flutter_service_worker_version}}';
         navigator.serviceWorker.register(serviceWorkerUrl)
           .then((reg) => {
             function waitForActivation(serviceWorker) {
@@ -113,7 +116,7 @@
               // No active web worker and we have installed or are installing
               // one for the first time. Simply wait for it to activate.
               waitForActivation(reg.installing ?? reg.waiting);
-            } else if (!reg.active.scriptURL.endsWith(serviceWorkerVersion)) {
+            } else if (!reg.active.scriptURL.endsWith('{{flutter_service_worker_version}}')) {
               // When the app updates the serviceWorkerVersion changes, so we
               // need to ask the service worker to update.
               console.log('New service worker available.');
@@ -143,4 +146,5 @@
     }
   </script>
 </body>
+
 </html>

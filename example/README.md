@@ -4,9 +4,9 @@ You can use web app UI to see how the configuration works.
 
 Here provide severals ways:
 
--   visit GitHub hosting [page](https://evan361425.github.io/flutter-spotlight-ant/).
--   clone the project and run develop mode.
--   clone the built package and host the web app.
+- visit GitHub hosting [page](https://evan361425.github.io/flutter-spotlight-ant/).
+- clone the project and run develop mode.
+- clone the built package and host the web app.
 
 ## Develop mode
 

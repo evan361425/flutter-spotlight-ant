@@ -14,12 +14,12 @@ import 'my_spotlight.dart';
 
 void main() {
   setPathUrlStrategy();
+  GoRouter.optionURLReflectsImperativeAPIs = true;
   runApp(App(GoRouter(
-    initialLocation: '/flutter-spotlight-ant',
     routes: [
       GoRoute(
         name: 'home',
-        path: '/flutter-spotlight-ant',
+        path: '/',
         builder: (ctx, state) => const StartPage(),
         routes: [
           GoRoute(

@@ -30,7 +30,7 @@ class ObscureScreenState extends State<ObscureScreen> {
                     icon: const Icon(Icons.arrow_back_ios_outlined),
                   ),
                 ),
-                body: TextButton(
+                body: ElevatedButton(
                   onPressed: () {
                     setState(() {
                       isShown = true;
@@ -43,20 +43,23 @@ class ObscureScreenState extends State<ObscureScreen> {
           },
           child: const Text('show page above this one'),
         ),
-        ListTile(
-          title: const Text('Trailing icon can be trigger on next page'),
-          subtitle: const Text('press this tile to hide'),
-          onTap: () {
-            setState(() {
-              isShown = false;
-            });
-          },
-          trailing: isShown
-              ? const Spotlight(
-                  monitorId: 'obscure-test',
-                  child: Icon(Icons.star),
-                )
-              : null,
+        ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 400),
+          child: ListTile(
+            title: const Text('Trailing icon can be trigger on next page'),
+            subtitle: const Text('press this tile to hide'),
+            onTap: () {
+              setState(() {
+                isShown = false;
+              });
+            },
+            trailing: isShown
+                ? const Spotlight(
+                    monitorId: 'obscure-test',
+                    child: Icon(Icons.star),
+                  )
+                : null,
+          ),
         ),
       ]),
     );

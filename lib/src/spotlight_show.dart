@@ -61,13 +61,13 @@ class SpotlightShow extends StatefulWidget {
   /// ```
   final bool startWhenReady;
 
-  /// Only start the show when the first spotlight is at index <= 0 or null.
+  /// Only start the show when the index <= 0 or null spotlight is registered
   ///
   /// You can have a show that can wait until desired ant is register in
   /// the widget tree.
   ///
   /// This is default to true for backward compatibility.
-  final bool waitForZeroIndexOrNull;
+  final bool waitForZeroOrNullIndex;
 
   /// Wait until the [Future] has done and start the spotlight show.
   ///
@@ -80,10 +80,10 @@ class SpotlightShow extends StatefulWidget {
   /// True to make it able to start.
   final bool enable;
 
-  /// Hide the action is not operable.
+  /// Hide the action which is not operable.
   ///
   /// E.g. [SpotlightAntAction.next] is not operable at the last ant.
-  final bool hideIfNotAble;
+  final bool hideNonOperableActions;
 
   /// If user try to pop(aka BACK button in Android) which action to take.
   ///
@@ -104,9 +104,9 @@ class SpotlightShow extends StatefulWidget {
   const SpotlightShow({
     super.key,
     this.enable = true,
-    this.hideIfNotAble = true,
+    this.hideNonOperableActions = true,
     this.startWhenReady = true,
-    this.waitForZeroIndexOrNull = true,
+    this.waitForZeroOrNullIndex = true,
     this.showWaitFuture,
     this.onSkip,
     this.onFinish,
@@ -236,7 +236,7 @@ class SpotlightShowState extends State<SpotlightShow> {
         return widget.readinessChecker!(_antQueue);
       }
 
-      if (widget.waitForZeroIndexOrNull) {
+      if (widget.waitForZeroOrNullIndex) {
         final index = _antQueue.first.widget.index;
         return index == null || index <= 0;
       }
@@ -278,7 +278,7 @@ class SpotlightShowState extends State<SpotlightShow> {
             key: gaffer,
             ants: _antQueue,
             startAt: _startAt,
-            hideIfNotAble: widget.hideIfNotAble,
+            hideIfNotAble: widget.hideNonOperableActions,
             onFinish: () {
               _removeOverlayEntry();
               _startAt = 0;

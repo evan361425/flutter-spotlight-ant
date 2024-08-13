@@ -83,15 +83,15 @@ The configuration of `SpotlightAnt`:
 | Name | Default | Desc. |
 | - | - | - |
 | enable | `true` | Whether show this ant or not. |
-| monitorId | `null` | Monitor widget's visibility and start the show after it shown. |
+| monitorId | `null` | Monitor widget's visibility and start the show after it shown, see [example](https://evan361425.github.io/flutter-spotlight-ant/obscure). |
 | spotlight | [SpotlightConfig] | Customize spotlight. |
 | backdrop | [SpotlightBackdropConfig] | Customize backdrop. |
 | action | [SpotlightActionConfig] | Customize actions. |
 | duration | [SpotlightDurationConfig] | Customize animation duration. |
 | contentLayout | [SpotlightContentLayoutConfig] | Customize layout of content. |
 | bumpRatio | `0.1` | How big outer area you want in bump animation. |
-| traceChild | `false` | Trace the position of the child. |
-| index | `null` | Order in the show. |
+| traceChild | `false` | Trace the position of the child, see [example](https://evan361425.github.io/flutter-spotlight-ant/animation). |
+| index | `null` | Order in the show, see [example](https://evan361425.github.io/flutter-spotlight-ant/random). |
 | content | `null` | Content beside spotlight. |
 | onShown | `null` | Callback before zoom in. |
 | onShow | `null` | Callback after zoom in. |
@@ -104,13 +104,13 @@ The configuration of `SpotlightShow`:
 | Name | Default | Desc. |
 | - | - | - |
 | enable | `true` | Wheather enable the show. |
-| hideIfNotAble | `true` | Hide the action is not operable. |
 | startWhenReady | `true` | If you want to fire it by program, set it to false. |
-| waitForZeroIndexOrNull | `true` | Only start the show when the first spotlight is at index <= 0 or null. |
+| waitForZeroOrNullIndex | `true` | Only start the show when the index <= 0 or null spotlight is registered. |
+| hideNonOperableActions | `true` | Hide the action which is not operable. |
 | showWaitFuture | `null` | Pass the `Future` and it will wait until it done and start the show. |
 | onSkip | `null` | Callback after tapping `SpotlightAntAction.skip`. |
 | onFinish | `null` | Callback after finish the show. |
-| popAction | `SpotlightAntAction.skip` | Action after pressing pop button. |
+| popAction | `SpotlightAntAction.skip` | Called action after pressing pop (aka BACK button in Android) button. |
 | readinessChecker | `null` | A function to check whether the show is ready to start. |
 
 Go to [API doc](https://pub.dev/documentation/spotlight_ant/latest/spotlight_ant/spotlight_ant-library.html) for details.
@@ -170,7 +170,7 @@ Configuration for the animation duration.
 
 ### SpotlightContentLayoutConfig
 
-Configuration for the layout of content.
+Configuration for the layout of content, see [example](https://evan361425.github.io/flutter-spotlight-ant/alignment).
 
 | Name | Default | Desc. |
 | - | - | - |
