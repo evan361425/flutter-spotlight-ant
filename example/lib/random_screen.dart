@@ -33,6 +33,7 @@ class RandomScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(100),
               ),
               child: Spotlight(
+                traceChild: true,
                 index: orders[i],
                 content: Material(
                   color: Colors.indigo,

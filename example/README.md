@@ -37,7 +37,8 @@ Then open <http://localhost:8000> on your browser.
 You can built it your own by:
 
 ```bash
-flutter build web --release
+make build-example
+make serve-example
 ```
 
 ## In the code

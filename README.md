@@ -201,7 +201,7 @@ class _Painter extends SpotlightPainter {
 }
 ```
 
-Actions is also easy to customize:
+Actions are also easy to customize:
 
 ```dart
 SpotlightAnt(
