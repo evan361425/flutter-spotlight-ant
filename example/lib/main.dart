@@ -198,7 +198,7 @@ class _StartPageState extends State<StartPage> {
             onPressed: () => launchUrl(Uri.parse(
               'https://github.com/evan361425/flutter-spotlight-ant',
             )),
-            icon: const FaIcon(IconDataBrands(0xf09b)),
+            icon: FaIcon(FontAwesomeIcons.github),
           ),
         ]),
       ),
