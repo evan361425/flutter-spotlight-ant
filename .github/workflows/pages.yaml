@@ -26,7 +26,11 @@ jobs:
       # Get flutter dependencies.
       - name: Install dependencies
         working-directory: ./example
-        run: flutter pub get
+        run: >-
+          flutter clean
+          flutter pub cache repair
+          rm -f pubspec.lock
+          flutter pub get
 
       - name: Build web
         run: make build-example
