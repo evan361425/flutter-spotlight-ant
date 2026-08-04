@@ -27,9 +27,9 @@ jobs:
       - name: Install dependencies
         working-directory: ./example
         run: >-
-          flutter clean
-          flutter pub cache repair
-          rm -f pubspec.lock
+          flutter clean &&
+          flutter pub cache repair &&
+          rm -f pubspec.lock &&
           flutter pub get
 
       - name: Build web
