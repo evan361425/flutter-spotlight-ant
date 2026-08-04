@@ -8,6 +8,12 @@ This document's format follow the context in [Keep a Changelog](https://keepacha
 
 Please check git diff.
 
+## [v1.4.5] - 2026-08-04
+
+### Fixed
+
+- ([2a44e79](https://github.com/evan361425/flutter-spotlight-ant/commit/2a44e7913de4eff67ffd0944f92e059954495bf5)) null check on spotlight ant - @wu0dj2k7ao3
+
 ## [v1.4.4] - 2026-08-04
 
 ### Fixed
@@ -133,7 +139,8 @@ fix example document
 
 Initial release
 
-[unreleased]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.4.4...HEAD
+[unreleased]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.4.5...HEAD
+[v1.4.5]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.4.4...v1.4.5
 [v1.4.4]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.4.3...v1.4.4
 [v1.4.3]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.4.2...v1.4.3
 [v1.4.2]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.4.1...v1.4.2
