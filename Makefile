@@ -26,9 +26,8 @@ build-example: ## Compile for GithHub Pages
 
 .PHONY: serve-example
 serve-example: ## Serve example in local
-	@if [ ! -d example/build/flutter-spotlight-ant ]; then \
-		mv example/build/web example/build/flutter-spotlight-ant; \
-	fi
+	@rm -rf example/build/flutter-spotlight-ant
+	@mv example/build/web example/build/flutter-spotlight-ant
 	cd example/build && python3 -m http.server
 
 ##@ Build
