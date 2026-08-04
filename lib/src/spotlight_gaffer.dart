@@ -298,7 +298,7 @@ class SpotlightGafferState extends State<SpotlightGaffer> with TickerProviderSta
     if (SpotlightAnt.debug) log('performing prev', name: 'ant');
     if (currentIndex > 0) {
       _startZoomOut().then((success) {
-        if (success) {
+        if (success && currentIndex > 0 && currentIndex <= widget.ants.length) {
           _startZoomIn(--currentIndex);
         }
       });
