@@ -22,8 +22,7 @@ test-coverage: ## Run tests with coverage
 build-example: ## Compile for GithHub Pages
 	cd example && \
 		flutter build web --release \
-		--base-href "/flutter-spotlight-ant/" \
-		--web-renderer html
+		--base-href "/flutter-spotlight-ant/"
 
 .PHONY: serve-example
 serve-example: ## Serve example in local

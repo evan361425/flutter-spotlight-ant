@@ -157,7 +157,7 @@ class SpotlightAntState extends State<SpotlightAnt> {
   ///
   /// see: https://stackoverflow.com/a/71568630/12089368
   Rect? get rect {
-    if (_rect == null || widget.traceChild) {
+    if (mounted && (_rect == null || widget.traceChild)) {
       final renderBox = context.findRenderObject();
       final matrix = renderBox?.getTransformTo(null);
       // getting global position of renderBox
