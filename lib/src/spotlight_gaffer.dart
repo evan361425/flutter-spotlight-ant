@@ -78,7 +78,7 @@ class SpotlightGafferState extends State<SpotlightGaffer> with TickerProviderSta
           },
         ),
         if (currentAnt!.widget.content != null) _buildContent(),
-        if (currentAnt!.widget.action.freeStyleLayout) ..._getActions(),
+        if (currentAnt!.widget.action.freeStyleLayout) ..._getActions().where((a) => a is! Spacer),
       ],
     );
 
