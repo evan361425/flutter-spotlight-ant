@@ -66,18 +66,21 @@ class SpotlightGafferState extends State<SpotlightGaffer> with TickerProviderSta
       return const SizedBox.shrink();
     }
 
-    final spotlight = Stack(children: <Widget>[
-      AnimatedBuilder(
-        animation: _zoomController,
-        builder: (context, child) {
-          return AnimatedBuilder(
-            animation: _bumpController,
-            builder: _buildSpotlight,
-          );
-        },
-      ),
-      if (currentAnt!.widget.content != null) _buildContent(),
-    ]);
+    final spotlight = Stack(
+      children: <Widget>[
+        AnimatedBuilder(
+          animation: _zoomController,
+          builder: (context, child) {
+            return AnimatedBuilder(
+              animation: _bumpController,
+              builder: _buildSpotlight,
+            );
+          },
+        ),
+        if (currentAnt!.widget.content != null) _buildContent(),
+        if (currentAnt!.widget.action.freeStyleLayout) ..._getActions().where((a) => a is! Spacer),
+      ],
+    );
 
     return Material(
       type: MaterialType.transparency,
@@ -164,7 +167,8 @@ class SpotlightGafferState extends State<SpotlightGaffer> with TickerProviderSta
           opacity: _contentAnimation,
           child: Stack(children: [
             SizedBox.expand(child: currentAnt!.widget.content),
-            (currentAnt!.widget.action.builder ?? _buildActions).call(context, _getActions()),
+            if (!currentAnt!.widget.action.freeStyleLayout)
+              (currentAnt!.widget.action.builder ?? _buildActions).call(context, _getActions()),
           ]),
         ),
       ),
