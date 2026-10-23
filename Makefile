@@ -34,7 +34,7 @@ serve-example: ## Serve example in local
 .PHONY: bump
 bump: install-bumper ## Bump version
 	bumper \
-		--hook-repl[]path 'pubspec.yaml' \
+		--hook-repl[]paths[] 'pubspec.yaml' \
 		--hook-repl[]pattern '^version: .+' \
 		--hook-repl[]repl 'version: {version.noPrefix}' \
 
