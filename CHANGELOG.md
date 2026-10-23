@@ -8,6 +8,12 @@ This document's format follow the context in [Keep a Changelog](https://keepacha
 
 Please check git diff.
 
+## [v1.5.0] - 2026-10-23
+
+### Added
+
+- ([#10](https://github.com/evan361425/flutter-spotlight-ant/pull/10)) support customize buttons placement in stack - @wu0dj2k7ao3
+
 ## [v1.4.5] - 2026-08-04
 
 ### Fixed
@@ -139,7 +145,8 @@ fix example document
 
 Initial release
 
-[unreleased]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.4.5...HEAD
+[unreleased]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.5.0...HEAD
+[v1.5.0]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.4.5...v1.5.0
 [v1.4.5]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.4.4...v1.4.5
 [v1.4.4]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.4.3...v1.4.4
 [v1.4.3]: https://github.com/evan361425/flutter-spotlight-ant/compare/v1.4.2...v1.4.3
