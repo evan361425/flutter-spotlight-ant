@@ -24,7 +24,7 @@ jobs:
       # Setup the flutter environment.
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.13.x"
+          flutter-version: "3.41.x"
           cache: true
           channel: "stable"
 
@@ -42,11 +42,11 @@ jobs:
       # Run widget tests for our flutter project.
       - name: Testing
         if: github.event_name == 'pull_request'
-        run: flutter test --no-pub --no-test-assets
+        run: flutter test --no-pub
 
       - name: Testing with Coverage
         if: github.event_name != 'pull_request'
-        run: flutter test --coverage --no-pub --no-test-assets
+        run: flutter test --coverage --no-pub
 
       - name: Coverage to codecov
         if: github.event_name != 'pull_request'

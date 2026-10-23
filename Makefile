@@ -33,23 +33,10 @@ serve-example: ## Serve example in local
 ##@ Build
 .PHONY: bump
 bump: install-bumper ## Bump version
-	@current=$$(grep '^version:' pubspec.yaml | head -n1 | cut -d' ' -f2); \
-	read -p "Enter new version (current is $$current): " version; \
-	if [[ ! $$version =~ ^[0-9]+\.[0-9]+\.[0-9]+$$ ]]; then \
-		echo "Version must be in x.x.x format"; \
-		exit 1; \
-	fi; \
-	if [[ $$(echo -e "$$version\n$$current" | sort -V | head -n1) == $$version ]]; then \
-		echo "Version must be above $$current"; \
-		exit 1; \
-	fi; \
-	sed -i.bk '3s/version: *.*.*/version: '$$version'/' pubspec.yaml; \
-	rm pubspec.yaml.bk; \
-	bumper --latestVersion=v$$version \
-		--repoLink https://github.com/evan361425/flutter-spotlight-ant \
-		--tagNames production \
-		--tagPatterns 'v[0-9]+.[0-9]+.[0-9]+$$' \
-		--changelogTemplate '{content}'
+	bumper \
+		--hook-repl[]path 'pubspec.yaml' \
+		--hook-repl[]pattern '^version: .+' \
+		--hook-repl[]repl 'version: {version.noPrefix}' \
 
 ##@ Tools
 .PHONY: install-bumper

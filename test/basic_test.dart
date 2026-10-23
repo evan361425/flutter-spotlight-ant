@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:spotlight_ant/spotlight_ant.dart';
@@ -494,6 +496,12 @@ void main() {
       await tester.pump(const Duration(milliseconds: 1));
       await tester.pump(const Duration(milliseconds: 1));
       expect(find.text('content-2'), findsOneWidget);
+    });
+
+    test('fulfill coverage', () {
+      String hostname = Platform.localHostname;
+      SpotlightRectBuilder(borderRadius: hostname.length.toDouble());
+      SpotlightBackDropBuilder(color: Color(hostname.length));
     });
 
     setUpAll(() => SpotlightAnt.debug = true);

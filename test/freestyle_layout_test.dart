@@ -3,8 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:spotlight_ant/spotlight_ant.dart';
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
-
   group('Spotlight Ant Freestyle layout for action buttons', () {
     const actions = [
       SpotlightAntAction.prev,

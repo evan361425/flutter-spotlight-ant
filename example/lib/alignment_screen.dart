@@ -20,15 +20,10 @@ class AlignmentScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MyScaffold(
-      appBar: AppBar(
-        title: const Text('Alignment Example'),
-        actions: const [BackButton()],
-      ),
+      appBar: AppBar(title: const Text('Alignment Example'), actions: const [BackButton()]),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
-        child: Stack(children: [
-          for (final a in alignments) _AlignTarget(a: a),
-        ]),
+        child: Stack(children: [for (final a in alignments) _AlignTarget(a: a)]),
       ),
     );
   }

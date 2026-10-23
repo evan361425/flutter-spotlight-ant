@@ -10,10 +10,8 @@ class AnimationScreen extends StatefulWidget {
 }
 
 class AnimationScreenState extends State<AnimationScreen> with TickerProviderStateMixin {
-  late final AnimationController _controller = AnimationController(
-    duration: const Duration(seconds: 2),
-    vsync: this,
-  )..repeat(reverse: true);
+  late final AnimationController _controller = AnimationController(duration: const Duration(seconds: 2), vsync: this)
+    ..repeat(reverse: true);
 
   @override
   void dispose() {
@@ -27,43 +25,28 @@ class AnimationScreenState extends State<AnimationScreen> with TickerProviderSta
     const double bigLogo = 200;
 
     return MyScaffold(
-      appBar: AppBar(
-        title: const Text('Animation Example'),
-        actions: const [BackButton()],
-      ),
+      appBar: AppBar(title: const Text('Animation Example'), actions: const [BackButton()]),
       body: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
           final Size biggest = constraints.biggest;
-          return Stack(children: <Widget>[
-            Center(child: Text('Set `traceChild` to true', style: Theme.of(context).textTheme.labelMedium)),
-            Spotlight(
-              traceChild: true,
-              child: PositionedTransition(
-                rect: RelativeRectTween(
-                  begin: RelativeRect.fromSize(
-                    const Rect.fromLTWH(0, 0, smallLogo, smallLogo),
-                    biggest,
-                  ),
-                  end: RelativeRect.fromSize(
-                    Rect.fromLTWH(
-                      biggest.width - bigLogo,
-                      biggest.height - bigLogo,
-                      bigLogo,
-                      bigLogo,
+          return Stack(
+            children: <Widget>[
+              Center(child: Text('Set `traceChild` to true', style: Theme.of(context).textTheme.labelMedium)),
+              Spotlight(
+                traceChild: true,
+                child: PositionedTransition(
+                  rect: RelativeRectTween(
+                    begin: RelativeRect.fromSize(const Rect.fromLTWH(0, 0, smallLogo, smallLogo), biggest),
+                    end: RelativeRect.fromSize(
+                      Rect.fromLTWH(biggest.width - bigLogo, biggest.height - bigLogo, bigLogo, bigLogo),
+                      biggest,
                     ),
-                    biggest,
-                  ),
-                ).animate(CurvedAnimation(
-                  parent: _controller,
-                  curve: Curves.elasticInOut,
-                )),
-                child: const Padding(
-                  padding: EdgeInsets.all(8),
-                  child: FlutterLogo(),
+                  ).animate(CurvedAnimation(parent: _controller, curve: Curves.elasticInOut)),
+                  child: const Padding(padding: EdgeInsets.all(8), child: FlutterLogo()),
                 ),
               ),
-            ),
-          ]);
+            ],
+          );
         },
       ),
     );

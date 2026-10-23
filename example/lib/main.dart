@@ -15,42 +15,26 @@ import 'my_spotlight.dart';
 void main() {
   setPathUrlStrategy();
   GoRouter.optionURLReflectsImperativeAPIs = true;
-  runApp(App(GoRouter(
-    routes: [
-      GoRoute(
-        name: 'home',
-        path: '/',
-        builder: (ctx, state) => const StartPage(),
+  runApp(
+    App(
+      GoRouter(
         routes: [
           GoRoute(
-            path: 'alignment',
-            name: 'alignment',
-            builder: (ctx, state) => const AlignmentScreen(),
-          ),
-          GoRoute(
-            path: 'animation',
-            name: 'animation',
-            builder: (ctx, state) => const AnimationScreen(),
-          ),
-          GoRoute(
-            path: 'random',
-            name: 'random',
-            builder: (ctx, state) => const RandomScreen(),
-          ),
-          GoRoute(
-            path: 'delay',
-            name: 'delay',
-            builder: (ctx, state) => const DelayScreen(),
-          ),
-          GoRoute(
-            path: 'obscure',
-            name: 'obscure',
-            builder: (ctx, state) => const ObscureScreen(),
+            name: 'home',
+            path: '/',
+            builder: (ctx, state) => const StartPage(),
+            routes: [
+              GoRoute(path: 'alignment', name: 'alignment', builder: (ctx, state) => const AlignmentScreen()),
+              GoRoute(path: 'animation', name: 'animation', builder: (ctx, state) => const AnimationScreen()),
+              GoRoute(path: 'random', name: 'random', builder: (ctx, state) => const RandomScreen()),
+              GoRoute(path: 'delay', name: 'delay', builder: (ctx, state) => const DelayScreen()),
+              GoRoute(path: 'obscure', name: 'obscure', builder: (ctx, state) => const ObscureScreen()),
+            ],
           ),
         ],
       ),
-    ],
-  )));
+    ),
+  );
 }
 
 class App extends StatelessWidget {
@@ -91,13 +75,8 @@ class _StartPageState extends State<StartPage> {
           builder: (context, _) => SpotlightAnt(
             enable: isFirst.value,
             index: 1,
-            content: const SpotlightContent(
-              fontSize: 26,
-              child: Text('Configure your spotlight...'),
-            ),
-            action: const SpotlightActionConfig(
-              enabled: [SpotlightAntAction.prev, SpotlightAntAction.next],
-            ),
+            content: const SpotlightContent(fontSize: 26, child: Text('Configure your spotlight...')),
+            action: const SpotlightActionConfig(enabled: [SpotlightAntAction.prev, SpotlightAntAction.next]),
             duration: const SpotlightDurationConfig(
               bump: Duration(milliseconds: 200),
               zoomIn: Duration(milliseconds: 300),
@@ -117,13 +96,8 @@ class _StartPageState extends State<StartPage> {
         builder: (context, _) => SpotlightAnt(
           index: 2,
           enable: isFirst.value,
-          spotlight: const SpotlightConfig(
-            builder: SpotlightRectBuilder(borderRadius: 20),
-            padding: EdgeInsets.zero,
-          ),
-          action: const SpotlightActionConfig(
-            enabled: [SpotlightAntAction.prev],
-          ),
+          spotlight: const SpotlightConfig(builder: SpotlightRectBuilder(borderRadius: 20), padding: EdgeInsets.zero),
+          action: const SpotlightActionConfig(enabled: [SpotlightAntAction.prev]),
           content: const SpotlightContent(
             fontSize: 26,
             child: Text('and re-run the animation by pressing the button.'),
@@ -132,75 +106,64 @@ class _StartPageState extends State<StartPage> {
         ),
       ),
       body: Center(
-        child: Column(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-          Spotlight(
-            index: 0,
-            monitorId: 'example.start',
-            content: SpotlightContent(
-              child: Column(children: [
-                const CircleAvatar(
-                  foregroundImage: AssetImage('assets/spotlight-ant.png'),
-                  radius: 64,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Spotlight(
+              index: 0,
+              monitorId: 'example.start',
+              content: SpotlightContent(
+                child: Column(
+                  children: [
+                    const CircleAvatar(foregroundImage: AssetImage('assets/spotlight-ant.png'), radius: 64),
+                    const Text('SpotlightAnt', style: TextStyle(fontSize: 32)),
+                    const SizedBox(height: 16),
+                    const Text('SpotlightAnt help focus on specific widget.\n'),
+                    const Text(
+                      'You can do many flexible configuration and \n'
+                      'even make your own customized painter for the spotlight.\n',
+                    ),
+                    const Text(
+                      'You can easily setup the spotlight by using SpotlightAnt to wrap the widget.\n'
+                      'See the details in the GitHub README\n',
+                    ),
+                    ElevatedButton(
+                      onPressed: () => launchUrl(Uri.parse('https://github.com/evan361425/flutter-spotlight-ant')),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [Text('Go to GitHub '), Icon(Icons.open_in_new_sharp)],
+                      ),
+                    ),
+                  ],
                 ),
-                const Text('SpotlightAnt', style: TextStyle(fontSize: 32)),
-                const SizedBox(height: 16),
-                const Text('SpotlightAnt help focus on specific widget.\n'),
-                const Text('You can do many flexible configuration and \n'
-                    'even make your own customized painter for the spotlight.\n'),
-                const Text('You can easily setup the spotlight by using SpotlightAnt to wrap the widget.\n'
-                    'See the details in the GitHub README\n'),
-                ElevatedButton(
-                  onPressed: () => launchUrl(Uri.parse(
-                    'https://github.com/evan361425/flutter-spotlight-ant',
-                  )),
-                  child: const Row(mainAxisSize: MainAxisSize.min, children: [
-                    Text('Go to GitHub '),
-                    Icon(Icons.open_in_new_sharp),
-                  ]),
-                ),
-              ]),
+              ),
+              child: Container(
+                margin: const EdgeInsets.symmetric(vertical: 16.0),
+                padding: const EdgeInsets.all(8.0),
+                child: const Text('Welcome !', style: TextStyle(fontSize: 32)),
+              ),
             ),
-            child: Container(
-              margin: const EdgeInsets.symmetric(vertical: 16.0),
-              padding: const EdgeInsets.all(8.0),
-              child: const Text('Welcome !', style: TextStyle(fontSize: 32)),
+            Builder(
+              builder: (context) =>
+                  OutlinedButton(onPressed: () => SpotlightShow.of(context).start(), child: const Text('Run Again')),
             ),
-          ),
-          Builder(
-            builder: (context) => OutlinedButton(
-              onPressed: () => SpotlightShow.of(context).start(),
-              child: const Text('Run Again'),
+            Wrap(
+              spacing: 8.0,
+              runSpacing: 8.0,
+              children: [
+                ElevatedButton(onPressed: () => context.pushNamed('alignment'), child: const Text('Alignment')),
+                ElevatedButton(onPressed: () => context.pushNamed('animation'), child: const Text('Animation')),
+                ElevatedButton(onPressed: () => context.pushNamed('random'), child: const Text('Random Index')),
+                ElevatedButton(onPressed: () => context.pushNamed('delay'), child: const Text('Delay')),
+                ElevatedButton(onPressed: () => context.pushNamed('obscure'), child: const Text('Obscure')),
+              ],
             ),
-          ),
-          Wrap(spacing: 8.0, runSpacing: 8.0, children: [
-            ElevatedButton(
-              onPressed: () => context.pushNamed('alignment'),
-              child: const Text('Alignment'),
+            IconButton(
+              onPressed: () => launchUrl(Uri.parse('https://github.com/evan361425/flutter-spotlight-ant')),
+              icon: FaIcon(FontAwesomeIcons.github),
             ),
-            ElevatedButton(
-              onPressed: () => context.pushNamed('animation'),
-              child: const Text('Animation'),
-            ),
-            ElevatedButton(
-              onPressed: () => context.pushNamed('random'),
-              child: const Text('Random Index'),
-            ),
-            ElevatedButton(
-              onPressed: () => context.pushNamed('delay'),
-              child: const Text('Delay'),
-            ),
-            ElevatedButton(
-              onPressed: () => context.pushNamed('obscure'),
-              child: const Text('Obscure'),
-            ),
-          ]),
-          IconButton(
-            onPressed: () => launchUrl(Uri.parse(
-              'https://github.com/evan361425/flutter-spotlight-ant',
-            )),
-            icon: FaIcon(FontAwesomeIcons.github),
-          ),
-        ]),
+          ],
+        ),
       ),
     );
   }
@@ -210,8 +173,9 @@ class _StartPageState extends State<StartPage> {
     super.didChangeDependencies();
     final delegate = GoRouter.of(context).routerDelegate;
     final RouteMatch lastMatch = delegate.currentConfiguration.last;
-    final RouteMatchList matchList =
-        lastMatch is ImperativeRouteMatch ? lastMatch.matches : delegate.currentConfiguration;
+    final RouteMatchList matchList = lastMatch is ImperativeRouteMatch
+        ? lastMatch.matches
+        : delegate.currentConfiguration;
     final redirect = matchList.uri.queryParameters['r'];
     if (redirect != null && ['alignment', 'animation', 'random', 'delay', 'obscure'].contains(redirect)) {
       context.pushNamed(redirect);

@@ -32,42 +32,38 @@ class _SpotlightState extends State<Spotlight> {
   Widget build(BuildContext context) {
     final c = Spotlight.config;
     return ListenableBuilder(
-        listenable: c,
-        builder: (context, _) {
-          return SpotlightAnt(
-            enable: widget.enable,
-            index: widget.index,
-            monitorId: widget.monitorId,
-            traceChild: widget.traceChild,
-            spotlight: SpotlightConfig(
-              padding: EdgeInsets.all(c.padding.value),
-              builder: c.useCircle.value ? const SpotlightCircularBuilder() : const SpotlightRectBuilder(),
-              silent: c.spotlightSilent.value,
-              usingInkwell: c.spotlightInkwell.value,
-            ),
-            duration: SpotlightDurationConfig(
-              zoomIn: Duration(milliseconds: c.zoomIn.value.toInt()),
-              zoomOut: Duration(milliseconds: c.zoomOut.value.toInt()),
-              bump: Duration(milliseconds: c.bump.value.toInt()),
-              contentFadeIn: Duration(milliseconds: c.fadeIn.value.toInt()),
-            ),
-            bumpRatio: c.bumpRatio.value,
-            backdrop: SpotlightBackdropConfig(
-              silent: c.backdropSilent.value,
-              usingInkwell: c.backdropInkwell.value,
-            ),
-            contentLayout: SpotlightContentLayoutConfig(
-              alignment: c.alignment.value,
-            ),
-            action: SpotlightActionConfig(enabled: c.antActions),
-            onShow: () => c.handleEvent('onShow'),
-            onShown: () => c.handleEvent('onShown'),
-            onDismiss: () => c.handleEvent('onDismiss'),
-            onDismissed: () => c.handleEvent('onDismissed'),
-            content: widget.content,
-            child: widget.child,
-          );
-        });
+      listenable: c,
+      builder: (context, _) {
+        return SpotlightAnt(
+          enable: widget.enable,
+          index: widget.index,
+          monitorId: widget.monitorId,
+          traceChild: widget.traceChild,
+          spotlight: SpotlightConfig(
+            padding: EdgeInsets.all(c.padding.value),
+            builder: c.useCircle.value ? const SpotlightCircularBuilder() : const SpotlightRectBuilder(),
+            silent: c.spotlightSilent.value,
+            usingInkwell: c.spotlightInkwell.value,
+          ),
+          duration: SpotlightDurationConfig(
+            zoomIn: Duration(milliseconds: c.zoomIn.value.toInt()),
+            zoomOut: Duration(milliseconds: c.zoomOut.value.toInt()),
+            bump: Duration(milliseconds: c.bump.value.toInt()),
+            contentFadeIn: Duration(milliseconds: c.fadeIn.value.toInt()),
+          ),
+          bumpRatio: c.bumpRatio.value,
+          backdrop: SpotlightBackdropConfig(silent: c.backdropSilent.value, usingInkwell: c.backdropInkwell.value),
+          contentLayout: SpotlightContentLayoutConfig(alignment: c.alignment.value),
+          action: SpotlightActionConfig(enabled: c.antActions),
+          onShow: () => c.handleEvent('onShow'),
+          onShown: () => c.handleEvent('onShown'),
+          onDismiss: () => c.handleEvent('onDismiss'),
+          onDismissed: () => c.handleEvent('onDismissed'),
+          content: widget.content,
+          child: widget.child,
+        );
+      },
+    );
   }
 }
 
@@ -80,13 +76,7 @@ class MyScaffold extends StatelessWidget {
 
   final Widget Function(BuildContext context, Widget widget)? floatingActionButtonWrapper;
 
-  const MyScaffold({
-    super.key,
-    this.onFinish,
-    this.appBar,
-    required this.body,
-    this.floatingActionButtonWrapper,
-  });
+  const MyScaffold({super.key, this.onFinish, this.appBar, required this.body, this.floatingActionButtonWrapper});
 
   @override
   Widget build(BuildContext context) {
@@ -97,22 +87,22 @@ class MyScaffold extends StatelessWidget {
           onFinish?.call();
         },
         onSkip: () => Spotlight.config.handleEvent('onSkip'),
-        child: Builder(builder: (context) {
-          final btn = ElevatedButton(
-            style: const ButtonStyle(
-              minimumSize: WidgetStatePropertyAll(Size(double.infinity, 48)),
-            ),
-            onPressed: () => SpotlightShow.of(context).start(),
-            child: const Text('Re-run the spotlight show!'),
-          );
+        child: Builder(
+          builder: (context) {
+            final btn = ElevatedButton(
+              style: const ButtonStyle(minimumSize: WidgetStatePropertyAll(Size(double.infinity, 48))),
+              onPressed: () => SpotlightShow.of(context).start(),
+              child: const Text('Re-run the spotlight show!'),
+            );
 
-          return Scaffold(
-            appBar: appBar,
-            drawer: const _MyDriver(),
-            persistentFooterButtons: [floatingActionButtonWrapper?.call(context, btn) ?? btn],
-            body: body,
-          );
-        }),
+            return Scaffold(
+              appBar: appBar,
+              drawer: const _MyDriver(),
+              persistentFooterButtons: [floatingActionButtonWrapper?.call(context, btn) ?? btn],
+              body: body,
+            );
+          },
+        ),
       ),
     );
   }
@@ -134,10 +124,7 @@ class _MyDriverState extends State<_MyDriver> {
         children: [
           Text('Settings', style: Theme.of(context).textTheme.headlineSmall),
           const Center(
-            child: Text(
-              'Duration',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
+            child: Text('Duration', style: TextStyle(fontWeight: FontWeight.bold)),
           ),
           ListenableBuilder(listenable: Spotlight.config, builder: _buildToggler),
         ],
@@ -148,173 +135,143 @@ class _MyDriverState extends State<_MyDriver> {
   Widget _buildToggler(BuildContext context, Widget? _) {
     final c = Spotlight.config;
     final actions = c.antActions;
-    return Column(children: [
-      _row(
-        Text('Zoom In (${c.zoomIn.value.toStringAsFixed(0)})'),
-        Slider(
-          value: c.zoomIn.value,
-          min: 50,
-          max: 3000,
-          onChanged: (value) => c.zoomIn.value = value,
+    return Column(
+      children: [
+        _row(
+          Text('Zoom In (${c.zoomIn.value.toStringAsFixed(0)})'),
+          Slider(value: c.zoomIn.value, min: 50, max: 3000, onChanged: (value) => c.zoomIn.value = value),
         ),
-      ),
-      _row(
-        Text('Zoom Out (${c.zoomOut.value.toStringAsFixed(0)})'),
-        Slider(
-          value: c.zoomOut.value,
-          min: 50,
-          max: 3000,
-          onChanged: (value) => c.zoomOut.value = value,
+        _row(
+          Text('Zoom Out (${c.zoomOut.value.toStringAsFixed(0)})'),
+          Slider(value: c.zoomOut.value, min: 50, max: 3000, onChanged: (value) => c.zoomOut.value = value),
         ),
-      ),
-      _row(
-        Text('Bump (${c.bump.value.toStringAsFixed(0)})'),
-        Slider(
-          value: c.bump.value,
-          min: 50,
-          max: 3000,
-          onChanged: (value) => c.bump.value = value,
+        _row(
+          Text('Bump (${c.bump.value.toStringAsFixed(0)})'),
+          Slider(value: c.bump.value, min: 50, max: 3000, onChanged: (value) => c.bump.value = value),
         ),
-      ),
-      _row(
-        Text('Content FadeIn (${c.fadeIn.value.toStringAsFixed(0)})'),
-        Slider(
-          value: c.fadeIn.value,
-          min: 50,
-          max: 3000,
-          onChanged: (value) => c.fadeIn.value = value,
+        _row(
+          Text('Content FadeIn (${c.fadeIn.value.toStringAsFixed(0)})'),
+          Slider(value: c.fadeIn.value, min: 50, max: 3000, onChanged: (value) => c.fadeIn.value = value),
         ),
-      ),
-      const Divider(),
-      const Center(
-        child: Text(
-          'Numeric Settings',
-          style: TextStyle(fontWeight: FontWeight.bold),
+        const Divider(),
+        const Center(
+          child: Text('Numeric Settings', style: TextStyle(fontWeight: FontWeight.bold)),
         ),
-      ),
-      _row(
-        Text('Bump Ratio (${c.bumpRatio.value.toStringAsFixed(1)})'),
-        Slider(
-          value: c.bumpRatio.value,
-          min: 0.0,
-          max: 3,
-          onChanged: (value) => c.bumpRatio.value = value,
+        _row(
+          Text('Bump Ratio (${c.bumpRatio.value.toStringAsFixed(1)})'),
+          Slider(value: c.bumpRatio.value, min: 0.0, max: 3, onChanged: (value) => c.bumpRatio.value = value),
         ),
-      ),
-      _row(
-        Text('Padding ${c.padding.value.toStringAsFixed(0)}'),
-        Slider(
-          value: c.padding.value,
-          min: 0.0,
-          max: 128.0,
-          divisions: 128,
-          onChanged: (value) => c.padding.value = value,
-        ),
-      ),
-      const Divider(),
-      const Center(
-        child: Text(
-          'Spotlight Actions',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-      ),
-      Container(
-        padding: const EdgeInsets.all(4),
-        margin: const EdgeInsets.symmetric(vertical: 8),
-        decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
-        child: Text(actions.map((e) => e.name).join(', ')),
-      ),
-      Wrap(spacing: 4, runSpacing: 4, children: [
-        for (final v in SpotlightAntAction.values)
-          ChoiceChip(
-            label: Text(v.name),
-            selected: actions.contains(v),
-            onSelected: (value) {
-              actions.remove(v);
-              if (value) {
-                actions.add(v);
-              }
-              c.actions.value = actions.map((e) => e.name).join(',');
-            },
+        _row(
+          Text('Padding ${c.padding.value.toStringAsFixed(0)}'),
+          Slider(
+            value: c.padding.value,
+            min: 0.0,
+            max: 128.0,
+            divisions: 128,
+            onChanged: (value) => c.padding.value = value,
           ),
-      ]),
-      const Divider(),
-      const Center(
-        child: Text(
-          'True/False',
-          style: TextStyle(fontWeight: FontWeight.bold),
         ),
-      ),
-      SwitchListTile(
-        value: c.listening.value,
-        title: const Text('Listening events'),
-        onChanged: (value) => c.listening.value = value,
-      ),
-      SwitchListTile(
-        value: c.useCircle.value,
-        title: const Text('Use circle'),
-        onChanged: (value) => c.useCircle.value = value,
-      ),
-      SwitchListTile(
-        value: c.spotlightInkwell.value,
-        title: const Text('Spotlight inkwell'),
-        onChanged: (value) => c.spotlightInkwell.value = value,
-      ),
-      SwitchListTile(
-        value: c.backdropInkwell.value,
-        title: const Text('Backdrop inkwell'),
-        onChanged: (value) => c.backdropInkwell.value = value,
-      ),
-      SwitchListTile(
-        value: c.spotlightSilent.value,
-        title: const Text('Disable spotlight tapping'),
-        onChanged: (value) => c.spotlightSilent.value = value,
-      ),
-      SwitchListTile(
-        value: c.backdropSilent.value,
-        title: const Text('Disable backdrop tapping'),
-        onChanged: (value) => c.backdropSilent.value = value,
-      ),
-      const Divider(),
-      const Center(
-        child: Text(
-          'Alignment',
-          style: TextStyle(fontWeight: FontWeight.bold),
+        const Divider(),
+        const Center(
+          child: Text('Spotlight Actions', style: TextStyle(fontWeight: FontWeight.bold)),
         ),
-      ),
-      Wrap(spacing: 4, runSpacing: 4, children: [
-        ChoiceChip(
-          label: const Text('Auto detect'),
-          selected: c.alignment.value == null,
-          onSelected: (value) => c.alignment.value = null,
+        Container(
+          padding: const EdgeInsets.all(4),
+          margin: const EdgeInsets.symmetric(vertical: 8),
+          decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
+          child: Text(actions.map((e) => e.name).join(', ')),
         ),
-        for (final v in const [
-          Alignment.topLeft,
-          Alignment.topCenter,
-          Alignment.topRight,
-          Alignment.centerLeft,
-          Alignment.center,
-          Alignment.centerRight,
-          Alignment.bottomLeft,
-          Alignment.bottomCenter,
-          Alignment.bottomRight,
-        ])
-          ChoiceChip(
-            label: Text(v.toString().substring(10)),
-            selected: v == c.alignment.value,
-            onSelected: (value) => c.alignment.value = (value ? v : null),
-          ),
-      ]),
-    ]);
+        Wrap(
+          spacing: 4,
+          runSpacing: 4,
+          children: [
+            for (final v in SpotlightAntAction.values)
+              ChoiceChip(
+                label: Text(v.name),
+                selected: actions.contains(v),
+                onSelected: (value) {
+                  actions.remove(v);
+                  if (value) {
+                    actions.add(v);
+                  }
+                  c.actions.value = actions.map((e) => e.name).join(',');
+                },
+              ),
+          ],
+        ),
+        const Divider(),
+        const Center(
+          child: Text('True/False', style: TextStyle(fontWeight: FontWeight.bold)),
+        ),
+        SwitchListTile(
+          value: c.listening.value,
+          title: const Text('Listening events'),
+          onChanged: (value) => c.listening.value = value,
+        ),
+        SwitchListTile(
+          value: c.useCircle.value,
+          title: const Text('Use circle'),
+          onChanged: (value) => c.useCircle.value = value,
+        ),
+        SwitchListTile(
+          value: c.spotlightInkwell.value,
+          title: const Text('Spotlight inkwell'),
+          onChanged: (value) => c.spotlightInkwell.value = value,
+        ),
+        SwitchListTile(
+          value: c.backdropInkwell.value,
+          title: const Text('Backdrop inkwell'),
+          onChanged: (value) => c.backdropInkwell.value = value,
+        ),
+        SwitchListTile(
+          value: c.spotlightSilent.value,
+          title: const Text('Disable spotlight tapping'),
+          onChanged: (value) => c.spotlightSilent.value = value,
+        ),
+        SwitchListTile(
+          value: c.backdropSilent.value,
+          title: const Text('Disable backdrop tapping'),
+          onChanged: (value) => c.backdropSilent.value = value,
+        ),
+        const Divider(),
+        const Center(
+          child: Text('Alignment', style: TextStyle(fontWeight: FontWeight.bold)),
+        ),
+        Wrap(
+          spacing: 4,
+          runSpacing: 4,
+          children: [
+            ChoiceChip(
+              label: const Text('Auto detect'),
+              selected: c.alignment.value == null,
+              onSelected: (value) => c.alignment.value = null,
+            ),
+            for (final v in const [
+              Alignment.topLeft,
+              Alignment.topCenter,
+              Alignment.topRight,
+              Alignment.centerLeft,
+              Alignment.center,
+              Alignment.centerRight,
+              Alignment.bottomLeft,
+              Alignment.bottomCenter,
+              Alignment.bottomRight,
+            ])
+              ChoiceChip(
+                label: Text(v.toString().substring(10)),
+                selected: v == c.alignment.value,
+                onSelected: (value) => c.alignment.value = (value ? v : null),
+              ),
+          ],
+        ),
+      ],
+    );
   }
 
   Widget _row(Widget w1, Widget w2) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [w1, w2],
-      ),
+      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [w1, w2]),
     );
   }
 }
